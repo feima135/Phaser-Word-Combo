@@ -26,19 +26,22 @@ class GameScene extends Phaser.Scene {
           wordsCombo : [], // atlas indices that form the words
           wordPartsBoxes : [], // pos and size
           wordParts : [], // first part is word index, next is atlas index 
-          guessWordsIndices : [] // which word (index) is the target guess word
+          guessWordsIndices : [], // which word (index) is the target guess word
+          guessRemainCount : 0 // how many more parts needs guessing
         };
 
       // consolidate the words combo
       let wordsCombos = questionData.getElementsByTagName('wordsCombo');
       for (var wordComboIndex = 0; wordComboIndex < wordsCombos.length; ++wordComboIndex) {
         let wordCombo = wordsCombos[wordComboIndex];
+        let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
+ 
 
         let isThisAGuessWord = wordCombo.getAttribute("guessWord");
         if (isThisAGuessWord && isThisAGuessWord == "true") {
           currQuestion.guessWordsIndices.push(wordComboIndex);
         }
-        currQuestion.wordsCombo.push(wordCombo);
+        currQuestion.wordsCombo.push(parseInt(wordComboAtlasIndex));
       }
 
         // consolidate the word part boxes combo
@@ -50,13 +53,17 @@ class GameScene extends Phaser.Scene {
             let u = wordPartBox.getAttribute("u");
             let w = wordPartBox.getAttribute("w");
             let atlasBoxInfo = wordPartBox.getAttribute("atlasInfo");
+            let guessOrFixed = atlasBoxInfo.split('_')[1];
+
+            if(guessOrFixed == "Guess")
+            {
+              ++currQuestion.guessRemainCount;
+            }
 
             let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
             currQuestion.wordPartsBoxes.push(boxInfo);
-
             currQuestion.wordParts.push(atlasBoxInfo);
           });
-
 
           this.allQuestions.push(currQuestion);
       });
@@ -67,9 +74,6 @@ class GameScene extends Phaser.Scene {
     //   wordParts : ["1_5_Guess", "1_2_Fixed"], // first part is word index, next is atlas index 
     //   guessWordsIndices : [1] // which word (index) is the target guess word
     // };
-
-    console.log(this.allQuestions[0]);
-
   }
 
   ////////////////////////////////
@@ -91,12 +95,13 @@ class GameScene extends Phaser.Scene {
     }
 
     // remove the "correct", also add them into creationTableIndices
-    for(var index = 0; index < targetQuestion.length; ++index)
+    for(var index = 0; index < targetQuestion.wordParts.length; ++index)
     {
-      let currWordPart = targetQuestion[index];
+      let currWordPart = targetQuestion.wordParts[index];
+
       const splitArray = currWordPart.split("_");
-      let atlasIndex = splitArray[1];
-      let guessOrFixed = splitArray[2];
+      let atlasIndex = splitArray[0];
+      let guessOrFixed = splitArray[1];
 
       if(guessOrFixed == "Guess")
       {
@@ -132,6 +137,8 @@ class GameScene extends Phaser.Scene {
       currWord.atlasIndex = targetAtlasIndex;
 
       this.input.setDraggable(currWord);
+
+      this.garbageCollector.push(currWord);
     }
   }
 
@@ -176,100 +183,36 @@ class GameScene extends Phaser.Scene {
       {    
         let wordBoxPosSizeInfo = targetQuestion.wordPartsBoxes[boxIndex];
         let wordPartInfo = targetQuestion.wordParts[boxIndex];
-        
+
         let splitArray = wordPartInfo.split('_');
-        let wordIndex = splitArray[0];
-        let atlasIndex = splitArray[1];
-        let guessOrFixed = splitArray[2];
+        //let wordIndex = splitArray[0];
+        let atlasIndex = splitArray[0];
+        let guessOrFixed = splitArray[1];
 
-        // match the current word owner
-        if(wordIndex == targetGuessWordIndex)
-        {
-          if(guessOrFixed == "Guess")
-          {
-            // 64 is size of word
-            // pos specified is normalized gap from center of word
-            let boxX = wordBoxPosSizeInfo.x * this.wordImageSize + targetGuessWord.x;
-            let boxY = wordBoxPosSizeInfo.y * this.wordImageSize + targetGuessWord.y;
-            let boxSizeX = wordBoxPosSizeInfo.z;
-            let boxSizeY = wordBoxPosSizeInfo.w;
+        if (guessOrFixed == "Guess") {
+          // 64 is size of word
+          // pos specified is normalized gap from center of word
+          let boxX = wordBoxPosSizeInfo.x * this.wordImageSize + targetGuessWord.x;
+          let boxY = wordBoxPosSizeInfo.y * this.wordImageSize + targetGuessWord.y;
+          let boxSizeX = wordBoxPosSizeInfo.z;
+          let boxSizeY = wordBoxPosSizeInfo.w;
 
-            let box = this.add.image(boxX, boxY, "WordDropBox").setScale(boxSizeX, boxSizeY);
-            box.alpha = .7;
-          }
+          // drop zone
+          let box = this.add.image(boxX, boxY, "WordDropBox").setScale(boxSizeX, boxSizeY);
+          box.alpha = .7;
+
+          let zone = this.add.zone(boxX, boxY, box.displayWidth, box.displayHeight).setRectangleDropZone(box.displayWidth, box.displayHeight);
+          zone.requiredAtlasIndex = atlasIndex;
+          zone.ownerDropBox = box;
+
+          // var graphics = this.add.graphics();
+          // graphics.lineStyle(2, 0xffff00);
+          // graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+          this.garbageCollector.push(box);
         }
       }
     }
-
-    // Create drag boxes
-
-    // // test load question based from atlas
-    // for(var index = 0; index < targetQuestion.length; ++index)
-    // {
-    //   let currWordPart = targetQuestion[index];
-    //   const splitArray = currWordPart.split("_");
-    //   //let direction = splitArray[0];
-
-    //   let wordIndex = splitArray[0];
-    //   let atlasIndex = splitArray[1];
-    //   let guessOrFixed = splitArray[2];
-
-    //   // set spawn pos
-    //   let spawnPos = new Phaser.Math.Vector2(0, 0);
-    //   let size = 4;
-    //   // let yGap = 35 * size;
-    //   // let xGap = 35 * size;
-      
-    //   // if (direction == 'M') {
-    //   //   spawnPos.set(cenPosX, cenPosY);
-    //   // }
-    //   // if (direction == 'T') {
-    //   //   spawnPos.set(cenPosX, cenPosY + yGap);
-    //   // }
-    //   // if (direction == 'B') {
-    //   //   spawnPos.set(cenPosX, cenPosY - yGap);
-    //   // }
-    //   // if (direction == 'L') {
-    //   //   spawnPos.set(cenPosX - xGap, cenPosY);
-    //   // }
-    //   // if (direction == 'R') {
-    //   //   spawnPos.set(cenPosX + xGap, cenPosY);
-    //   // }
-
-    //   // if this is a part to be guessed, create a drag zone
-    //   if (guessOrFixed == "Guess") {
-
-    //     let boxSize = new Phaser.Math.Vector2(1, 1);
-    //     let boxSizeInfo = splitArray[3];
-    //     if(boxSizeInfo == "HLong")
-    //     {
-    //       boxSize.x = 1.5;
-    //       boxSize.y = 0.7;
-    //     }
-    //     if(boxSizeInfo == "VLong")
-    //     {
-    //       boxSize.y = 1.5;
-    //       boxSize.x = 0.7;
-    //     }
-
-    //     let box = this.add.image(spawnPos.x, spawnPos.y, "WordDropBox").setScale(boxSize.x, boxSize.y);
-    //     box.alpha = 0.5;
-
-    //     let zone = this.add.zone(spawnPos.x, spawnPos.y, box.displayWidth, box.displayHeight).setRectangleDropZone(box.displayWidth, box.displayHeight);
-    //     // var graphics = this.add.graphics();
-    //     // graphics.lineStyle(2, 0xffff00);
-    //     // graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-    
-    //   }
-
-    //   if (guessOrFixed == "Fixed") {
-    //     // if this is fixed, we show the word part right away
-    //     let currWord = this.add.sprite(spawnPos.x, spawnPos.y, "WordsAtlas");
-    //     currWord.setFrame(atlasIndex);
-    //     currWord.setScale(size, size);
-    //   }
-
-    // }
   }
 
   ////////////////////////////
@@ -277,9 +220,22 @@ class GameScene extends Phaser.Scene {
   ////////////////////////////
   processHint()
   {
-
   }
   
+  /////////////////
+  // clean up, get ready new question
+  /////////////////
+  resetQuestion()
+  {
+    Array.from(this.garbageCollector).forEach(item => item.destroy());
+
+    this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
+
+    this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
+
+    this.createDragWordSelectables(this.currQuestion);
+  }
+
   /////////////////
   // Create Main
   /////////////////
@@ -314,11 +270,7 @@ class GameScene extends Phaser.Scene {
 
     this.parseLevelData();
 
-    let testQuestion = this.allQuestions[0];
-
-    this.createQuestionAssets(testQuestion, config.width * 0.4, config.height * 0.4);
-
-    this.createDragWordSelectables(testQuestion);
+    this.resetQuestion();
 
     //this.starIcons = this.createGameProgressUI(this);
     
@@ -382,6 +334,17 @@ class GameScene extends Phaser.Scene {
   rollupSummaryComplete()
   {
     this.starIconScaleTween.stop();
+  }
+
+  /////////////////
+  // check if question ended
+  /////////////////
+  checkEndQuestionCondition()
+  {
+    if(this.currQuestion.guessRemainCount <= 0)
+    {
+      this.resetQuestion();
+    }
   }
 
   checkEntireGameOverCondition()
@@ -461,24 +424,18 @@ class GameScene extends Phaser.Scene {
   onItemDroppedInZone(pointer, gameObject, dropZone) {
 
     // check if this word part is correct
-    let answerCorrect = false;
-    for (var index = 0; index < this.currQuestion.length; ++index) {
-      let currWordPart = this.currQuestion[index];
-      const splitArray = currWordPart.split("_");
-      let atlasIndex = splitArray[1];
-      let guessOrFixed = splitArray[2];
-
-      if (guessOrFixed == "Guess") {
-        if (atlasIndex == gameObject.atlasIndex) {
-          answerCorrect = true;
-          break;
-        }
-      }
-    }
+    let answerCorrect = gameObject.atlasIndex == dropZone.requiredAtlasIndex;
 
     if (answerCorrect) {
       gameObject.x = dropZone.x;
       gameObject.y = dropZone.y;
+
+      dropZone.ownerDropBox.destroy();
+
+      --this.currQuestion.guessRemainCount;
+      
+      // check end question condition
+      this.checkEndQuestionCondition();
     }
     else
     {
@@ -489,7 +446,6 @@ class GameScene extends Phaser.Scene {
 
   // drop zone hover
   onItemDropZoneEnter(pointer, gameObject, dropZone) {
-
   }
 
   // drop zone leave

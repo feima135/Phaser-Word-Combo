@@ -95,7 +95,7 @@ class LoadingScene extends Phaser.Scene {
     // this.load.audio('Eat_SFX', 'assets/Audio/Eat.wav');
     // this.load.audio('Drink_SFX', 'assets/Audio/DrinkStraw.wav');
     // this.load.audio('CollectStar_SFX', 'assets/Audio/CollectStar.wav');
-    // this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');
+    this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');
     // this.load.audio('BalloonPop_SFX', 'assets/Audio/BalloonPop.wav');
     // this.load.audio('RingTossBottle_SFX', 'assets/Audio/RingTossBottle.wav');
     // this.load.audio('Eat_Sausage_SFX', 'assets/Audio/Eat_Sausage.mp3');
