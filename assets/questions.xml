@@ -1,22 +1,15 @@
 <?xml version="1.0"?>
 <Questions>
 
-   <question id="">
-      <wordsCombo > 1 </wordsCombo>
-      <wordsCombo> 2 </wordsCombo>
-      <wordsCombo guessWord='true'> 4 </wordsCombo>
-      <wordsCombo> 7 </wordsCombo>
-      <wordPartBox x='0' y ='0' u='1' w='0.5'  atlasInfo='0_Guess'></wordPartBox>
-      <wordPartBox x='3' y ='13' u='140' w='155' atlasInfo='2_Fixed'></wordPartBox>
-   </question>
-
-   <question id="">
+   <question id="嘴">
       <wordsCombo > 0 </wordsCombo>
-      <wordsCombo> 2 </wordsCombo>
-      <wordsCombo guessWord='true'> 4 </wordsCombo>
-      <wordsCombo> 7 </wordsCombo>
-      <wordPartBox x='0' y ='0' u='1' w='0.5'  atlasInfo='1_Guess'></wordPartBox>
-      <wordPartBox x='3' y ='13' u='140' w='155' atlasInfo='2_Fixed'></wordPartBox>
+      <wordsCombo> 1 </wordsCombo>
+      <wordsCombo guessWord='true'> 7 </wordsCombo>
+      <wordsCombo> 3 </wordsCombo>
+      <wordPartBox x='-1' y ='0' u='.5' w='0.5'  atlasInfo='0_Guess'></wordPartBox>
+      <wordPartBox x='.1' y ='-.3' u='.5' w='0.5'  atlasInfo='1_Guess'></wordPartBox>
+      <wordPartBox x='1.2' y ='-.3' u='.5' w='0.5'  atlasInfo='2_Guess'></wordPartBox>
+      <wordPartBox x='.6' y ='1' atlasInfo='3_Fixed'></wordPartBox>
    </question>
 
 </Questions>

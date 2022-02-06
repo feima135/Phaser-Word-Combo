@@ -27,7 +27,7 @@ class GameScene extends Phaser.Scene {
           wordPartsBoxes : [], // pos and size
           wordParts : [], // first part is word index, next is atlas index 
           guessWordsIndices : [], // which word (index) is the target guess word
-          guessRemainCount : 0 // how many more parts needs guessing
+          wordPartsLeftToGuess : [] // atlas indicies of the remaining items left to guess
         };
 
       // consolidate the words combo
@@ -36,7 +36,6 @@ class GameScene extends Phaser.Scene {
         let wordCombo = wordsCombos[wordComboIndex];
         let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
  
-
         let isThisAGuessWord = wordCombo.getAttribute("guessWord");
         if (isThisAGuessWord && isThisAGuessWord == "true") {
           currQuestion.guessWordsIndices.push(wordComboIndex);
@@ -53,12 +52,6 @@ class GameScene extends Phaser.Scene {
             let u = wordPartBox.getAttribute("u");
             let w = wordPartBox.getAttribute("w");
             let atlasBoxInfo = wordPartBox.getAttribute("atlasInfo");
-            let guessOrFixed = atlasBoxInfo.split('_')[1];
-
-            if(guessOrFixed == "Guess")
-            {
-              ++currQuestion.guessRemainCount;
-            }
 
             let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
             currQuestion.wordPartsBoxes.push(boxInfo);
@@ -81,6 +74,8 @@ class GameScene extends Phaser.Scene {
   ////////////////////////////////
   createDragWordSelectables(targetQuestion)
   {
+    Array.from(this.selectableWords).forEach(item => item.destroy());
+
     let maxSelectableWordsInPanel = 6;
 
     // temp hard coded max atlas words
@@ -94,20 +89,28 @@ class GameScene extends Phaser.Scene {
       randomRubbishTable.push(index);
     }
 
-    // remove the "correct", also add them into creationTableIndices
-    for(var index = 0; index < targetQuestion.wordParts.length; ++index)
-    {
+    // remove the "correct answers" 
+    // also add them into creationTableIndices
+    for (var index = 0; index < targetQuestion.wordParts.length; ++index) {
       let currWordPart = targetQuestion.wordParts[index];
 
       const splitArray = currWordPart.split("_");
-      let atlasIndex = splitArray[0];
+      let atlasIndex = parseInt(splitArray[0]);
       let guessOrFixed = splitArray[1];
 
-      if(guessOrFixed == "Guess")
-      {
-        creationTableIndices.push(atlasIndex);
+      // to make them selectable in the panel
+      // ensure that those that has been guessed will not show up in selectables
+      if (guessOrFixed == "Guess") {
+
+        // to be a selectable guess item, it must exist in wordPartsLeftToGuess
+        let canBeGuessed = targetQuestion.wordPartsLeftToGuess.includes(atlasIndex);
+
+        if (canBeGuessed) {
+          creationTableIndices.push(atlasIndex);
+        }
       }
 
+      // randomRubbishTable will never contain the correct answers
       Phaser.Utils.Array.Remove(randomRubbishTable, atlasIndex);
     }
 
@@ -138,6 +141,8 @@ class GameScene extends Phaser.Scene {
 
       this.input.setDraggable(currWord);
 
+      this.selectableWords.push(currWord);
+
       this.garbageCollector.push(currWord);
     }
   }
@@ -148,8 +153,8 @@ class GameScene extends Phaser.Scene {
   createQuestionAssets(targetQuestion, cenPosX, cenPosY)
   {
     let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.4);
-    let wordSize = 2.7;
-    let wordXGap = wordSize * this.wordImageSize * 1.1;
+    let wordSize = 1.2;
+    let wordXGap = wordSize * 128 * 1.3;
     let maxWordsDisplay = 4; // assume is 4
 
     // for centralize word based on word count
@@ -161,7 +166,7 @@ class GameScene extends Phaser.Scene {
     for(var index = 0; index < targetQuestion.wordsCombo.length; ++index)
     {
         let atlasIndex = targetQuestion.wordsCombo[index];
-        let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "WordsAtlas");
+        let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
         currWord.setFrame(atlasIndex);
         currWord.setScale(wordSize, wordSize);
 
@@ -177,7 +182,7 @@ class GameScene extends Phaser.Scene {
 
       // the sprite word that we are creating boxes on
       let targetGuessWord = wordCreatedCache[targetGuessWordIndex];
-
+      
       // iterate the data given boxes now
       for(var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex)
       {    
@@ -186,16 +191,22 @@ class GameScene extends Phaser.Scene {
 
         let splitArray = wordPartInfo.split('_');
         //let wordIndex = splitArray[0];
-        let atlasIndex = splitArray[0];
+        let atlasIndex = parseInt(splitArray[0]);
         let guessOrFixed = splitArray[1];
 
+        // 64 is size of word
+        // pos specified is normalized gap from center of word
+        let boxX = wordBoxPosSizeInfo.x * this.wordImageSize + targetGuessWord.x;
+        let boxY = wordBoxPosSizeInfo.y * this.wordImageSize + targetGuessWord.y;
+        let boxSizeX = wordBoxPosSizeInfo.z;
+        let boxSizeY = wordBoxPosSizeInfo.w;
+
         if (guessOrFixed == "Guess") {
-          // 64 is size of word
-          // pos specified is normalized gap from center of word
-          let boxX = wordBoxPosSizeInfo.x * this.wordImageSize + targetGuessWord.x;
-          let boxY = wordBoxPosSizeInfo.y * this.wordImageSize + targetGuessWord.y;
-          let boxSizeX = wordBoxPosSizeInfo.z;
-          let boxSizeY = wordBoxPosSizeInfo.w;
+
+          targetQuestion.wordPartsLeftToGuess.push(atlasIndex);
+
+          this.currQuestionGuessWord = targetGuessWord;
+          targetGuessWord.visible = false;
 
           // drop zone
           let box = this.add.image(boxX, boxY, "WordDropBox").setScale(boxSizeX, boxSizeY);
@@ -210,6 +221,14 @@ class GameScene extends Phaser.Scene {
           // graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
 
           this.garbageCollector.push(box);
+        }
+        // no need for box but create the word part sprite
+        else if (guessOrFixed == "Fixed") {
+          let fixedWordPart = this.add.image(boxX, boxY, "WordsAtlas").setScale(1.5, 1.5);
+          fixedWordPart.setFrame(atlasIndex);
+
+          this.selectableGuessedCorrectWords.push(fixedWordPart);
+          this.garbageCollector.push(fixedWordPart);
         }
       }
     }
@@ -229,11 +248,17 @@ class GameScene extends Phaser.Scene {
   {
     Array.from(this.garbageCollector).forEach(item => item.destroy());
 
+    this.selectableWords.length = 0;
+    this.selectableGuessedCorrectWords.length = 0;
+    this.garbageCollector.length = 0;
+    
     this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
 
     this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
 
     this.createDragWordSelectables(this.currQuestion);
+
+    console.log(this.currQuestion);
   }
 
   /////////////////
@@ -244,6 +269,8 @@ class GameScene extends Phaser.Scene {
     this.allQuestions = [];
     this.garbageCollector = [];
     this.wordImageSize = 64;
+    this.selectableWords = [];
+    this.selectableGuessedCorrectWords = [];
 
     ////////////////////
     // Set up drag stuff
@@ -341,9 +368,20 @@ class GameScene extends Phaser.Scene {
   /////////////////
   checkEndQuestionCondition()
   {
-    if(this.currQuestion.guessRemainCount <= 0)
+    if(this.currQuestion.wordPartsLeftToGuess.length <= 0)
     {
-      this.resetQuestion();
+      // fade out selectables
+      Array.from(this.selectableWords).forEach(item => item.destroy());
+
+      // fade out the correctly picked parts
+      Array.from(this.selectableGuessedCorrectWords).forEach(item => item.destroy());
+
+      // reveal correct word
+      this.currQuestionGuessWord.visible = true;
+
+      // show correct splash
+
+      //this.resetQuestion();
     }
   }
 
@@ -432,8 +470,14 @@ class GameScene extends Phaser.Scene {
 
       dropZone.ownerDropBox.destroy();
 
-      --this.currQuestion.guessRemainCount;
-      
+      // 1 less part to guess
+      Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.atlasIndex);
+
+      // remove from selectables
+      Phaser.Utils.Array.Remove(this.selectableWords, gameObject);
+
+      this.selectableGuessedCorrectWords.push(gameObject);
+
       // check end question condition
       this.checkEndQuestionCondition();
     }
@@ -442,6 +486,9 @@ class GameScene extends Phaser.Scene {
       gameObject.x = gameObject.input.dragStartX;
       gameObject.y = gameObject.input.dragStartY;
     }
+
+    // Regenerate the selectables
+    this.createDragWordSelectables(this.currQuestion);
   }
 
   // drop zone hover
