@@ -16,6 +16,13 @@ class GameScene extends Phaser.Scene {
   /////////////////
   parseLevelData()
   {
+    this.currQuestion = {
+
+      wordsCombo : [1, 2, 4, 5], // atlas indices that form the words
+      wordPartsBoxes : [new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1)], // pos and size
+      wordParts : ["1_5_Guess", "1_2_Fixed"], // first part is word index, next is atlas index 
+
+    };
     this.currQuestion = ["M_0_Guess_HLong", "T_1_Fixed"];
   }
 
