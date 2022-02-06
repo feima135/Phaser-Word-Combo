@@ -44,9 +44,13 @@ class LoadingScene extends Phaser.Scene {
 
   preloadAssets() {
 
+    this.load.xml('questionsData', 'assets/questions.xml');
+
     this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
     this.load.image('WordDropBox', 'assets/WordDropBox.png');
     this.load.image('NoFillBox', 'assets/NoFillBox.png');
+    this.load.image('HintBtn', 'assets/HintBtn.png');
+
     this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
 
     // this.load.image('GameOverSplash', 'assets/GameOverSplash.png');

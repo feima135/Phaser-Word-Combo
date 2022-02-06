@@ -16,14 +16,60 @@ class GameScene extends Phaser.Scene {
   /////////////////
   parseLevelData()
   {
-    this.currQuestion = {
+    const questionsTable = this.cache.xml.get('questionsData');
+    const questions = questionsTable.getElementsByTagName('question');
 
-      wordsCombo : [1, 2, 4, 5], // atlas indices that form the words
-      wordPartsBoxes : [new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1)], // pos and size
-      wordParts : ["1_5_Guess", "1_2_Fixed"], // first part is word index, next is atlas index 
+    // iterate all possible questions
+    Array.from(questions).forEach(questionData => 
+      {
+        let currQuestion = {
+          wordsCombo : [], // atlas indices that form the words
+          wordPartsBoxes : [], // pos and size
+          wordParts : [], // first part is word index, next is atlas index 
+          guessWordsIndices : [] // which word (index) is the target guess word
+        };
 
-    };
-    this.currQuestion = ["M_0_Guess_HLong", "T_1_Fixed"];
+      // consolidate the words combo
+      let wordsCombos = questionData.getElementsByTagName('wordsCombo');
+      for (var wordComboIndex = 0; wordComboIndex < wordsCombos.length; ++wordComboIndex) {
+        let wordCombo = wordsCombos[wordComboIndex];
+
+        let isThisAGuessWord = wordCombo.getAttribute("guessWord");
+        if (isThisAGuessWord && isThisAGuessWord == "true") {
+          currQuestion.guessWordsIndices.push(wordComboIndex);
+        }
+        currQuestion.wordsCombo.push(wordCombo);
+      }
+
+        // consolidate the word part boxes combo
+        let wordPartBoxes = questionData.getElementsByTagName('wordPartBox');
+        Array.from(wordPartBoxes).forEach(wordPartBox =>
+          {
+            let x = wordPartBox.getAttribute("x");
+            let y = wordPartBox.getAttribute("y");
+            let u = wordPartBox.getAttribute("u");
+            let w = wordPartBox.getAttribute("w");
+            let atlasBoxInfo = wordPartBox.getAttribute("atlasInfo");
+
+            let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
+            currQuestion.wordPartsBoxes.push(boxInfo);
+
+            currQuestion.wordParts.push(atlasBoxInfo);
+          });
+
+
+          this.allQuestions.push(currQuestion);
+      });
+
+    // let currQuestion = {
+    //   wordsCombo : [1, 2, 3, 4], // atlas indices that form the words
+    //   wordPartsBoxes : [new Phaser.Math.Vector4(0, 0, 1, .5), new Phaser.Math.Vector4(1, 1, 1, 1)], // pos and size
+    //   wordParts : ["1_5_Guess", "1_2_Fixed"], // first part is word index, next is atlas index 
+    //   guessWordsIndices : [1] // which word (index) is the target guess word
+    // };
+
+    console.log(this.allQuestions[0]);
+
   }
 
   ////////////////////////////////
@@ -71,16 +117,16 @@ class GameScene extends Phaser.Scene {
     }
 
     // populating the right selectables panel now
-    let startPosX = config.width * 0.8;
-    let startPosY = config.height * 0.2;
-    let yGap = 75;
+    let xGap = this.wordImageSize * 1.8;
+    let startPosX = this.SelectablePanel.x - (0.5 * maxSelectableWordsInPanel * 95);
+    let startPosY = this.SelectablePanel.y;
 
     // some correct answers the rest are rubbish
     for(var index = 0; index < maxSelectableWordsInPanel; ++index)
     {
       let targetAtlasIndex = Phaser.Utils.Array.RemoveRandomElement(creationTableIndices);
 
-      let currWord = this.add.sprite(startPosX, startPosY + yGap * index, "WordsAtlas");
+      let currWord = this.add.sprite(startPosX + xGap * index, startPosY, "WordsAtlas");
       currWord.setFrame(targetAtlasIndex);
       currWord.setInteractive();
       currWord.atlasIndex = targetAtlasIndex;
@@ -94,77 +140,154 @@ class GameScene extends Phaser.Scene {
   //////////////////////////////////////////////////////////////
   createQuestionAssets(targetQuestion, cenPosX, cenPosY)
   {
-    // test load question based from atlas
-    for(var index = 0; index < targetQuestion.length; ++index)
+    let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.4);
+    let wordSize = 2.7;
+    let wordXGap = wordSize * this.wordImageSize * 1.1;
+    let maxWordsDisplay = 4; // assume is 4
+
+    // for centralize word based on word count
+    let startPosOffSet = (maxWordsDisplay - targetQuestion.wordsCombo.length) * wordXGap * 0.5;
+
+    let wordCreatedCache = [];
+
+    // create all the words
+    for(var index = 0; index < targetQuestion.wordsCombo.length; ++index)
     {
-      let currWordPart = targetQuestion[index];
-      const splitArray = currWordPart.split("_");
-      let direction = splitArray[0];
-      let atlasIndex = splitArray[1];
-      let guessOrFixed = splitArray[2];
-
-      // set spawn pos
-      let spawnPos = new Phaser.Math.Vector2(0, 0);
-      let size = 4;
-      let yGap = 35 * size;
-      let xGap = 35 * size;
-      
-      if (direction == 'M') {
-        spawnPos.set(cenPosX, cenPosY);
-      }
-      if (direction == 'T') {
-        spawnPos.set(cenPosX, cenPosY + yGap);
-      }
-      if (direction == 'B') {
-        spawnPos.set(cenPosX, cenPosY - yGap);
-      }
-      if (direction == 'L') {
-        spawnPos.set(cenPosX - xGap, cenPosY);
-      }
-      if (direction == 'R') {
-        spawnPos.set(cenPosX + xGap, cenPosY);
-      }
-
-      // if this is a part to be guessed, create a drag zone
-      if (guessOrFixed == "Guess") {
-
-        let boxSize = new Phaser.Math.Vector2(1, 1);
-        let boxSizeInfo = splitArray[3];
-        if(boxSizeInfo == "HLong")
-        {
-          boxSize.x = 1.5;
-          boxSize.y = 0.7;
-        }
-        if(boxSizeInfo == "VLong")
-        {
-          boxSize.y = 1.5;
-          boxSize.x = 0.7;
-        }
-
-        let box = this.add.image(spawnPos.x, spawnPos.y, "WordDropBox").setScale(boxSize.x, boxSize.y);
-        box.alpha = 0.5;
-
-        let zone = this.add.zone(spawnPos.x, spawnPos.y, box.displayWidth, box.displayHeight).setRectangleDropZone(box.displayWidth, box.displayHeight);
-        // var graphics = this.add.graphics();
-        // graphics.lineStyle(2, 0xffff00);
-        // graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-    
-      }
-
-      if (guessOrFixed == "Fixed") {
-        // if this is fixed, we show the word part right away
-        let currWord = this.add.sprite(spawnPos.x, spawnPos.y, "WordsAtlas");
+        let atlasIndex = targetQuestion.wordsCombo[index];
+        let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "WordsAtlas");
         currWord.setFrame(atlasIndex);
-        currWord.setScale(size, size);
-      }
+        currWord.setScale(wordSize, wordSize);
 
+        wordCreatedCache.push(currWord);
+
+        this.garbageCollector.push(currWord);
     }
+
+    // for each of the word we are guessing
+    for(var index = 0; index < targetQuestion.guessWordsIndices.length; ++index)
+    {
+      let targetGuessWordIndex = targetQuestion.guessWordsIndices[index];
+
+      // the sprite word that we are creating boxes on
+      let targetGuessWord = wordCreatedCache[targetGuessWordIndex];
+
+      // iterate the data given boxes now
+      for(var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex)
+      {    
+        let wordBoxPosSizeInfo = targetQuestion.wordPartsBoxes[boxIndex];
+        let wordPartInfo = targetQuestion.wordParts[boxIndex];
+        
+        let splitArray = wordPartInfo.split('_');
+        let wordIndex = splitArray[0];
+        let atlasIndex = splitArray[1];
+        let guessOrFixed = splitArray[2];
+
+        // match the current word owner
+        if(wordIndex == targetGuessWordIndex)
+        {
+          if(guessOrFixed == "Guess")
+          {
+            // 64 is size of word
+            // pos specified is normalized gap from center of word
+            let boxX = wordBoxPosSizeInfo.x * this.wordImageSize + targetGuessWord.x;
+            let boxY = wordBoxPosSizeInfo.y * this.wordImageSize + targetGuessWord.y;
+            let boxSizeX = wordBoxPosSizeInfo.z;
+            let boxSizeY = wordBoxPosSizeInfo.w;
+
+            let box = this.add.image(boxX, boxY, "WordDropBox").setScale(boxSizeX, boxSizeY);
+            box.alpha = .7;
+          }
+        }
+      }
+    }
+
+    // Create drag boxes
+
+    // // test load question based from atlas
+    // for(var index = 0; index < targetQuestion.length; ++index)
+    // {
+    //   let currWordPart = targetQuestion[index];
+    //   const splitArray = currWordPart.split("_");
+    //   //let direction = splitArray[0];
+
+    //   let wordIndex = splitArray[0];
+    //   let atlasIndex = splitArray[1];
+    //   let guessOrFixed = splitArray[2];
+
+    //   // set spawn pos
+    //   let spawnPos = new Phaser.Math.Vector2(0, 0);
+    //   let size = 4;
+    //   // let yGap = 35 * size;
+    //   // let xGap = 35 * size;
+      
+    //   // if (direction == 'M') {
+    //   //   spawnPos.set(cenPosX, cenPosY);
+    //   // }
+    //   // if (direction == 'T') {
+    //   //   spawnPos.set(cenPosX, cenPosY + yGap);
+    //   // }
+    //   // if (direction == 'B') {
+    //   //   spawnPos.set(cenPosX, cenPosY - yGap);
+    //   // }
+    //   // if (direction == 'L') {
+    //   //   spawnPos.set(cenPosX - xGap, cenPosY);
+    //   // }
+    //   // if (direction == 'R') {
+    //   //   spawnPos.set(cenPosX + xGap, cenPosY);
+    //   // }
+
+    //   // if this is a part to be guessed, create a drag zone
+    //   if (guessOrFixed == "Guess") {
+
+    //     let boxSize = new Phaser.Math.Vector2(1, 1);
+    //     let boxSizeInfo = splitArray[3];
+    //     if(boxSizeInfo == "HLong")
+    //     {
+    //       boxSize.x = 1.5;
+    //       boxSize.y = 0.7;
+    //     }
+    //     if(boxSizeInfo == "VLong")
+    //     {
+    //       boxSize.y = 1.5;
+    //       boxSize.x = 0.7;
+    //     }
+
+    //     let box = this.add.image(spawnPos.x, spawnPos.y, "WordDropBox").setScale(boxSize.x, boxSize.y);
+    //     box.alpha = 0.5;
+
+    //     let zone = this.add.zone(spawnPos.x, spawnPos.y, box.displayWidth, box.displayHeight).setRectangleDropZone(box.displayWidth, box.displayHeight);
+    //     // var graphics = this.add.graphics();
+    //     // graphics.lineStyle(2, 0xffff00);
+    //     // graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+    
+    //   }
+
+    //   if (guessOrFixed == "Fixed") {
+    //     // if this is fixed, we show the word part right away
+    //     let currWord = this.add.sprite(spawnPos.x, spawnPos.y, "WordsAtlas");
+    //     currWord.setFrame(atlasIndex);
+    //     currWord.setScale(size, size);
+    //   }
+
+    // }
   }
 
+  ////////////////////////////
+  // when hint btn is pressed
+  ////////////////////////////
+  processHint()
+  {
+
+  }
+  
   /////////////////
   // Create Main
   /////////////////
   create() {
+
+    this.allQuestions = [];
+    this.garbageCollector = [];
+    this.wordImageSize = 64;
 
     ////////////////////
     // Set up drag stuff
@@ -176,16 +299,26 @@ class GameScene extends Phaser.Scene {
     this.input.on('dragenter', this.onItemDropZoneEnter, this);
     this.input.on('dragleave', this.onItemDropZoneLeave, this);
 
-
+    // BG
     this.add.image(config.width / 2, config.height / 2, "GameSceneBG").setScale(100, 100);
 
-    this.add.image(config.width * 0.8, config.height / 2, "NoFillBox");
+    // right panel for selectables
+    this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
+    this.SelectablePanel.alpha = 0.5;
+
+    // hint btn
+    this.HintBtn = this.add.image(config.width * 0.5, config.height * 0.9, "HintBtn").setInteractive();
+    this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn, 
+      () => this.processHint())
+      );
 
     this.parseLevelData();
 
-    this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
+    let testQuestion = this.allQuestions[0];
 
-    this.createDragWordSelectables(this.currQuestion);
+    this.createQuestionAssets(testQuestion, config.width * 0.4, config.height * 0.4);
+
+    this.createDragWordSelectables(testQuestion);
 
     //this.starIcons = this.createGameProgressUI(this);
     

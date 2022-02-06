@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Questions>
+
+   <question id="">
+      <wordsCombo > 1 </wordsCombo>
+      <wordsCombo> 2 </wordsCombo>
+      <wordsCombo guessWord='true'> 4 </wordsCombo>
+      <wordsCombo> 88 </wordsCombo>
+
+      <wordPartBox x='0' y ='0' u='1' w='0.5'  atlasInfo='1_5_Guess'></wordPartBox>
+      <wordPartBox x='3' y ='13' u='140' w='155' atlasInfo='1_2_Fixed'></wordPartBox>
+   </question>
+
+   <question id="">
+      <wordsCombo> 1 </wordsCombo>
+      <wordsCombo> 2 </wordsCombo>
+      <wordsCombo> 4 </wordsCombo>
+      <wordsCombo> 88 </wordsCombo>
+
+
+      <price>44.95</price>
+      <description>An in-depth look at creating applications 
+      with XML.</description>
+   </question>
+
+</Questions>
