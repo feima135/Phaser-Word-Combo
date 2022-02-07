@@ -18,8 +18,26 @@ class GameScene extends Phaser.Scene {
   /////////////////
   parseLevelData()
   {
-    const questionsTable = this.cache.xml.get('questionsData');
-    const questions = questionsTable.getElementsByTagName('question');
+    const levelInfo = this.cache.xml.get('LevelInfo');
+
+    const levelInfoDataTable = levelInfo.getElementsByTagName('level');
+
+    this.levelInfoTable = [];
+
+    // iterate all possible questions
+    Array.from(levelInfoDataTable).forEach(info => {
+
+      let currLevelInfo = {
+        levelID : info.getAttribute("levelID"),
+        threshold : info.getAttribute("threshold"), 
+        partsToGuess : info.getAttribute("partsToGuess"),
+        maxselectable : info.getAttribute("maxselectable")
+      };
+
+      this.levelInfoTable.push(currLevelInfo);
+    });
+
+    const questions = levelInfo.getElementsByTagName('question');
 
     // iterate all possible questions
     Array.from(questions).forEach(questionData => 
@@ -98,18 +116,12 @@ class GameScene extends Phaser.Scene {
 
       const splitArray = currWordPart.split("_");
       let atlasIndex = parseInt(splitArray[0]);
-      let guessOrFixed = splitArray[1];
 
-      // to make them selectable in the panel
-      // ensure that those that has been guessed will not show up in selectables
-      if (guessOrFixed == "Guess") {
+      // to be a selectable guess item, it must exist in wordPartsLeftToGuess
+      let canBeGuessed = targetQuestion.wordPartsLeftToGuess.includes(atlasIndex);
 
-        // to be a selectable guess item, it must exist in wordPartsLeftToGuess
-        let canBeGuessed = targetQuestion.wordPartsLeftToGuess.includes(atlasIndex);
-
-        if (canBeGuessed) {
-          creationTableIndices.push(atlasIndex);
-        }
+      if (canBeGuessed) {
+        creationTableIndices.push(atlasIndex);
       }
 
       // randomRubbishTable will never contain the correct answers
@@ -117,7 +129,9 @@ class GameScene extends Phaser.Scene {
     }
 
     // randomRubbishTable only contains wrong answers now
-    let rubbishElementsCount = this.maxSelectableWordsInPanel - creationTableIndices.length;
+    let maxSelectableWordsInPanel = this.levelInfoTable[g_CurrLevelIndex].maxselectable;
+
+    let rubbishElementsCount = maxSelectableWordsInPanel - creationTableIndices.length;
 
     // populate the remaining rubbish elements
     for(var index = 0; index < rubbishElementsCount; ++index)
@@ -128,11 +142,11 @@ class GameScene extends Phaser.Scene {
 
     // populating the right selectables panel now
     let xGap = this.wordImageSize * 1.8;
-    let startPosX = this.SelectablePanel.x - (0.5 * this.maxSelectableWordsInPanel * 95);
+    let startPosX = this.SelectablePanel.x - (0.5 * maxSelectableWordsInPanel * 95);
     let startPosY = this.SelectablePanel.y;
 
     // some correct answers the rest are rubbish
-    for(var index = 0; index < this.maxSelectableWordsInPanel; ++index)
+    for(var index = 0; index < maxSelectableWordsInPanel; ++index)
     {
       let targetAtlasIndex = Phaser.Utils.Array.RemoveRandomElement(creationTableIndices);
 
@@ -185,6 +199,18 @@ class GameScene extends Phaser.Scene {
       // the sprite word that we are creating boxes on
       let targetGuessWord = wordCreatedCache[targetGuessWordIndex];
       
+      // ugly random
+      // inject random box count here
+      let randomGuessTableIndices = []; // store generate box index
+      for (var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex) {
+        randomGuessTableIndices.push(boxIndex);
+      }
+      // based on level difficulty, "remove randomly" things that need guessing
+      let currLevelPartsToGuessCount = this.levelInfoTable[g_CurrLevelIndex].partsToGuess;
+      for (var iter = 0; iter < currLevelPartsToGuessCount; ++iter) {
+        Phaser.Utils.Array.RemoveRandomElement(randomGuessTableIndices);
+      }
+
       // iterate the data given boxes now
       for(var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex)
       {    
@@ -194,7 +220,9 @@ class GameScene extends Phaser.Scene {
         let splitArray = wordPartInfo.split('_');
         //let wordIndex = splitArray[0];
         let atlasIndex = parseInt(splitArray[0]);
-        let guessOrFixed = splitArray[1];
+        //let guessOrFixed = splitArray[1];
+
+        let guessPart = !randomGuessTableIndices.includes(boxIndex);
 
         // 64 is size of word
         // pos specified is normalized gap from center of word
@@ -203,8 +231,8 @@ class GameScene extends Phaser.Scene {
         let boxSizeX = wordBoxPosSizeInfo.z;
         let boxSizeY = wordBoxPosSizeInfo.w;
 
-        if (guessOrFixed == "Guess") {
-
+        if (guessPart) 
+        {
           targetQuestion.wordPartsLeftToGuess.push(atlasIndex);
 
           this.currQuestionGuessWord = targetGuessWord;
@@ -225,8 +253,9 @@ class GameScene extends Phaser.Scene {
           this.garbageCollector.push(box);
         }
         // no need for box but create the word part sprite
-        else if (guessOrFixed == "Fixed") {
-          let fixedWordPart = this.add.image(boxX, boxY, "WordsAtlas").setScale(1.5, 1.5);
+        else 
+        {
+          let fixedWordPart = this.add.image(boxX, boxY, "WordsAtlas").setScale(1.1, 1.1);
           fixedWordPart.setFrame(atlasIndex);
 
           this.selectableGuessedCorrectWords.push(fixedWordPart);
@@ -258,7 +287,7 @@ class GameScene extends Phaser.Scene {
     
     this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
 
-    this.levelLogic();
+    //this.levelLogic();
 
     this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
 
@@ -546,10 +575,7 @@ class GameScene extends Phaser.Scene {
 
     // check if we move to new level
     let newLevelAttained = prevLevel != g_CurrLevelIndex;
-    if(newLevelAttained)
-    {
-      this.levelLogic();
-    }
+
     this.add.tween(
       {
       targets: this.starIcon,
@@ -559,20 +585,20 @@ class GameScene extends Phaser.Scene {
       yoyo: true});
   }
 
-  // hard coded simple level progression logic
-  levelLogic()
-  {
-    if(g_CurrLevelIndex == 0)
-    {
-      this.maxSelectableWordsInPanel = 3;
-      this.partsToGuess = 1;
-    }
-    else if(g_CurrLevelIndex == 1)
-    {
-      this.maxSelectableWordsInPanel = 5;
-      this.partsToGuess = 2;
-    }
-  }
+  // // hard coded simple level progression logic
+  // levelLogic()
+  // {
+  //   if(g_CurrLevelIndex == 0)
+  //   {
+  //     this.maxSelectableWordsInPanel = 7;
+  //     this.levelInfoPartsToGuess = 1;
+  //   }
+  //   else if(g_CurrLevelIndex == 1)
+  //   {
+  //     this.maxSelectableWordsInPanel = 5;
+  //     this.levelInfoPartsToGuess = 2;
+  //   }
+  //}
   
 
   /***************************/

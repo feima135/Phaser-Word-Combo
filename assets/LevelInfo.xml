@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <Questions>
 
+   <levelInfo>
+      <level levelID='0' threshold ='0' partsToGuess='1' maxselectable='3'></level>
+      <level levelID='1' threshold ='5' partsToGuess='2' maxselectable='4'></level>
+      <level levelID='2' threshold ='10' partsToGuess='3' maxselectable='5'></level>
+   </levelInfo>
+
    <question id="嘴">
       <wordsCombo > 0 </wordsCombo>
       <wordsCombo> 1 </wordsCombo>
@@ -9,7 +15,7 @@
       <wordPartBox x='-1' y ='0' u='.5' w='0.5'  atlasInfo='0_Guess'></wordPartBox>
       <wordPartBox x='.1' y ='-.3' u='.5' w='0.5'  atlasInfo='1_Guess'></wordPartBox>
       <wordPartBox x='1.2' y ='-.3' u='.5' w='0.5'  atlasInfo='2_Guess'></wordPartBox>
-      <wordPartBox x='.6' y ='1' atlasInfo='3_Fixed'></wordPartBox>
+      <wordPartBox x='.7' y ='1' u='.7' w='0.7' atlasInfo='3_Fixed'></wordPartBox>
    </question>
 
 </Questions>

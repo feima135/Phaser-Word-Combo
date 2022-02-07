@@ -44,7 +44,7 @@ class LoadingScene extends Phaser.Scene {
 
   preloadAssets() {
 
-    this.load.xml('questionsData', 'assets/questions.xml');
+    this.load.xml('LevelInfo', 'assets/LevelInfo.xml');
 
     this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
     this.load.image('WordDropBox', 'assets/WordDropBox.png');
