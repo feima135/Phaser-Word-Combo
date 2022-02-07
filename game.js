@@ -24,7 +24,7 @@ class GameScene extends Phaser.Scene {
 
     this.levelInfoTable = [];
 
-    // iterate all possible questions
+    // iterate all level info
     Array.from(levelInfoDataTable).forEach(info => {
 
       let currLevelInfo = {
@@ -43,7 +43,7 @@ class GameScene extends Phaser.Scene {
     Array.from(questions).forEach(questionData => 
       {
         let currQuestion = {
-          wordsCombo : [], // atlas indices that form the words
+          wordsComboIndices : [], // atlas indices that form the words
           wordPartsBoxes : [], // pos and size
           wordParts : [], // first part is word index, next is atlas index 
           guessWordsIndices : [], // which word (index) is the target guess word
@@ -52,15 +52,28 @@ class GameScene extends Phaser.Scene {
 
       // consolidate the words combo
       let wordsCombos = questionData.getElementsByTagName('wordsCombo');
+
+      // each of the possible word combinations
       for (var wordComboIndex = 0; wordComboIndex < wordsCombos.length; ++wordComboIndex) {
+
         let wordCombo = wordsCombos[wordComboIndex];
-        let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
+        
+        // save the guess word ID index
+        let guessWordID = parseInt(wordCombo.getAttribute("guessWordID"));
+        currQuestion.guessWordsIndices.push(guessWordID);
+
+        // save the combo indices
+        let comboIndicesData = wordCombo.getAttribute("comboIndices");
+        currQuestion.wordsComboIndices.push(comboIndicesData)
+
+        // let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
  
-        let isThisAGuessWord = wordCombo.getAttribute("guessWord");
-        if (isThisAGuessWord && isThisAGuessWord == "true") {
-          currQuestion.guessWordsIndices.push(wordComboIndex);
-        }
-        currQuestion.wordsCombo.push(parseInt(wordComboAtlasIndex));
+        // let isThisAGuessWord = wordCombo.getAttribute("guessWord");
+        // if (isThisAGuessWord && isThisAGuessWord == "true") {
+        //   currQuestion.guessWordsIndices.push(wordComboIndex);
+        // }
+        // currQuestion.wordsCombo.push(parseInt(wordComboAtlasIndex));
+
       }
 
         // consolidate the word part boxes combo
@@ -173,15 +186,24 @@ class GameScene extends Phaser.Scene {
     let wordXGap = wordSize * 128 * 1.3;
     let maxWordsDisplay = 4; // assume is 4
 
+    // choose a combo
+    let randomComboSetIndex = Phaser.Math.Between(0, targetQuestion.wordsComboIndices.length - 1);
+    let randomWordsCombo = [];
+
+    let resultSplitArray = targetQuestion.wordsComboIndices[randomComboSetIndex].split(',');
+    resultSplitArray.forEach(item => randomWordsCombo.push(parseInt(item)));
+
+    console.log(randomWordsCombo);
+
     // for centralize word based on word count
-    let startPosOffSet = (maxWordsDisplay - targetQuestion.wordsCombo.length) * wordXGap * 0.5;
+    let startPosOffSet = (maxWordsDisplay - randomWordsCombo.length) * wordXGap * 0.5;
 
     let wordCreatedCache = [];
 
     // create all the words
-    for(var index = 0; index < targetQuestion.wordsCombo.length; ++index)
+    for(var index = 0; index < randomWordsCombo.length; ++index)
     {
-        let atlasIndex = targetQuestion.wordsCombo[index];
+        let atlasIndex = randomWordsCombo[index];
         let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
         currWord.setFrame(atlasIndex);
         currWord.setScale(wordSize, wordSize);
@@ -191,11 +213,13 @@ class GameScene extends Phaser.Scene {
         this.garbageCollector.push(currWord);
     }
 
-    // for each of the word we are guessing
-    for(var index = 0; index < targetQuestion.guessWordsIndices.length; ++index)
-    {
-      let targetGuessWordIndex = targetQuestion.guessWordsIndices[index];
+    // assume only gues 1 word
+    //let numberOfGuessWord = targetQuestion.guessWordsIndices.length;
+    let numberOfGuessWord = 1;
+    let targetGuessWordIndex = targetQuestion.guessWordsIndices[randomComboSetIndex];
 
+    for(var index = 0; index < numberOfGuessWord; ++index)
+    {
       // the sprite word that we are creating boxes on
       let targetGuessWord = wordCreatedCache[targetGuessWordIndex];
       
@@ -323,9 +347,16 @@ class GameScene extends Phaser.Scene {
     this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20,  g_Score, { font: '42px Arial', fill: "#000" });
     this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level : " + g_CurrLevelIndex, { font: '24px Arial', fill: "#000" });
 
+
+    this.add.text(400, 200,  "萤火灰", { font: '42px KaiTi', fill: "#000" });
+
     // right panel for selectables
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
     this.SelectablePanel.alpha = 0.5;
+
+    // accumulate star icon
+    this.accumulateStarIcon = this.add.image(0, 0, "StarIcon").setScale(0.5, 0.5);
+    this.accumulateStarIcon.visible = false;
 
     // hint btn
     this.HintBtn = this.add.image(config.width * 0.5, config.height * 0.9, "HintBtn").setInteractive();
