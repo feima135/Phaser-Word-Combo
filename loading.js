@@ -51,7 +51,7 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('NoFillBox', 'assets/NoFillBox.png');
     this.load.image('HintBtn', 'assets/HintBtn.png');
 
-    this.load.spritesheet('QuestionWordsAtlas', 'assets/QuestionWordsAtlas.png', { frameWidth: 128, frameHeight: 128 });
+    //this.load.spritesheet('QuestionWordsAtlas', 'assets/QuestionWordsAtlas.png', { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
 
     // this.load.image('GameOverSplash', 'assets/GameOverSplash.png');

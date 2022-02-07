@@ -2,23 +2,37 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='0' partsToGuess='1' maxselectable='3'></level>
+      <level levelID='0' threshold ='0' partsToGuess='2' maxselectable='3'></level>
       <level levelID='1' threshold ='5' partsToGuess='2' maxselectable='4'></level>
       <level levelID='2' threshold ='10' partsToGuess='3' maxselectable='5'></level>
    </levelInfo>
 
+   <!-- <question id="营">
+      <wordsCombo guessWordID = '0' word = '营_地'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '萤_火_灰'> </wordsCombo>
+      <wordsCombo guessWordID = '1' word = '露_营'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '营_养'> </wordsCombo>
+      <wordPartBox x='-.8' y ='0' u='.5' w='0.5'  atlasInfo='0'></wordPartBox>
+      <wordPartBox x='.3' y ='-.3' u='.5' w='0.5'  atlasInfo='1'></wordPartBox>
+      <wordPartBox x='1.0' y ='-.3' u='.5' w='0.5'  atlasInfo='2'></wordPartBox>
+   </question> -->
+
    <question id="嘴">
-      <wordsCombo guessWordID = '1' word = '' comboIndices = "0, 1, 3, 4 "> </wordsCombo>
-      <wordsCombo guessWordID = '2' word = '' comboIndices = "0, 2, 3, 4 "> </wordsCombo>
-      
-      <!-- <wordsCombo > 0 </wordsCombo>
-      <wordsCombo> 1 </wordsCombo>
-      <wordsCombo guessWord='true'> 7 </wordsCombo>
-      <wordsCombo> 3 </wordsCombo> -->
-      <wordPartBox x='-1' y ='0' u='.5' w='0.5'  atlasInfo='0_Guess'></wordPartBox>
-      <wordPartBox x='.1' y ='-.3' u='.5' w='0.5'  atlasInfo='1_Guess'></wordPartBox>
-      <wordPartBox x='1.2' y ='-.3' u='.5' w='0.5'  atlasInfo='2_Guess'></wordPartBox>
-      <wordPartBox x='.7' y ='1' u='.7' w='0.7' atlasInfo='3_Fixed'></wordPartBox>
+      <wordsCombo guessWordID = '0' word = '嘴_巴'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '嘴_里'> </wordsCombo>
+      <wordPartBox x='0' y ='.5' u='.5' w='0.5'  atlasInfo='0'></wordPartBox>
+      <wordPartBox x='.72' y ='.2' u='.4' w='0.5'  atlasInfo='1'></wordPartBox>
+      <wordPartBox x='1.6' y ='.2' u='.4' w='0.5'  atlasInfo='2'></wordPartBox>
+      <wordPartBox x='1.2' y ='1.4' u='.7' w='0.7' atlasInfo='3'></wordPartBox>
+   </question>
+
+   <question id="蛋">
+      <wordsCombo guessWordID = '1' word = '鸡_蛋'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '蛋_黄'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '蛋_糕'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '蛋_白'> </wordsCombo>
+      <wordPartBox x='1.05' y ='.42' u='.7' w='0.5'  atlasInfo='4'></wordPartBox>
+      <wordPartBox x='1.05' y ='1.42' u='.7' w='0.5'  atlasInfo='5'></wordPartBox>
    </question>
 
 </Questions>
