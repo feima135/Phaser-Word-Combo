@@ -2,7 +2,6 @@
 var g_Score = 0;
 var g_LevelTime = 60000; // how long for each level in ms
 var g_CurrLevelIndex = 0;
-var g_LevelThreshold = [0, 5, 20, 30, 40, 50];
 
 /////////////////
 // Game
@@ -47,7 +46,8 @@ class GameScene extends Phaser.Scene {
           wordPartsBoxes : [], // pos and size
           wordParts : [], // first part is word index, next is atlas index 
           guessWordsIndices : [], // which word (index) is the target guess word
-          wordPartsLeftToGuess : [] // atlas indicies of the remaining items left to guess
+          wordPartsLeftToGuess : [], // atlas indicies of the remaining items left to guess
+          audioTable : []
         };
 
       // consolidate the words combo
@@ -64,7 +64,11 @@ class GameScene extends Phaser.Scene {
 
         // save the combo indices
         let wordData = wordCombo.getAttribute("word");
-        currQuestion.wordsComboTable.push(wordData)
+        currQuestion.wordsComboTable.push(wordData);
+
+        // save the audio file name
+        let audioName = wordCombo.getAttribute("audioName");
+        currQuestion.audioTable.push(audioName);
 
         // let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
  
@@ -196,6 +200,8 @@ class GameScene extends Phaser.Scene {
     // choose a random combo
     let randomComboSetIndex = Phaser.Math.Between(0, targetQuestion.wordsComboTable.length - 1);
 
+    this.currQuestionAudioName = targetQuestion.audioTable[randomComboSetIndex];
+
     let resultSplitArray = targetQuestion.wordsComboTable[randomComboSetIndex].split('_');
 
     // for centralize word based on word count
@@ -222,7 +228,6 @@ class GameScene extends Phaser.Scene {
     // assume only gues 1 word
     let targetGuessWordIndex = targetQuestion.guessWordsIndices[randomComboSetIndex];
     let targetGuessWord = wordCreatedCache[targetGuessWordIndex];
-    console.log(wordCreatedCache);
 
     let numberOfGuessWord = 1;
 
@@ -389,10 +394,13 @@ class GameScene extends Phaser.Scene {
     // BG
     this.add.image(config.width / 2, config.height / 2, "GameSceneBG").setScale(100, 100);
 
+    // Game BG
+    //this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+
     // top UI
     this.starIcon = this.add.image(config.width / 2, config.height * 0.1, "StarIcon").setScale(0.5, 0.5);
     this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20,  g_Score, { font: '42px Arial', fill: "#000" });
-    this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level : " + g_CurrLevelIndex, { font: '24px Arial', fill: "#000" });
+    this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level " + g_CurrLevelIndex, { font: '24px Arial', fill: "#000" });
 
     // right panel for selectables
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
@@ -404,18 +412,47 @@ class GameScene extends Phaser.Scene {
 
     // hint btn
     this.HintBtn = this.add.image(config.width * 0.5, config.height * 0.9, "HintBtn").setInteractive();
+    this.HintBtn.setScale(0.7, 0.7);
     this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn, 
       () => this.processHint())
+      );
+
+    // audio button
+    this.voiceOverBtn = this.add.image(config.width * 0.9, config.height * 0.5, "AudioButton").setScale(.8, .8).setInteractive();
+    this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn, 
+      () => {
+        this.sound.play(this.currQuestionAudioName);
+      })
       );
 
     this.parseLevelData();
 
     this.resetQuestion();
 
-    //this.starIcons = this.createGameProgressUI(this);
-    
-    //this.updateGameProgressUI(this.starIcons);
+    ///////////////////////
+    // TO BE PORTED ANIMATION CODE FOR MONSTER
+    // create monster sprite
+    // this.adultMonster = this.add.sprite(config.width * 0.2, config.height * 0.15, "AdultMonsterIdle");
 
+    //   this.anims.create({
+    //     key: "AdultMonsterIdleAnim",
+    //     frames: this.anims.generateFrameNumbers('AdultMonsterIdle',
+    //       { start: 0, end: 25 }),
+    //     frameRate: 20,
+    //     repeat: -1
+    //   });
+
+    //   this.anims.create({
+    //     key: "AdultMonsterWalkAnim",
+    //     frames: this.anims.generateFrameNumbers('AdultMonsterWalk',
+    //       { start: 0, end: 15 }),
+    //     frameRate: 20,
+    //     repeat: -1
+    //   });
+
+    //   this.adultMonster.play("AdultMonsterWalkAnim");
+    
+      ///////////////////////
 
     // if (this.checkEntireGameOverCondition()) {
 
@@ -471,18 +508,18 @@ class GameScene extends Phaser.Scene {
     // }
   }
 
-  rollupSummaryComplete()
-  {
-    this.starIconScaleTween.stop();
-  }
-
   /////////////////
   // check if question ended
   /////////////////
   checkEndQuestionCondition()
   {
+    // no more to guess
     if(this.currQuestion.wordPartsLeftToGuess.length <= 0)
-    {
+    {      
+      this.updateScore(1);
+
+      this.sound.play('QuestionCorrect_SFX');
+
       Array.from(this.selectableWords).forEach(item => item.destroy());
 
       // fade out selectables
@@ -514,11 +551,6 @@ class GameScene extends Phaser.Scene {
         this.resetQuestion();
       });
     }
-  }
-
-  checkEntireGameOverCondition()
-  {
-    return false;
   }
 
   entireGameOver() {
@@ -601,10 +633,11 @@ class GameScene extends Phaser.Scene {
 
     if (answerCorrect) {
 
-      this.updateScore(1);
+      this.sound.play('Correct_SFX');
 
       gameObject.x = dropZone.x;
       gameObject.y = dropZone.y;
+      gameObject.disableInteractive();
 
       dropZone.ownerDropBox.destroy();
 
@@ -645,20 +678,21 @@ class GameScene extends Phaser.Scene {
   {
     let prevLevel = g_CurrLevelIndex;
 
+    let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
+
     g_Score += valueDiff;
     this.ScoreText.text = g_Score;
 
-    // level score check
-    for(var index = 0; index < g_LevelThreshold.length; ++index)
-    {
-      let currThreshold = g_LevelThreshold[index];
-      if(g_Score >= currThreshold)
-      {
-        g_CurrLevelIndex = index;
+    console.log(currThreshold);
+
+    // threshold negative means infinite level
+    if (currThreshold > 0) {
+      if (g_Score >= currThreshold) {
+        ++g_CurrLevelIndex;
       }
     }
-
-    this.LevelText.text = g_CurrLevelIndex;
+ 
+    this.LevelText.text = "Level " + g_CurrLevelIndex;
 
     // check if we move to new level
     let newLevelAttained = prevLevel != g_CurrLevelIndex;
@@ -671,22 +705,6 @@ class GameScene extends Phaser.Scene {
       duration: 180,
       yoyo: true});
   }
-
-  // // hard coded simple level progression logic
-  // levelLogic()
-  // {
-  //   if(g_CurrLevelIndex == 0)
-  //   {
-  //     this.maxSelectableWordsInPanel = 7;
-  //     this.levelInfoPartsToGuess = 1;
-  //   }
-  //   else if(g_CurrLevelIndex == 1)
-  //   {
-  //     this.maxSelectableWordsInPanel = 5;
-  //     this.levelInfoPartsToGuess = 2;
-  //   }
-  //}
-  
 
   /***************************/
   // Generic Btn Click Effect

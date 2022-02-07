@@ -47,6 +47,9 @@ class LoadingScene extends Phaser.Scene {
     this.load.xml('LevelInfo', 'assets/LevelInfo.xml');
 
     this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
+
+    this.load.image('GameMonsterBG', 'assets/GameMonsterBG.png');
+
     this.load.image('WordDropBox', 'assets/WordDropBox.png');
     this.load.image('NoFillBox', 'assets/NoFillBox.png');
     this.load.image('HintBtn', 'assets/HintBtn.png');
@@ -54,13 +57,16 @@ class LoadingScene extends Phaser.Scene {
     //this.load.spritesheet('QuestionWordsAtlas', 'assets/QuestionWordsAtlas.png', { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
 
+    this.load.spritesheet('AdultMonsterIdle', 'assets/AdultMonsterIdle.png', { frameWidth: 256, frameHeight: 210 });
+    this.load.spritesheet('AdultMonsterWalk', 'assets/AdultMonsterWalk.png', { frameWidth: 256, frameHeight: 210 });
+
     // this.load.image('GameOverSplash', 'assets/GameOverSplash.png');
     // this.load.image('WhiteBox', 'assets/WhiteBox.png');
 
     // this.load.image('HomeBtn', 'assets/HomeBtn.png');
     this.load.image('StarIcon', 'assets/StarIcon.png');
     // this.load.image('StarIconBase', 'assets/StarIconEmptyBase.png');
-    // this.load.image('AudioButton', 'assets/AudioBtn.png');
+    this.load.image('AudioButton', 'assets/AudioBtn.png');
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
     // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });
     // this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
@@ -90,27 +96,19 @@ class LoadingScene extends Phaser.Scene {
 
 
     // // audio
-    // this.load.audio('LevelComplete_SFX', 'assets/Audio/LevelComplete.mp3');
-    // this.load.audio('Correct_SFX', 'assets/Audio/Correct.wav');
+    this.load.audio('QuestionCorrect_SFX', 'assets/Audio/QuestionCorrect.mp3');
+    this.load.audio('Correct_SFX', 'assets/Audio/Correct.wav');
     // this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.wav');
-    // this.load.audio('Eat_SFX', 'assets/Audio/Eat.wav');
-    // this.load.audio('Drink_SFX', 'assets/Audio/DrinkStraw.wav');
     // this.load.audio('CollectStar_SFX', 'assets/Audio/CollectStar.wav');
+
     this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');
-    // this.load.audio('BalloonPop_SFX', 'assets/Audio/BalloonPop.wav');
-    // this.load.audio('RingTossBottle_SFX', 'assets/Audio/RingTossBottle.wav');
-    // this.load.audio('Eat_Sausage_SFX', 'assets/Audio/Eat_Sausage.mp3');
-    // this.load.audio('Eat_Popcorn_SFX', 'assets/Audio/Eat_Popcorn.mp3');
-    // this.load.audio('Eat_Drink_SFX', 'assets/Audio/Eat_Drink.mp3');
-    // this.load.audio('Eat_CandyFloss_SFX', 'assets/Audio/Eat_CandyFloss.mp3');
-    // this.load.audio('Eat_ChickenWing_SFX', 'assets/Audio/Eat_ChickenWing.mp3');
-    // this.load.audio('Eat_SkeweredMeat_SFX', 'assets/Audio/Eat_SkeweredMeat.mp3');
-    // this.load.audio('ShootBalloonWord_SFX', 'assets/Audio/ShootBalloonWord.mp3');
-    // this.load.audio('RingTossGameWord_SFX', 'assets/Audio/RingTossGameWord.mp3');
-    // this.load.audio('FerrisWheelWord_SFX', 'assets/Audio/Ride_FerrisWheel.mp3');
-    // this.load.audio('TrainWord_SFX', 'assets/Audio/Ride_Train.mp3');
-    // this.load.audio('BumperCar_SFX', 'assets/Audio/Ride_BumperCar.mp3');
-    // this.load.audio('SwingChair_SFX', 'assets/Audio/Ride_SwingChair.mp3');
+    this.load.audio('ZuiBa_SFX', 'assets/Audio/ZuiBa_SFX.mp3');
+    this.load.audio('ZuiLi_SFX', 'assets/Audio/ZuiLi_SFX.mp3');
+
+    this.load.audio('DanBai_SFX', 'assets/Audio/DanBai_SFX.mp3');
+    this.load.audio('DanGao_SFX', 'assets/Audio/DanGao_SFX.mp3');
+    this.load.audio('DanHuang_SFX', 'assets/Audio/DanHuang_SFX.mp3');
+    this.load.audio('JiDan_SFX', 'assets/Audio/JiDan_SFX.mp3');
 
     // this.load.audio('FoodStoresWord_SFX', 'assets/Audio/FoodStoresWord.mp3');
     // this.load.audio('CarnivalGamesWord_SFX', 'assets/Audio/CarnivalGamesWord.mp3');
