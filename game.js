@@ -1,6 +1,8 @@
 // global score
 var g_Score = 0;
 var g_LevelTime = 60000; // how long for each level in ms
+var g_CurrLevelIndex = 0;
+var g_LevelThreshold = [0, 5, 20, 30, 40, 50];
 
 /////////////////
 // Game
@@ -76,7 +78,7 @@ class GameScene extends Phaser.Scene {
   {
     Array.from(this.selectableWords).forEach(item => item.destroy());
 
-    let maxSelectableWordsInPanel = 6;
+    this.selectableWords.length = 0;
 
     // temp hard coded max atlas words
     let maxAtlasWordIndex = 55;
@@ -115,7 +117,7 @@ class GameScene extends Phaser.Scene {
     }
 
     // randomRubbishTable only contains wrong answers now
-    let rubbishElementsCount = maxSelectableWordsInPanel - creationTableIndices.length;
+    let rubbishElementsCount = this.maxSelectableWordsInPanel - creationTableIndices.length;
 
     // populate the remaining rubbish elements
     for(var index = 0; index < rubbishElementsCount; ++index)
@@ -126,11 +128,11 @@ class GameScene extends Phaser.Scene {
 
     // populating the right selectables panel now
     let xGap = this.wordImageSize * 1.8;
-    let startPosX = this.SelectablePanel.x - (0.5 * maxSelectableWordsInPanel * 95);
+    let startPosX = this.SelectablePanel.x - (0.5 * this.maxSelectableWordsInPanel * 95);
     let startPosY = this.SelectablePanel.y;
 
     // some correct answers the rest are rubbish
-    for(var index = 0; index < maxSelectableWordsInPanel; ++index)
+    for(var index = 0; index < this.maxSelectableWordsInPanel; ++index)
     {
       let targetAtlasIndex = Phaser.Utils.Array.RemoveRandomElement(creationTableIndices);
 
@@ -246,6 +248,8 @@ class GameScene extends Phaser.Scene {
   /////////////////
   resetQuestion()
   {
+    Array.from(this.selectableWords).forEach(item => item.destroy());
+    Array.from(this.selectableGuessedCorrectWords).forEach(item => item.destroy());
     Array.from(this.garbageCollector).forEach(item => item.destroy());
 
     this.selectableWords.length = 0;
@@ -254,11 +258,11 @@ class GameScene extends Phaser.Scene {
     
     this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
 
+    this.levelLogic();
+
     this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
 
     this.createDragWordSelectables(this.currQuestion);
-
-    console.log(this.currQuestion);
   }
 
   /////////////////
@@ -284,6 +288,11 @@ class GameScene extends Phaser.Scene {
 
     // BG
     this.add.image(config.width / 2, config.height / 2, "GameSceneBG").setScale(100, 100);
+
+    // top UI
+    this.starIcon = this.add.image(config.width / 2, config.height * 0.1, "StarIcon").setScale(0.5, 0.5);
+    this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20,  g_Score, { font: '42px Arial', fill: "#000" });
+    this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level : " + g_CurrLevelIndex, { font: '24px Arial', fill: "#000" });
 
     // right panel for selectables
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
@@ -370,18 +379,29 @@ class GameScene extends Phaser.Scene {
   {
     if(this.currQuestion.wordPartsLeftToGuess.length <= 0)
     {
-      // fade out selectables
       Array.from(this.selectableWords).forEach(item => item.destroy());
 
-      // fade out the correctly picked parts
-      Array.from(this.selectableGuessedCorrectWords).forEach(item => item.destroy());
+      // fade out selectables
+      Array.from(this.selectableGuessedCorrectWords).forEach(item => {
+        // fade out
+        this.add.tween({
+          targets: item,
+          alpha: { from: 1, to: 0.0 },
+          duration: 200
+        });
+      })
 
       // reveal correct word
       this.currQuestionGuessWord.visible = true;
+      this.add.tween({
+        targets: this.currQuestionGuessWord,
+        alpha: { from: 0, to: 1.0 },
+        duration: 200
+      });
 
       // show correct splash
 
-      //this.resetQuestion();
+      this.time.delayedCall(1000, ()=> this.resetQuestion());
     }
   }
 
@@ -465,6 +485,9 @@ class GameScene extends Phaser.Scene {
     let answerCorrect = gameObject.atlasIndex == dropZone.requiredAtlasIndex;
 
     if (answerCorrect) {
+
+      this.updateScore(1);
+
       gameObject.x = dropZone.x;
       gameObject.y = dropZone.y;
 
@@ -497,9 +520,60 @@ class GameScene extends Phaser.Scene {
 
   // drop zone leave
   onItemDropZoneLeave(pointer, gameObject, dropZone) {
-
-
   }
+
+  /////////////////
+  // check if question ended
+  /////////////////
+  updateScore(valueDiff)
+  {
+    let prevLevel = g_CurrLevelIndex;
+
+    g_Score += valueDiff;
+    this.ScoreText.text = g_Score;
+
+    // level score check
+    for(var index = 0; index < g_LevelThreshold.length; ++index)
+    {
+      let currThreshold = g_LevelThreshold[index];
+      if(g_Score >= currThreshold)
+      {
+        g_CurrLevelIndex = index;
+      }
+    }
+
+    this.LevelText.text = g_CurrLevelIndex;
+
+    // check if we move to new level
+    let newLevelAttained = prevLevel != g_CurrLevelIndex;
+    if(newLevelAttained)
+    {
+      this.levelLogic();
+    }
+    this.add.tween(
+      {
+      targets: this.starIcon,
+      scaleX: 1.01,
+      scaleY: 1.01,
+      duration: 180,
+      yoyo: true});
+  }
+
+  // hard coded simple level progression logic
+  levelLogic()
+  {
+    if(g_CurrLevelIndex == 0)
+    {
+      this.maxSelectableWordsInPanel = 3;
+      this.partsToGuess = 1;
+    }
+    else if(g_CurrLevelIndex == 1)
+    {
+      this.maxSelectableWordsInPanel = 5;
+      this.partsToGuess = 2;
+    }
+  }
+  
 
   /***************************/
   // Generic Btn Click Effect
@@ -515,14 +589,6 @@ class GameScene extends Phaser.Scene {
     });
 
     this.sound.play('ButtonClick_SFX');
-  }
-
-  /************************************/
-  // used by scenes to update new score
-  /************************************/
-  increaseGlobalScore(ownerScene) {
-    ++g_Score;
-    this.updateGameProgressUI(ownerScene.starIcons, ownerScene);
   }
 
   /*******************************************/
@@ -549,32 +615,6 @@ class GameScene extends Phaser.Scene {
     }
 
     return starIcons;
-  }
-
-  /*******************************************/
-  // update star progress generic
-  /*******************************************/
-  updateGameProgressUI(starIcons, ownerScene) {
-
-    // set the star icons according to score
-    for (var index = 0; index < starIcons.length; ++index) {
-      if (index == g_Score - 1) {
-        let targetStarIcon = starIcons[index];
-        targetStarIcon.setTexture('StarIcon');
-
-        // optional for children scenes to show scale pulse
-        if (ownerScene) {
-          // Scale Pulse Effect
-          ownerScene.add.tween({
-            targets: targetStarIcon,
-            scaleX: 1.3,
-            scaleY: 1.3,
-            duration: 100,
-            yoyo: true
-          });
-        }
-      }
-    }
   }
 
   /*******************************************/

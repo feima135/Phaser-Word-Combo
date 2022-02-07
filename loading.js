@@ -58,7 +58,7 @@ class LoadingScene extends Phaser.Scene {
     // this.load.image('WhiteBox', 'assets/WhiteBox.png');
 
     // this.load.image('HomeBtn', 'assets/HomeBtn.png');
-    // this.load.image('StarIcon', 'assets/StarIcon.png');
+    this.load.image('StarIcon', 'assets/StarIcon.png');
     // this.load.image('StarIconBase', 'assets/StarIconEmptyBase.png');
     // this.load.image('AudioButton', 'assets/AudioBtn.png');
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
