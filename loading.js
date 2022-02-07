@@ -110,6 +110,11 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('DanHuang_SFX', 'assets/Audio/DanHuang_SFX.mp3');
     this.load.audio('JiDan_SFX', 'assets/Audio/JiDan_SFX.mp3');
 
+    this.load.audio('YingDi_SFX', 'assets/Audio/YingDi_SFX.mp3');
+    this.load.audio('YingYang_SFX', 'assets/Audio/YingYang_SFX.mp3');
+    this.load.audio('LuYing_SFX', 'assets/Audio/LuYing_SFX.mp3');
+    this.load.audio('YingHuoHui_SFX', 'assets/Audio/YingHuoHui_SFX.mp3');
+
     // this.load.audio('FoodStoresWord_SFX', 'assets/Audio/FoodStoresWord.mp3');
     // this.load.audio('CarnivalGamesWord_SFX', 'assets/Audio/CarnivalGamesWord.mp3');
     // this.load.audio('RidesWord_SFX', 'assets/Audio/RidesWord.mp3');
