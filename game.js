@@ -47,7 +47,8 @@ class GameScene extends Phaser.Scene {
           wordParts : [], // first part is word index, next is atlas index 
           guessWordsIndices : [], // which word (index) is the target guess word
           wordPartsLeftToGuess : [], // atlas indicies of the remaining items left to guess
-          audioTable : []
+          audioTable : [],
+          pinYinTable : []
         };
 
       // consolidate the words combo
@@ -69,6 +70,10 @@ class GameScene extends Phaser.Scene {
         // save the audio file name
         let audioName = wordCombo.getAttribute("audioName");
         currQuestion.audioTable.push(audioName);
+
+        // save the pin yin
+        let pinYinData = wordCombo.getAttribute("pinYin");
+        currQuestion.pinYinTable.push(pinYinData);
 
         // let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
  
@@ -192,7 +197,7 @@ class GameScene extends Phaser.Scene {
   //////////////////////////////////////////////////////////////
   createQuestionAssets(targetQuestion, cenPosX, cenPosY)
   {
-    let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.35);
+    let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.25);
     let wordSize = 1.1;
     let wordXGap = wordSize * 128 * 1.2;
     let maxWordsDisplay = 4; // assume is 4
@@ -203,6 +208,8 @@ class GameScene extends Phaser.Scene {
     this.currQuestionAudioName = targetQuestion.audioTable[randomComboSetIndex];
 
     let resultSplitArray = targetQuestion.wordsComboTable[randomComboSetIndex].split('_');
+
+    let splitPinYinArray = targetQuestion.pinYinTable[randomComboSetIndex].split('_');
 
     // for centralize word based on word count
     let startPosOffSet = (maxWordsDisplay - resultSplitArray.length) * wordXGap * 0.5;
@@ -216,12 +223,17 @@ class GameScene extends Phaser.Scene {
 
         let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y,  character, { font: '128px KaiTi', fill: "#000" });
 
+        // create the han yun pin yin
+        let pinYinData = splitPinYinArray[index];
+        let pinYin = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet + 50, spawnPos.y + 140,  pinYinData, { font: '22px Arial', fill: "#000" });
+
         //let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
         //currWord.setFrame(atlasIndex);
         //currWord.setScale(wordSize, wordSize);
 
         wordCreatedCache.push(currWord);
 
+        this.garbageCollector.push(pinYin);
         this.garbageCollector.push(currWord);
     }
 
@@ -406,6 +418,8 @@ class GameScene extends Phaser.Scene {
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
     this.SelectablePanel.alpha = 0.5;
 
+    //this.ScoreText = this.add.text(0,0,  'chǎofàn', { font: '20px Arial', fill: "#000" });
+    
     // accumulate star icon
     this.accumulateStarIcon = this.add.image(0, 0, "StarIcon").setScale(0.5, 0.5);
     this.accumulateStarIcon.visible = false;
