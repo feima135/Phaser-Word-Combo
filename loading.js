@@ -60,24 +60,17 @@ class LoadingScene extends Phaser.Scene {
     this.load.spritesheet('AdultMonsterIdle', 'assets/AdultMonsterIdle.png', { frameWidth: 256, frameHeight: 210 });
     this.load.spritesheet('AdultMonsterWalk', 'assets/AdultMonsterWalk.png', { frameWidth: 256, frameHeight: 210 });
 
-    // this.load.image('GameOverSplash', 'assets/GameOverSplash.png');
-    // this.load.image('WhiteBox', 'assets/WhiteBox.png');
+    this.load.image('GameOverSplash', 'assets/GameOverSplash.png');
+    this.load.image('WhiteBox', 'assets/WhiteBox.png');
 
     // this.load.image('HomeBtn', 'assets/HomeBtn.png');
     this.load.image('StarIcon', 'assets/StarIcon.png');
     // this.load.image('StarIconBase', 'assets/StarIconEmptyBase.png');
     this.load.image('AudioButton', 'assets/AudioBtn.png');
+
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
     // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });
-    // this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
-
-    // // Food Store
-    // this.load.image('FoodStoreBG', 'assets/FoodStoreScene/FoodStoreBG.png');
-    // this.load.image('CrossX', 'assets/FoodStoreScene/CrossX.png');
-    // this.load.spritesheet('FoodItems', 'assets/FoodStoreScene/FoodItems.png',{ frameWidth: 100, frameHeight: 100 });
-    // this.load.image('FoodCustomerIdle', 'assets/FoodStoreScene/FoodCustomerIdle.png');
-    // this.load.image('FoodCustomerOpen', 'assets/FoodStoreScene/FoodCustomerOpen.png');
-    // this.load.spritesheet('FoodItemsWord', 'assets/FoodStoreScene/FoodItemsWord.png', { frameWidth: 180, frameHeight: 144 });
+    this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
 
     // this.load.image('ChatBubble', 'assets/FoodStoreScene/ChatBubble.png');
     // this.load.image('TimerBar', 'assets/TimerBar.png');
@@ -118,6 +111,7 @@ class LoadingScene extends Phaser.Scene {
     // this.load.audio('FoodStoresWord_SFX', 'assets/Audio/FoodStoresWord.mp3');
     // this.load.audio('CarnivalGamesWord_SFX', 'assets/Audio/CarnivalGamesWord.mp3');
     // this.load.audio('RidesWord_SFX', 'assets/Audio/RidesWord.mp3');
-    // this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
+    
+    this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
   }
 }
