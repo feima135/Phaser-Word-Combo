@@ -91,10 +91,17 @@ class LoadingScene extends Phaser.Scene {
     // // audio
     this.load.audio('QuestionCorrect_SFX', 'assets/Audio/QuestionCorrect.mp3');
     this.load.audio('Correct_SFX', 'assets/Audio/Correct.wav');
-    // this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.wav');
+    
+    this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.wav');
     // this.load.audio('CollectStar_SFX', 'assets/Audio/CollectStar.wav');
 
     this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');
+
+    this.load.audio('HuangSe_SFX', 'assets/Audio/HuangSe_SFX.mp3');
+    this.load.audio('HuangGua_SFX', 'assets/Audio/HuangGua_SFX.mp3');
+    this.load.audio('HuangJin_SFX', 'assets/Audio/HuangJin_SFX.mp3');
+    this.load.audio('HuangHun_SFX', 'assets/Audio/HuangHun_SFX.mp3');
+
     this.load.audio('ZuiBa_SFX', 'assets/Audio/ZuiBa_SFX.mp3');
     this.load.audio('ZuiLi_SFX', 'assets/Audio/ZuiLi_SFX.mp3');
 
@@ -107,11 +114,17 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('YingYang_SFX', 'assets/Audio/YingYang_SFX.mp3');
     this.load.audio('LuYing_SFX', 'assets/Audio/LuYing_SFX.mp3');
     this.load.audio('YingHuoHui_SFX', 'assets/Audio/YingHuoHui_SFX.mp3');
-
-    // this.load.audio('FoodStoresWord_SFX', 'assets/Audio/FoodStoresWord.mp3');
-    // this.load.audio('CarnivalGamesWord_SFX', 'assets/Audio/CarnivalGamesWord.mp3');
-    // this.load.audio('RidesWord_SFX', 'assets/Audio/RidesWord.mp3');
     
+    this.load.audio('YangChengXiGuan_SFX', 'assets/Audio/YangChengXiGuan_SFX.mp3');
+
+    this.load.audio('XingZhuang_SFX', 'assets/Audio/XingZhuang_SFX.mp3');
+    this.load.audio('YuanXing_SFX', 'assets/Audio/YuanXing_SFX.mp3');
+
+    this.load.audio('ChaoFan_SFX', 'assets/Audio/ChaoFan_SFX.mp3');
+    this.load.audio('ChaoCai_SFX', 'assets/Audio/ChaoCai_SFX.mp3');
+    this.load.audio('ChaoShou_SFX', 'assets/Audio/ChaoShou_SFX.mp3');
+    this.load.audio('ChaoDan_SFX', 'assets/Audio/ChaoDan_SFX.mp3');
+
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
   }
 }

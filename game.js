@@ -116,7 +116,7 @@ class GameScene extends Phaser.Scene {
     this.selectableWords.length = 0;
 
     // temp hard coded max atlas words
-    let maxAtlasWordIndex = 55;
+    let maxAtlasWordIndex = 33;
     let creationTableIndices = [];
 
     // populate all rubbish first
@@ -418,7 +418,7 @@ class GameScene extends Phaser.Scene {
       );
 
     // audio button
-    this.voiceOverBtn = this.add.image(config.width * 0.9, config.height * 0.5, "AudioButton").setScale(.8, .8).setInteractive();
+    this.voiceOverBtn = this.add.image(config.width * 0.95, config.height * 0.3, "AudioButton").setScale(.8, .8).setInteractive();
     this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn, 
       () => {
         this.sound.play(this.currQuestionAudioName);
@@ -571,23 +571,20 @@ class GameScene extends Phaser.Scene {
       this.HintBtn.alpha = 0.5;
 
       let genericDelay = 1000;
-      if(newLevelAttained)
-      {
-        genericDelay = 0;
-      }
 
       this.time.delayedCall(genericDelay, ()=> 
       {
         this.resetQuestion();
+
+        if(newLevelAttained)
+        {
+          this.splashSummary("过关", "", true);
+        }
         this.children.bringToTop(this.maskUnderlay);
         this.children.bringToTop(this.SummaryContainer);   
         this.children.bringToTop(this.fireworksContainer); 
-      });  
 
-      if(newLevelAttained)
-      {
-        this.splashSummary("过关", "", true);
-      }
+      });  
     }
   }
 
@@ -735,6 +732,8 @@ class GameScene extends Phaser.Scene {
     // wrong answer
     else
     {
+      this.sound.play('Wrong_SFX');
+
       gameObject.x = gameObject.input.dragStartX;
       gameObject.y = gameObject.input.dragStartY;
     }
