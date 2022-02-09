@@ -45,6 +45,7 @@ class LoadingScene extends Phaser.Scene {
   preloadAssets() {
 
     this.load.xml('LevelInfo', 'assets/LevelInfo.xml');
+    this.load.xml('CoinShowerLevelInfo', 'assets/CoinShowerLevelInfo.xml');
 
     this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
 
@@ -67,6 +68,12 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('StarIcon', 'assets/StarIcon.png');
     // this.load.image('StarIconBase', 'assets/StarIconEmptyBase.png');
     this.load.image('AudioButton', 'assets/AudioBtn.png');
+
+    this.load.image('Coin', 'assets/Coin.png');
+    this.load.image('Crown', 'assets/Crown.png');
+    this.load.image('Gem', 'assets/Gem.png');
+    this.load.image('Bomb', 'assets/Bomb.png');
+    this.load.image('Skull_A', 'assets/Skull_A.png');
 
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
     // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });

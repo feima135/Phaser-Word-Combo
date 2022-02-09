@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<CoinShowerLevel>
+
+   <SpawnInfoTable>
+      <Spawn ID='Coin' RNGSpawn ='0.2' Payout='1'></Spawn>
+      <Spawn ID='Bomb' RNGSpawn ='0.8' Payout='-1'></Spawn>
+   </SpawnInfoTable>
+
+</CoinShowerLevel>
