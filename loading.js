@@ -74,6 +74,7 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('Gem', 'assets/Gem.png');
     this.load.image('Bomb', 'assets/Bomb.png');
     this.load.image('Skull_A', 'assets/Skull_A.png');
+    this.load.image('ScoreIcon', 'assets/ScoreIcon.png');
 
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
     // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });

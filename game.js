@@ -435,6 +435,8 @@ class GameScene extends Phaser.Scene {
 
     this.resetQuestion();
 
+    this.genericGameSceneInit(this);
+
     //////////////////////////////////
     // create the underlay and splash
     /////////////////////////////////
@@ -876,12 +878,25 @@ class GameScene extends Phaser.Scene {
   //   });
   // }
 
-  // /*******************************************/
-  // // Common update stuff for all scenes
-  // /*******************************************/
-  // genericGameSceneUpdate(ownerScene) {
-  //   ownerScene.timerBarContent.setScale(1 - ownerScene.gameTimer.getOverallProgress(), 1);
-  // }
+  
+  /*******************************************/
+  // Common Init stuff for all scenes
+  /*******************************************/
+  genericGameSceneInit(ownerScene)
+  {
+    console.log("asdfsd");
+    
+    let scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
+    ownerScene.ScoreText = ownerScene.add.text(scoreIcon.x + 30, scoreIcon.y, "Test asfs df", { font: '42px Arial', fill: "#000", align: 'center' });
+    ownerScene.ScoreText.setOrigin(0.5);
+  }
+
+  /*******************************************/
+  // Common update stuff for all scenes
+  /*******************************************/
+  genericGameSceneUpdate(ownerScene) {
+    //ownerScene.timerBarContent.setScale(1 - ownerScene.gameTimer.getOverallProgress(), 1);
+  }
 }
 
 var config =
