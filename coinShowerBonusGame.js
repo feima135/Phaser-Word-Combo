@@ -6,7 +6,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
   create() {
 
-    this.dispatchInterval = 1000;
+    this.levelDuration = 50000;
+    this.dispatchInterval = 100;
 
     this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
 
@@ -14,7 +15,14 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.activateCoinShower();
 
+    this.scene.get('GameScene').genericCreateTimer(this.levelDuration, this);
+
     this.scene.get('GameScene').genericGameSceneInit(this);
+  }
+
+  update()
+  {
+    this.scene.get('GameScene').genericGameSceneUpdate(this);
   }
 
   // populate spawn data from XML
@@ -38,7 +46,6 @@ class CoinShowerBonusGame extends Phaser.Scene {
         Payout : info.getAttribute("Payout")
       }
 
-
       this.spawnTableInfo.push(spawnInfo);
 
       currRNGValue += rngThreshold;
@@ -51,8 +58,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // randomly select a drop start pt and speed
     let spawnPosX = Phaser.Math.FloatBetween(bufferItemWorldSize, config.width - bufferItemWorldSize);
-    let randomFallDuration = Phaser.Math.FloatBetween(2000, 5000);
-    let randomStartDelay = Phaser.Math.FloatBetween(0, 3500);
+    let randomFallDuration = Phaser.Math.FloatBetween(3500, 8000);
+    let randomStartDelay = Phaser.Math.FloatBetween(0, 2000);
     let startY = -bufferItemWorldSize * 3;
     let finalY = config.height + bufferItemWorldSize;
 
@@ -62,7 +69,6 @@ class CoinShowerBonusGame extends Phaser.Scene {
     selectableItem.setInteractive();
     selectableItem.on('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem, 
       () => {
-        console.log("clciekd" + this);
         this.onSelectableItemClicked(selectableItem);}));
 
     // set the random type
@@ -74,12 +80,12 @@ class CoinShowerBonusGame extends Phaser.Scene {
       if(spawnRNG >= currSpawnItemData.RNGThresholdMin && spawnRNG < currSpawnItemData.RNGThresholdMax)
       {
         selectableItem.setTexture(currSpawnItemData.ID);
-        selectableItem.payout = currSpawnItemData.Payout;
+        selectableItem.payout = parseInt(currSpawnItemData.Payout);
       }
     }
 
     // drop down tween anim
-    this.add.tween({
+    let targetTween = this.add.tween({
       targets: selectableItem,
       y: { from: startY, to: finalY },
       ease: "Cubic.In",
@@ -91,6 +97,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
       duration: randomFallDuration
     });
 
+    selectableItem.tweenRef = targetTween;
   }
 
   activateCoinShower() {
@@ -108,9 +115,45 @@ class CoinShowerBonusGame extends Phaser.Scene {
     });
   }
 
-  // when selectable item gets
+  // when selectable item gets clicked
   onSelectableItemClicked(selectedItem)
   {
-    console.log(selectedItem.payout);
+    let targetPos = this.scene.get('GameScene').ScoreText;
+
+    // a penalty fly to timer bar
+    if(selectedItem.payout < 0)
+    {
+      targetPos = this.timerBarContent;
+    }
+
+    // stop the falling
+    selectedItem.tweenRef.stop();
+
+    this.children.bringToTop(selectedItem);
+
+    // pulse glow
+
+    
+    // flyover and self destruct
+    this.add.tween({
+      targets: selectedItem,
+      onCompleteScope: this,
+      x: targetPos.x,
+      y: targetPos.y,
+      ease: "Back.easeInOut",
+      onComplete: function () {
+
+        if (selectedItem.payout > 0) {
+          this.scene.get('GameScene').genericUpdateGlobalScore(selectedItem.payout, this);
+        }
+        else {
+          // shorten timer
+          this.scene.get('GameScene').genericDeductTimer(selectedItem.payout, this);
+        }
+
+        selectedItem.destroy();
+      },
+      duration: 800
+    });
   }
 }

@@ -405,6 +405,10 @@ class GameScene extends Phaser.Scene {
     this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20,  g_Score, { font: '42px Arial', fill: "#000" });
     this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level " + parseInt(g_CurrLevelIndex + 1), { font: '24px Arial', fill: "#000" });
 
+    // create progression to bonus game bar
+    let expBarBase = this.add.image(config.width / 2 - 150, 120, "TimerBar").setOrigin(0, 0.5);
+    this.expBar = this.add.image(expBarBase.x + 53, expBarBase.y, "TimerBarContent").setOrigin(0, 0.5);
+
     // right panel for selectables
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
     this.SelectablePanel.alpha = 0.5;
@@ -538,7 +542,7 @@ class GameScene extends Phaser.Scene {
       this.fireworksContainer.add(fireworksSprite);
     }
 
-    //this.scene.start('CoinShowerBonusGame');
+    this.scene.start('CoinShowerBonusGame');
 
     //this.splashSummary("游戏开始", "", false);
   }
@@ -884,18 +888,103 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   genericGameSceneInit(ownerScene)
   {
-    console.log("asdfsd");
-    
+    ownerScene.scoreDisplay = this.add.container();
+
     let scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
-    ownerScene.ScoreText = ownerScene.add.text(scoreIcon.x + 30, scoreIcon.y, "Test asfs df", { font: '42px Arial', fill: "#000", align: 'center' });
-    ownerScene.ScoreText.setOrigin(0.5);
+    ownerScene.ScoreText = ownerScene.add.text(scoreIcon.x + 20, scoreIcon.y - 20, 99, { font: '32px Arial', fill: "#000", align: 'center' });
+    ownerScene.ScoreText.setOrigin(0.0);
+    ownerScene.ScoreText.setStroke('#fff', 3);
+
+    ownerScene.scoreDisplay.add(scoreIcon);
+    ownerScene.scoreDisplay.add(ownerScene.ScoreText);
+
+    ownerScene.children.bringToTop(ownerScene.scoreDisplay);
   }
 
   /*******************************************/
   // Common update stuff for all scenes
   /*******************************************/
   genericGameSceneUpdate(ownerScene) {
-    //ownerScene.timerBarContent.setScale(1 - ownerScene.gameTimer.getOverallProgress(), 1);
+
+    if (ownerScene.timerContainer) {
+      ownerScene.timerBarContent.setScale(1 - ownerScene.gameTimer.getOverallProgress(), 1);
+
+      ownerScene.children.bringToTop(ownerScene.timerContainer);
+    }
+
+    ownerScene.children.bringToTop(ownerScene.scoreDisplay);
+  }
+
+  /*******************************************/
+  // update the global score
+  /*******************************************/
+  genericUpdateGlobalScore(valueDiff, ownerScene)
+  {
+    g_Score += valueDiff;
+    ownerScene.ScoreText.text = g_Score;
+
+    let targetObject = ownerScene.ScoreText;
+
+    ownerScene.tweens.add({
+      targets: targetObject,
+      scaleX: 1.5,
+      scaleY: 1.5,
+      duration: 80,
+      yoyo: true
+    });
+
+    ownerScene.sound.play('ButtonClick_SFX');
+  }
+
+  /*******************************************/
+  // generic timer
+  /*******************************************/
+  genericCreateTimer(levelDuration, ownerScene)
+  {
+    // create timer bar
+    ownerScene.timerContainer = ownerScene.add.container();
+
+    var timerBarBase = ownerScene.add.image(config.width / 2 - 150, config.height * 0.1, "TimerBar").setOrigin(0, 0.5);
+
+    ownerScene.timerBarContent = ownerScene.add.image(timerBarBase.x + 53, timerBarBase.y, "GenericBarContent").setOrigin(0, 0.5);
+
+    ownerScene.timerContainer.add(timerBarBase);
+    ownerScene.timerContainer.add(ownerScene.timerBarContent);
+
+    ownerScene.children.bringToTop(ownerScene.timerContainer);
+
+    ownerScene.gameTimer = ownerScene.time.delayedCall(levelDuration, ownerScene.onTimerExpired, [], ownerScene);
+  }
+
+  /*******************************************/
+  // generic timer penalize timer
+  /*******************************************/
+  genericDeductTimer(valueDiff, ownerScene)
+  {
+    let tintTargetImage = ownerScene.timerBarContent;
+
+    // red tint effect
+    ownerScene.tweens.addCounter({
+      from: 255,
+      to: 2,
+      duration: 100,
+      yoyo: true,
+      onUpdate: function (tween) {
+        const value = Math.floor(tween.getValue());
+        tintTargetImage.setTint(Phaser.Display.Color.GetColor(255, value, value));
+      }
+    });
+
+    // speed up timer for a while
+    ownerScene.tweens.addCounter({
+      duration: 500,
+      onUpdate: function (tween) {
+        ownerScene.gameTimer.timeScale = 5.0;
+      },
+      onComplete: function (tween) {
+        ownerScene.gameTimer.timeScale = 1.0;
+      }
+    });
   }
 }
 

@@ -2,8 +2,10 @@
 <CoinShowerLevel>
 
    <SpawnInfoTable>
-      <Spawn ID='Coin' RNGSpawn ='0.2' Payout='1'></Spawn>
-      <Spawn ID='Bomb' RNGSpawn ='0.8' Payout='-1'></Spawn>
+      <Spawn ID='Coin' RNGSpawn ='0.4' Payout='1'></Spawn>
+      <Spawn ID='Gem' RNGSpawn ='0.1' Payout='10'></Spawn>
+      <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1'></Spawn>
+      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5'></Spawn>
    </SpawnInfoTable>
 
 </CoinShowerLevel>

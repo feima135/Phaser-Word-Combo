@@ -81,8 +81,10 @@ class LoadingScene extends Phaser.Scene {
     this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
 
     // this.load.image('ChatBubble', 'assets/FoodStoreScene/ChatBubble.png');
-    // this.load.image('TimerBar', 'assets/TimerBar.png');
-    // this.load.image('TimerBarContent', 'assets/TimerBarContent.png');
+    this.load.image('TimerBar', 'assets/TimerBar.png');
+    this.load.image('GenericBarContent', 'assets/GenericBarContent.png');
+
+    this.load.image('ExpBar', 'assets/ExpBar.png');
 
     // this.load.image('ChoppingBoard', 'assets/FoodStoreScene/ChoppingBoard.png');
     // this.load.image('FryingPan', 'assets/FoodStoreScene/FryingPan.png');
