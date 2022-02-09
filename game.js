@@ -538,7 +538,7 @@ class GameScene extends Phaser.Scene {
       this.fireworksContainer.add(fireworksSprite);
     }
 
-    this.scene.start('CoinShowerBonusGame');
+    //this.scene.start('CoinShowerBonusGame');
 
     //this.splashSummary("游戏开始", "", false);
   }
