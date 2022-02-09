@@ -38,7 +38,7 @@ class LoadingScene extends Phaser.Scene {
 
   // when load completes
   loadCompleted() {
-    // go to home page
+
     this.scene.start('GameScene');
   }
 
