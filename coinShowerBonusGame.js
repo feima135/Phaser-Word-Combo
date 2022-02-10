@@ -5,6 +5,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
   }
 
   create() {
+
+    this.freezeMode = false;
     this.levelDuration = 50000;
     this.dispatchInterval = 100;
 
@@ -12,17 +14,26 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.parseData();
 
-    this.activateCoinShower();
-
     this.scene.get('GameScene').genericCreateTimer(this.levelDuration, this);
 
     this.scene.get('GameScene').genericGameSceneInit(this);
+
+    // intro splash
+    this.scene.get('GameScene').genericSplashSummary(this, "Game Start", "qqqq", false, ()=>
+    {
+      this.activateCoinShower();
+    });
   }
 
   update() {
     this.scene.get('GameScene').genericGameSceneUpdate(this);
   }
 
+  onTimerExpired()
+  {
+    console.log("done");
+  }
+  
   // populate spawn data from XML
   parseData() {
     this.spawnTableInfo = [];
@@ -202,7 +213,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     });
   }
 
-  onSelectedFreezeItem(selectableItem)
+  onSelectedFreezeItem(selectedItem)
   {
     // show freeze overlay
     // let explosionSprite = this.add.sprite(selectedItem.x, selectedItem.y, "Explosion");
@@ -218,18 +229,36 @@ class CoinShowerBonusGame extends Phaser.Scene {
     //   explosionSprite.destroy();
     // })
 
-    this.tweens.timeScale = 0.5;
+    // freeze alreadt active just destroy it
+    if(this.freezeMode)
+    {
+      console.log("adsfasd");
+      selectedItem.destroy();
+      return;
+    }
+
+    this.freezeMode = true;
+
+    let freezeDuration = 2500;
 
     this.tweens.addCounter({
       from: 1,
-      to: 0.5,
-      duration: 5000,
+      to: 0.3,
+      duration: 500,
+      onUpdateScope: this,
+      onCompleteScope: this,
       onUpdate: function (tween) {
         this.tweens.timeScale = tween.getValue();
+      },
+      completeDelay : freezeDuration,
+      onComplete: function(tween)
+      {
+        // revert the freeze phase
+        this.tweens.timeScale = 1.0;
+        this.freezeMode = false;
+        selectedItem.destroy();
       }
     });
-
-    selectedItem.destroy();
   }
 
   // when selectable item gets clicked
@@ -246,7 +275,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     else if (selectedItem.payout > 0) {
       this.onSelectedPayoutItem(selectedItem);
     }
-    else if(selectableItem.freezeType > 0){
+    else if(selectedItem.freezeType > 0){
       this.onSelectedFreezeItem(selectedItem);
     }
   }

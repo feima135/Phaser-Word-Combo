@@ -15,8 +15,7 @@ class GameScene extends Phaser.Scene {
   /////////////////
   //Read Level data, create drag boxes and link up
   /////////////////
-  parseLevelData()
-  {
+  parseLevelData() {
     const levelInfo = this.cache.xml.get('LevelInfo');
 
     const levelInfoDataTable = levelInfo.getElementsByTagName('level');
@@ -27,10 +26,10 @@ class GameScene extends Phaser.Scene {
     Array.from(levelInfoDataTable).forEach(info => {
 
       let currLevelInfo = {
-        levelID : info.getAttribute("levelID"),
-        threshold : info.getAttribute("threshold"), 
-        partsToGuess : info.getAttribute("partsToGuess"),
-        maxselectable : info.getAttribute("maxselectable")
+        levelID: info.getAttribute("levelID"),
+        threshold: info.getAttribute("threshold"),
+        partsToGuess: info.getAttribute("partsToGuess"),
+        maxselectable: info.getAttribute("maxselectable")
       };
 
       this.levelInfoTable.push(currLevelInfo);
@@ -44,17 +43,16 @@ class GameScene extends Phaser.Scene {
     const questions = levelInfo.getElementsByTagName('question');
 
     // iterate all possible questions
-    Array.from(questions).forEach(questionData => 
-      {
-        let currQuestion = {
-          wordsComboTable : [], // hold string of possible word combos
-          wordPartsBoxes : [], // pos and size
-          wordParts : [], // first part is word index, next is atlas index 
-          guessWordsIndices : [], // which word (index) is the target guess word
-          wordPartsLeftToGuess : [], // atlas indicies of the remaining items left to guess
-          audioTable : [],
-          pinYinTable : []
-        };
+    Array.from(questions).forEach(questionData => {
+      let currQuestion = {
+        wordsComboTable: [], // hold string of possible word combos
+        wordPartsBoxes: [], // pos and size
+        wordParts: [], // first part is word index, next is atlas index 
+        guessWordsIndices: [], // which word (index) is the target guess word
+        wordPartsLeftToGuess: [], // atlas indicies of the remaining items left to guess
+        audioTable: [],
+        pinYinTable: []
+      };
 
       // consolidate the words combo
       let wordsCombos = questionData.getElementsByTagName('wordsCombo');
@@ -63,7 +61,7 @@ class GameScene extends Phaser.Scene {
       for (var wordComboIndex = 0; wordComboIndex < wordsCombos.length; ++wordComboIndex) {
 
         let wordCombo = wordsCombos[wordComboIndex];
-        
+
         // save the guess word ID index
         let guessWordID = parseInt(wordCombo.getAttribute("guessWordID"));
         currQuestion.guessWordsIndices.push(guessWordID);
@@ -81,7 +79,7 @@ class GameScene extends Phaser.Scene {
         currQuestion.pinYinTable.push(pinYinData);
 
         // let wordComboAtlasIndex = wordCombo.childNodes[0].nodeValue;
- 
+
         // let isThisAGuessWord = wordCombo.getAttribute("guessWord");
         // if (isThisAGuessWord && isThisAGuessWord == "true") {
         //   currQuestion.guessWordsIndices.push(wordComboIndex);
@@ -90,30 +88,28 @@ class GameScene extends Phaser.Scene {
 
       }
 
-        // consolidate the word part boxes combo
-        let wordPartBoxes = questionData.getElementsByTagName('wordPartBox');
-        Array.from(wordPartBoxes).forEach(wordPartBox =>
-          {
-            let x = wordPartBox.getAttribute("x");
-            let y = wordPartBox.getAttribute("y");
-            let u = wordPartBox.getAttribute("u");
-            let w = wordPartBox.getAttribute("w");
-            let partInfo = wordPartBox.getAttribute("wordPartInfo");
+      // consolidate the word part boxes combo
+      let wordPartBoxes = questionData.getElementsByTagName('wordPartBox');
+      Array.from(wordPartBoxes).forEach(wordPartBox => {
+        let x = wordPartBox.getAttribute("x");
+        let y = wordPartBox.getAttribute("y");
+        let u = wordPartBox.getAttribute("u");
+        let w = wordPartBox.getAttribute("w");
+        let partInfo = wordPartBox.getAttribute("wordPartInfo");
 
-            let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
-            currQuestion.wordPartsBoxes.push(boxInfo);
-            currQuestion.wordParts.push(partInfo);
-          });
-
-          this.allQuestions.push(currQuestion);
+        let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
+        currQuestion.wordPartsBoxes.push(boxInfo);
+        currQuestion.wordParts.push(partInfo);
       });
+
+      this.allQuestions.push(currQuestion);
+    });
   }
 
   ////////////////////////////////
   // Panel of words for selection
   ////////////////////////////////
-  createDragWordSelectables(targetQuestion)
-  {
+  createDragWordSelectables(targetQuestion) {
     Array.from(this.selectableWords).forEach(item => item.destroy());
 
     this.selectableWords.length = 0;
@@ -122,8 +118,7 @@ class GameScene extends Phaser.Scene {
 
     // populate all rubbish first
     let randomRubbishTable = [];
-    for(var index = 0; index < this.wordPartsPool.length; ++index)
-    {
+    for (var index = 0; index < this.wordPartsPool.length; ++index) {
       randomRubbishTable.push(this.wordPartsPool[index]);
     }
 
@@ -151,8 +146,7 @@ class GameScene extends Phaser.Scene {
     let rubbishElementsCount = maxSelectableWordsInPanel - creationTable.length;
 
     // populate the remaining rubbish elements
-    for(var index = 0; index < rubbishElementsCount; ++index)
-    {
+    for (var index = 0; index < rubbishElementsCount; ++index) {
       var randomIndex = Phaser.Utils.Array.RemoveRandomElement(randomRubbishTable);
       creationTable.push(randomIndex);
     }
@@ -163,10 +157,9 @@ class GameScene extends Phaser.Scene {
     let startPosY = this.SelectablePanel.y;
 
     // some correct answers the rest are rubbish
-    for(var index = 0; index < maxSelectableWordsInPanel; ++index)
-    {
+    for (var index = 0; index < maxSelectableWordsInPanel; ++index) {
       let targetWordPart = Phaser.Utils.Array.RemoveRandomElement(creationTable);
-      let currWord = this.add.text(startPosX + xGap * index, startPosY,  targetWordPart, { font: '80px KaiTi', fill: "#000" });
+      let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '80px KaiTi', fill: "#000" });
       currWord.wordPartCharacter = targetWordPart;
       currWord.setOrigin(0.5);
       currWord.setScale(1.1, 1.1);
@@ -177,7 +170,7 @@ class GameScene extends Phaser.Scene {
       // mark parts that are correct
       currWord.removedAsHint = false;
       currWord.correctPartAnswer = correctAnswersLookup.includes(targetWordPart);
-    
+
       this.selectableWords.push(currWord);
 
       this.garbageCollector.push(currWord);
@@ -187,8 +180,7 @@ class GameScene extends Phaser.Scene {
   ///////////////////////////////////////////////////////////////
   // based on current questions, prepare the drag boxes etc etc
   //////////////////////////////////////////////////////////////
-  createQuestionAssets(targetQuestion, cenPosX, cenPosY)
-  {
+  createQuestionAssets(targetQuestion, cenPosX, cenPosY) {
     let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.25);
     let wordSize = 1.1;
     let wordXGap = wordSize * 128 * 1.2;
@@ -209,24 +201,23 @@ class GameScene extends Phaser.Scene {
     let wordCreatedCache = [];
 
     // create all the words
-    for(var index = 0; index < resultSplitArray.length; ++index)
-    {
-        let character = resultSplitArray[index];
+    for (var index = 0; index < resultSplitArray.length; ++index) {
+      let character = resultSplitArray[index];
 
-        let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y,  character, { font: '100px KaiTi', fill: "#000" });
+      let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, character, { font: '100px KaiTi', fill: "#000" });
 
-        // create the han yun pin yin
-        let pinYinData = splitPinYinArray[index];
-        let pinYin = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet + 50, spawnPos.y + 140,  pinYinData, { font: '22px Arial', fill: "#000" });
+      // create the han yun pin yin
+      let pinYinData = splitPinYinArray[index];
+      let pinYin = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet + 50, spawnPos.y + 140, pinYinData, { font: '22px Arial', fill: "#000" });
 
-        //let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
-        //currWord.setFrame(atlasIndex);
-        //currWord.setScale(wordSize, wordSize);
+      //let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
+      //currWord.setFrame(atlasIndex);
+      //currWord.setScale(wordSize, wordSize);
 
-        wordCreatedCache.push(currWord);
+      wordCreatedCache.push(currWord);
 
-        this.garbageCollector.push(pinYin);
-        this.garbageCollector.push(currWord);
+      this.garbageCollector.push(pinYin);
+      this.garbageCollector.push(currWord);
     }
 
     // assume only gues 1 word
@@ -235,10 +226,9 @@ class GameScene extends Phaser.Scene {
 
     let numberOfGuessWord = 1;
 
-    for(var index = 0; index < numberOfGuessWord; ++index)
-    {
+    for (var index = 0; index < numberOfGuessWord; ++index) {
       // the sprite word that we are creating boxes on
-      
+
       // ugly random
       // inject random box count here
       let randomGuessTableIndices = []; // store generate box index
@@ -252,8 +242,7 @@ class GameScene extends Phaser.Scene {
       }
 
       // iterate the data given boxes now
-      for(var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex)
-      {    
+      for (var boxIndex = 0; boxIndex < targetQuestion.wordPartsBoxes.length; ++boxIndex) {
         let wordBoxPosSizeInfo = targetQuestion.wordPartsBoxes[boxIndex];
         let wordPartInfo = targetQuestion.wordParts[boxIndex];
 
@@ -271,8 +260,7 @@ class GameScene extends Phaser.Scene {
         let boxSizeX = wordBoxPosSizeInfo.z;
         let boxSizeY = wordBoxPosSizeInfo.w;
 
-        if (guessPart) 
-        {
+        if (guessPart) {
           targetQuestion.wordPartsLeftToGuess.push(wordPartInfo);
 
           this.currQuestionGuessWord = targetGuessWord;
@@ -293,9 +281,8 @@ class GameScene extends Phaser.Scene {
           this.garbageCollector.push(box);
         }
         // no need for box but create the word part sprite
-        else 
-        {
-          let fixedWordPart = this.add.text(boxX, boxY,  wordPartInfo, { font: '100px KaiTi', fill: "#000" });
+        else {
+          let fixedWordPart = this.add.text(boxX, boxY, wordPartInfo, { font: '100px KaiTi', fill: "#000" });
           fixedWordPart.setOrigin(0.5);
           this.selectableGuessedCorrectWords.push(fixedWordPart);
           this.garbageCollector.push(fixedWordPart);
@@ -307,8 +294,7 @@ class GameScene extends Phaser.Scene {
   ////////////////////////////
   // when hint btn is pressed
   ////////////////////////////
-  processHint()
-  {
+  processHint() {
     // take away some of the selections
     // account for words that are processed as hints
     let incorrectPool = [];
@@ -337,8 +323,7 @@ class GameScene extends Phaser.Scene {
       }
     }
 
-    if(incorrectPool.length < 1)
-    {
+    if (incorrectPool.length < 1) {
       this.HintBtn.disableInteractive();
       this.HintBtn.alpha = 0.5;
     }
@@ -346,12 +331,11 @@ class GameScene extends Phaser.Scene {
     // deduct currency
 
   }
-  
+
   /////////////////
   // clean up, get ready new question
   /////////////////
-  resetQuestion()
-  {
+  resetQuestion() {
     Array.from(this.selectableWords).forEach(item => item.destroy());
     Array.from(this.selectableGuessedCorrectWords).forEach(item => item.destroy());
     Array.from(this.garbageCollector).forEach(item => item.destroy());
@@ -359,7 +343,7 @@ class GameScene extends Phaser.Scene {
     this.selectableWords.length = 0;
     this.selectableGuessedCorrectWords.length = 0;
     this.garbageCollector.length = 0;
-    
+
     // can click hint again
     this.HintBtn.setInteractive();
     this.HintBtn.alpha = 1.0;
@@ -371,6 +355,27 @@ class GameScene extends Phaser.Scene {
     this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
 
     this.createDragWordSelectables(this.currQuestion);
+  }
+
+  frig
+  //////////////////////////////////
+  // create the underlay and splash
+  /////////////////////////////////
+  createSplashScreen(ownerScene) {
+    ownerScene.maskUnderlay = ownerScene.add.image(config.width / 2, config.height / 2, "WhiteBox").setScale(config.width, config.height);
+    ownerScene.maskUnderlay.tint = 0x000000;
+    ownerScene.maskUnderlay.alpha = 0.5;
+    ownerScene.maskUnderlay.visible = false;
+    ownerScene.maskUnderlay.setInteractive();
+
+    ownerScene.SummaryContainer = ownerScene.add.container(0, 0);
+    ownerScene.gameOverSplash = ownerScene.add.image(config.width / 2, 0, "GameOverSplash");
+    ownerScene.SplashTextA = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y, "Test asfs df", { font: '42px KaiTi', fill: "#000", align: 'center' });
+    ownerScene.SplashTextB = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.SplashTextA.y + 50, "Test asfs df", { font: '42px Arial', fill: "#000", align: 'center' });
+    ownerScene.SplashTextA.setOrigin(0.5);
+
+    ownerScene.SummaryContainer.add([ownerScene.gameOverSplash, ownerScene.SplashTextA, ownerScene.SplashTextB]);
+    ownerScene.SummaryContainer.visible = false;
   }
 
   /////////////////
@@ -402,8 +407,8 @@ class GameScene extends Phaser.Scene {
 
     // top UI
     this.starIcon = this.add.image(config.width / 2, config.height * 0.1, "StarIcon").setScale(0.5, 0.5);
-    this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20,  g_Score, { font: '42px Arial', fill: "#000" });
-    this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y,  "Level " + parseInt(g_CurrLevelIndex + 1), { font: '24px Arial', fill: "#000" });
+    this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20, g_Score, { font: '42px Arial', fill: "#000" });
+    this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y, "Level " + parseInt(g_CurrLevelIndex + 1), { font: '24px Arial', fill: "#000" });
 
     // create progression to bonus game bar
     let expBarBase = this.add.image(config.width / 2 - 150, 120, "TimerBar").setOrigin(0, 0.5);
@@ -414,7 +419,7 @@ class GameScene extends Phaser.Scene {
     this.SelectablePanel.alpha = 0.5;
 
     //this.ScoreText = this.add.text(0,0,  'chǎofàn', { font: '20px Arial', fill: "#000" });
-    
+
     // accumulate star icon
     this.accumulateStarIcon = this.add.image(0, 0, "StarIcon").setScale(0.5, 0.5);
     this.accumulateStarIcon.visible = false;
@@ -422,17 +427,17 @@ class GameScene extends Phaser.Scene {
     // hint btn
     this.HintBtn = this.add.image(config.width * 0.5, config.height * 0.9, "HintBtn").setInteractive();
     this.HintBtn.setScale(0.7, 0.7);
-    this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn, 
+    this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn,
       () => this.processHint())
-      );
+    );
 
     // audio button
     this.voiceOverBtn = this.add.image(config.width * 0.95, config.height * 0.3, "AudioButton").setScale(.8, .8).setInteractive();
-    this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn, 
+    this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn,
       () => {
         this.sound.play(this.currQuestionAudioName);
       })
-      );
+    );
 
 
     this.parseLevelData();
@@ -440,24 +445,6 @@ class GameScene extends Phaser.Scene {
     this.resetQuestion();
 
     this.genericGameSceneInit(this);
-
-    //////////////////////////////////
-    // create the underlay and splash
-    /////////////////////////////////
-    this.maskUnderlay = this.add.image(config.width / 2, config.height / 2, "WhiteBox").setScale(config.width, config.height);
-    this.maskUnderlay.tint = 0x000000;
-    this.maskUnderlay.alpha = 0.5;
-    this.maskUnderlay.visible = false;
-    this.maskUnderlay.setInteractive();
-
-    this.SummaryContainer = this.add.container(0, 0);
-    this.gameOverSplash = this.add.image(config.width / 2, 0, "GameOverSplash");
-    this.SplashTextA = this.add.text(this.gameOverSplash.x, this.gameOverSplash.y, "Test asfs df", { font: '42px KaiTi', fill: "#000", align: 'center' });
-    this.SplashTextB = this.add.text(this.gameOverSplash.x, this.SplashTextA.y + 50, "Test asfs df", { font: '42px Arial', fill: "#000", align: 'center' });
-    this.SplashTextA.setOrigin(0.5);
-
-    this.SummaryContainer.add([this.gameOverSplash, this.SplashTextA, this.SplashTextB]);
-    this.SummaryContainer.visible = false;
 
     ///////////////////////
     // TO BE PORTED ANIMATION CODE FOR MONSTER
@@ -481,8 +468,8 @@ class GameScene extends Phaser.Scene {
     //   });
 
     //   this.adultMonster.play("AdultMonsterWalkAnim");
-    
-      ///////////////////////
+
+    ///////////////////////
 
     // if (this.checkEntireGameOverCondition()) {
 
@@ -518,9 +505,17 @@ class GameScene extends Phaser.Scene {
 
     //   this.numberSprite.on('animationcomplete', this.rollupSummaryComplete, this);
 
-    ////////////////////
-    // Create fireworks
-    ///////////////////
+    this.createFireworks();
+
+    this.scene.start('CoinShowerBonusGame');
+
+    //this.splashSummary("游戏开始", "", false);
+  }
+
+  /////////////////
+  // generic create fireworks
+  /////////////////
+  createFireworks() {
     this.anims.create({
       key: "FireworksEmit",
       frames: this.anims.generateFrameNumbers('Fireworks',
@@ -541,20 +536,14 @@ class GameScene extends Phaser.Scene {
 
       this.fireworksContainer.add(fireworksSprite);
     }
-
-    this.scene.start('CoinShowerBonusGame');
-
-    //this.splashSummary("游戏开始", "", false);
   }
 
   /////////////////
   // check if question ended
   /////////////////
-  checkEndQuestionCondition()
-  {
+  checkEndQuestionCondition() {
     // no more to guess
-    if(this.currQuestion.wordPartsLeftToGuess.length <= 0)
-    {      
+    if (this.currQuestion.wordPartsLeftToGuess.length <= 0) {
       let newLevelAttained = this.updateScore(1);
 
       this.sound.play('QuestionCorrect_SFX');
@@ -585,102 +574,99 @@ class GameScene extends Phaser.Scene {
 
       let genericDelay = 1000;
 
-      this.time.delayedCall(genericDelay, ()=> 
-      {
+      this.time.delayedCall(genericDelay, () => {
         this.resetQuestion();
 
-        if(newLevelAttained)
-        {
+        if (newLevelAttained) {
           this.splashSummary("过关", "", true);
         }
         this.children.bringToTop(this.maskUnderlay);
-        this.children.bringToTop(this.SummaryContainer);   
-        this.children.bringToTop(this.fireworksContainer); 
+        this.children.bringToTop(this.SummaryContainer);
+        this.children.bringToTop(this.fireworksContainer);
 
-      });  
+      });
     }
   }
 
   /////////////////////////
   // Generic splash summary
   ////////////////////////
-  splashSummary(messageA, messageB, playCelebration) {
+  genericSplashSummary(ownerScene, messageA, messageB, playCelebration, postReadCallback) {
 
     if (playCelebration) {
-      this.sound.play("CombinedCelebration_SFX");
+      ownerScene.sound.play("CombinedCelebration_SFX");
       //this.sound.play("LevelComplete_SFX");
     }
 
-    this.SplashTextA.text = messageA;
-    this.SplashTextB.text = messageB;
+    ownerScene.SplashTextA.text = messageA;
+    ownerScene.SplashTextB.text = messageB;
 
     // due to dragging we need to rearrage the summary box to show up on top
-    this.maskUnderlay.visible = true;
-    this.SummaryContainer.visible = true;
-    this.children.bringToTop(this.maskUnderlay);
-    this.children.bringToTop(this.SummaryContainer);
+    ownerScene.maskUnderlay.visible = true;
+    ownerScene.SummaryContainer.visible = true;
+    ownerScene.children.bringToTop(ownerScene.maskUnderlay);
+    ownerScene.children.bringToTop(ownerScene.SummaryContainer);
 
-    this.SummaryContainer.y = -config.height * 0.5;
+    ownerScene.SummaryContainer.y = -config.height * 0.5;
 
-    // play fireworkds
+    // play fireworks
     if (playCelebration) {
-      for (var index = 0; index < this.fireworksArray.length; ++index) {
+      for (var index = 0; index < ownerScene.fireworksArray.length; ++index) {
 
-        let targetFireworkSprite = this.fireworksArray[index];
+        let targetFireworkSprite = ownerScene.fireworksArray[index];
         targetFireworkSprite.visible = false;
         // random delay call
-        this.time.delayedCall(index * 500, function () {
+        ownerScene.time.delayedCall(index * 500, function () {
           targetFireworkSprite.visible = true;
           targetFireworkSprite.play("FireworksEmit");
         }, [], targetFireworkSprite);
-        this.children.bringToTop(this.fireworksArray[index]);
+        ownerScene.children.bringToTop(ownerScene.fireworksArray[index]);
       }
     }
 
     // fade in the mask underlay
-    this.add.tween({
-      targets: this.maskUnderlay,
+    ownerScene.add.tween({
+      targets: ownerScene.maskUnderlay,
       alpha: 0.8,
       duration: 200
     });
 
     // drop down tween anim
-    this.add.tween({
-      targets: this.SummaryContainer,
+    ownerScene.add.tween({
+      targets: ownerScene.SummaryContainer,
       y: config.height / 2,
       ease: "Back.InOut",
-      onCompleteScope: this,
-      onComplete: function() 
-      { 
-
-      },
       duration: 1000
     });
 
     // done reading
-    this.time.delayedCall(3500, () => {
+    ownerScene.time.delayedCall(3500, () => {
 
-      for (var index = 0; index < this.fireworksArray.length; ++index) {
+      if (ownerScene.fireworksArray) {
+        for (var index = 0; index < ownerScene.fireworksArray.length; ++index) {
 
-        let targetFireworkSprite = this.fireworksArray[index];
-        targetFireworkSprite.visible = false;
+          let targetFireworkSprite = ownerScene.fireworksArray[index];
+          targetFireworkSprite.visible = false;
+        }
       }
-
       // drop down tween anim
-      this.add.tween({
-        targets: this.SummaryContainer,
+      ownerScene.add.tween({
+        targets: ownerScene.SummaryContainer,
         y: -config.height / 2,
         ease: "Back.InOut",
-        onCompleteScope: this,
+        onCompleteScope: ownerScene,
         onComplete: function () {
 
-          // fade in the mask underlay
-          this.add.tween({
-            targets: this.maskUnderlay,
+          // fade out the mask underlay
+          ownerScene.add.tween({
+            targets: ownerScene.maskUnderlay,
             alpha: 0.0,
             duration: 200
           });
 
+          if (postReadCallback) {
+            postReadCallback();
+          }
         },
         duration: 1000
       });
@@ -743,8 +729,7 @@ class GameScene extends Phaser.Scene {
       this.checkEndQuestionCondition();
     }
     // wrong answer
-    else
-    {
+    else {
       this.sound.play('Wrong_SFX');
 
       gameObject.x = gameObject.input.dragStartX;
@@ -768,8 +753,7 @@ class GameScene extends Phaser.Scene {
   /////////////////
   // check if question ended
   /////////////////
-  updateScore(valueDiff)
-  {
+  updateScore(valueDiff) {
     let prevLevel = g_CurrLevelIndex;
 
     let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
@@ -783,17 +767,18 @@ class GameScene extends Phaser.Scene {
         ++g_CurrLevelIndex;
       }
     }
- 
+
     this.LevelText.text = "Level " + parseInt(g_CurrLevelIndex + 1);
 
     this.add.tween(
       {
-      targets: this.starIcon,
-      scaleX: 1.01,
-      scaleY: 1.01,
-      duration: 180,
-      yoyo: true});
-      
+        targets: this.starIcon,
+        scaleX: 1.01,
+        scaleY: 1.01,
+        duration: 180,
+        yoyo: true
+      });
+
     // check if we move to new level
     return prevLevel != g_CurrLevelIndex;
 
@@ -882,18 +867,19 @@ class GameScene extends Phaser.Scene {
   //   });
   // }
 
-  
+
   /*******************************************/
   // Common Init stuff for all scenes
   /*******************************************/
-  genericGameSceneInit(ownerScene)
-  {
+  genericGameSceneInit(ownerScene) {
     ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
     ownerScene.ScoreText = ownerScene.add.text(ownerScene.scoreIcon.x + 20, ownerScene.scoreIcon.y - 20, 99, { font: '32px Arial', fill: "#000", align: 'center' });
     ownerScene.ScoreText.setOrigin(0.0);
     ownerScene.ScoreText.setStroke('#fff', 3);
 
     ownerScene.children.bringToTop(ownerScene.scoreDisplay);
+
+    this.createSplashScreen(ownerScene);
   }
 
   /*******************************************/
@@ -909,13 +895,15 @@ class GameScene extends Phaser.Scene {
 
     ownerScene.children.bringToTop(ownerScene.scoreIcon);
     ownerScene.children.bringToTop(ownerScene.ScoreText);
+
+    ownerScene.children.bringToTop(ownerScene.maskUnderlay);
+    ownerScene.children.bringToTop(ownerScene.SummaryContainer);
   }
 
   /*******************************************/
   // update the global score
   /*******************************************/
-  genericUpdateGlobalScore(valueDiff, ownerScene)
-  {
+  genericUpdateGlobalScore(valueDiff, ownerScene) {
     g_Score += valueDiff;
     ownerScene.ScoreText.text = g_Score;
 
@@ -935,8 +923,7 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   // generic timer
   /*******************************************/
-  genericCreateTimer(levelDuration, ownerScene)
-  {
+  genericCreateTimer(levelDuration, ownerScene) {
     // create timer bar
     ownerScene.timerContainer = ownerScene.add.container();
 
@@ -955,8 +942,7 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   // generic timer penalize timer
   /*******************************************/
-  genericDeductTimer(valueDiff, ownerScene)
-  {
+  genericDeductTimer(valueDiff, ownerScene) {
     let tintTargetImage = ownerScene.timerBarContent;
 
     // red tint effect
