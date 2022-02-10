@@ -888,15 +888,10 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   genericGameSceneInit(ownerScene)
   {
-    ownerScene.scoreDisplay = this.add.container();
-
-    let scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
-    ownerScene.ScoreText = ownerScene.add.text(scoreIcon.x + 20, scoreIcon.y - 20, 99, { font: '32px Arial', fill: "#000", align: 'center' });
+    ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
+    ownerScene.ScoreText = ownerScene.add.text(ownerScene.scoreIcon.x + 20, ownerScene.scoreIcon.y - 20, 99, { font: '32px Arial', fill: "#000", align: 'center' });
     ownerScene.ScoreText.setOrigin(0.0);
     ownerScene.ScoreText.setStroke('#fff', 3);
-
-    ownerScene.scoreDisplay.add(scoreIcon);
-    ownerScene.scoreDisplay.add(ownerScene.ScoreText);
 
     ownerScene.children.bringToTop(ownerScene.scoreDisplay);
   }
@@ -912,7 +907,8 @@ class GameScene extends Phaser.Scene {
       ownerScene.children.bringToTop(ownerScene.timerContainer);
     }
 
-    ownerScene.children.bringToTop(ownerScene.scoreDisplay);
+    ownerScene.children.bringToTop(ownerScene.scoreIcon);
+    ownerScene.children.bringToTop(ownerScene.ScoreText);
   }
 
   /*******************************************/

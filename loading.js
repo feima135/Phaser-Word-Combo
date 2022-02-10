@@ -75,10 +75,12 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('Bomb', 'assets/Bomb.png');
     this.load.image('Skull_A', 'assets/Skull_A.png');
     this.load.image('ScoreIcon', 'assets/ScoreIcon.png');
+    this.load.image('Freeze', 'assets/Freeze.png');
 
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
-    // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('Explosion', 'assets/Explosion.png', { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('Sparkle', 'assets/Sparkle_Gold.png', { frameWidth: 32, frameHeight: 32 });
 
     // this.load.image('ChatBubble', 'assets/FoodStoreScene/ChatBubble.png');
     this.load.image('TimerBar', 'assets/TimerBar.png');
