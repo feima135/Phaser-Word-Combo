@@ -76,6 +76,8 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('Skull_A', 'assets/Skull_A.png');
     this.load.image('ScoreIcon', 'assets/ScoreIcon.png');
     this.load.image('FreezeEffectOverlay', 'assets/FreezeEffectOverlay.png');
+    this.load.image('WordCharacterBG', 'assets/WordCharacterBG.png');
+    this.load.image('GuessWordComboBG', 'assets/GuessWordComboBG.png');
 
     this.load.spritesheet('Freeze', 'assets/Freeze.png', { frameWidth: 128, frameHeight: 131 });
 

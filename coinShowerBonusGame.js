@@ -10,7 +10,11 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.levelDuration = 50000;
     this.dispatchInterval = 100;
 
+    
     this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+
+    this.guessWordComboBG = this.add.image(config.width * 0.85, config.height * 0.13, "GuessWordComboBG").setScale(.22, .22);
+
     this.freezeOverlay = this.add.image(config.width / 2, config.height / 2, "FreezeEffectOverlay").setScale(1, 1);
     this.freezeOverlay.alpha = 0.0;
 
@@ -35,6 +39,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
   update() {
     this.scene.get('GameScene').genericGameSceneUpdate(this);
+
+    this.guessWordComboBG.depth = 1;
+    //this.children.bringToTop(this.guessWordComboBG);
   }
 
   // generate a random word combo question
@@ -46,8 +53,12 @@ class CoinShowerBonusGame extends Phaser.Scene {
     randomWordCombo = randomWordCombo.replace('_' , "");
     console.log(randomWordCombo);
 
-    let currWord = this.add.text(config.width * 0.7, config.height * 0.3, randomWordCombo, { font: '64px KaiTi', fill: "#F8FD38" });
+    let depth = this.guessWordComboBG.depth;
 
+    let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px KaiTi', fill: "#F8FD38" });
+    currWord.setOrigin(0.5);
+    currWord.depth = depth + 1;
+    this.children.bringToTop(currWord);
   }
 
   onTimerExpired()
@@ -142,22 +153,30 @@ class CoinShowerBonusGame extends Phaser.Scene {
       let spawnRNGSuccess = spawnRNG >= currSpawnItemData.RNGThresholdMin && spawnRNG < currSpawnItemData.RNGThresholdMax;
       if (spawnRNGSuccess) {
 
-        let selectableItem;
+        let selectableItemRoot = this.add.container();
+        let selectableItem = this.add.sprite(spawnPosX, startY, "WordCharacterBG").setScale(0.5);
+
+        selectableItemRoot.add(selectableItem);
 
         // either add a text character or picked image 
         if (currSpawnItemData.WordCharacter) {
-          selectableItem = this.add.text(spawnPosX, startY, "Coin", { font: '32px KaiTi', fill: "#F8FD38", align: 'center' });
+
+          let randomCharacter = Phaser.Utils.Array.GetRandom(this.wordCharacterPool);
+
+          // chinese character round base
+          selectableItem.wordCharacterObj = this.add.text(spawnPosX, startY, randomCharacter, { font: '42px KaiTi', fill: "#000", align: 'center' });
+          selectableItem.wordCharacterObj.setOrigin(0.5);
+          selectableItem.wordCharacterObj.word = randomCharacter;
+
+          selectableItemRoot.add(selectableItem.wordCharacterObj);
         }
         else {
-
-          selectableItem = this.add.sprite(spawnPosX, startY, "Coin").setScale(0.5);
           selectableItem.setTexture(currSpawnItemData.ID);
 
           let targetAnimName = String(currSpawnItemData.ID + "Anim");
           if (this.anims.exists(targetAnimName)) {
             selectableItem.play(targetAnimName);
           }
-
         }
 
         selectableItem.setInteractive();
@@ -171,13 +190,13 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
         // drop down tween anim
         let targetTween = this.add.tween({
-          targets: selectableItem,
+          targets: selectableItemRoot,
           y: { from: startY, to: finalY },
           ease: "Cubic.In",
           onCompleteScope: this,
           startDelay: randomStartDelay,
           onComplete: function () {
-            selectableItem.destroy();
+            selectableItemRoot.destroy();
           },
           duration: randomFallDuration
         });
