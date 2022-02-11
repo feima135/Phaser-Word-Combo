@@ -8,7 +8,7 @@
       <level levelID='3' threshold ='-1' partsToGuess='5' maxselectable='6'></level>
    </levelInfo>
 
-   <globalInfo worldPartInfoTable = '火,少,开,彡,犬,𦍌,介,𫇦,吕'></globalInfo>
+   <globalInfo worldPartInfoTable = '火,少,开,彡,丬,犬,𦍌,介,共,由,𫇦,吕,囗,此,角,疋,虫'></globalInfo>
 
    <!-- <question id="炒">
       <wordsCombo guessWordID = '0' word = '炒_饭' pinYin ='chǎo_fàn' audioName = 'ChaoFan_SFX'> </wordsCombo>

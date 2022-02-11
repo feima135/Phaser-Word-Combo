@@ -11,6 +11,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.dispatchInterval = 100;
 
     this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+    this.freezeOverlay = this.add.image(config.width / 2, config.height / 2, "FreezeEffectOverlay").setScale(1, 1);
+    this.freezeOverlay.alpha = 0.0;
 
     this.parseData();
 
@@ -18,15 +20,34 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.scene.get('GameScene').genericGameSceneInit(this);
 
-    // intro splash
-    this.scene.get('GameScene').genericSplashSummary(this, "Game Start", "qqqq", false, ()=>
-    {
-      this.activateCoinShower();
-    });
+    // bypass intro splash
+    this.activateCoinShower();
+    this.generateBonusWordComboPrize();
+
+    // // intro splash
+    // this.scene.get('GameScene').genericSplashSummary(this, "Game Start", "qqqq", false, ()=>
+    // {
+    //   this.activateCoinShower();
+      
+    //   this.generateBonusWordComboPrize();
+    // });
   }
 
   update() {
     this.scene.get('GameScene').genericGameSceneUpdate(this);
+  }
+
+  // generate a random word combo question
+  // if player picks correct missing words, award big prize
+  generateBonusWordComboPrize()
+  {
+    let randomWordCombo = Phaser.Utils.Array.GetRandom(this.wordComboPool);
+
+    randomWordCombo = randomWordCombo.replace('_' , "");
+    console.log(randomWordCombo);
+
+    let currWord = this.add.text(config.width * 0.7, config.height * 0.3, randomWordCombo, { font: '64px KaiTi', fill: "#F8FD38" });
+
   }
 
   onTimerExpired()
@@ -52,12 +73,48 @@ class CoinShowerBonusGame extends Phaser.Scene {
         RNGThresholdMax: currRNGValue + rngThreshold,
         ID: info.getAttribute("ID"),
         Payout: info.getAttribute("Payout"),
-        Freeze: info.getAttribute("Freeze")
+        Freeze: info.getAttribute("Freeze"),
+        WordCharacter : info.getAttribute("WordCharacter")
       }
 
       this.spawnTableInfo.push(spawnInfo);
 
       currRNGValue += rngThreshold;
+
+      if (info.getAttribute("Animated"))
+      {
+        this.anims.create({
+          key: spawnInfo.ID + "Anim",
+          frames: this.anims.generateFrameNumbers(spawnInfo.ID,
+            { start: 0, end: 2 }),
+          frameRate:4,
+          repeat: -1,
+          yoyo: true
+        });
+      }
+    });
+
+    // all the single word
+    this.wordCharacterPool = [];
+
+    // all the word pairings
+    this.wordComboPool = [];
+
+    // harvest bonus chest words combo
+    const wordsMatchTable = spawnInfoData.getElementsByTagName('WordsCombo');
+    Array.from(wordsMatchTable).forEach(info => {
+
+      let comboMasterString = info.getAttribute("combo");
+      let wordPairing = comboMasterString.split(','); // 1 instance of example 炒_菜
+
+      wordPairing.forEach(targetString => {
+
+        this.wordComboPool.push(targetString);
+  
+        let wordPart = targetString.split('_'); // 1 instance of example 炒
+
+        wordPart.forEach(item => this.wordCharacterPool.push(item));
+      });
     });
   }
 
@@ -74,39 +131,60 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // random select type to drop
 
-    let selectableItem = this.add.image(spawnPosX, startY, "Coin").setScale(0.5);
-    selectableItem.setInteractive();
-    selectableItem.on('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem,
-      () => {
-        this.onSelectableItemClicked(selectableItem);
-      }));
-
     // set the random type
-    let spawnRNG = Phaser.Math.FloatBetween(0, 1);
+    let maxRNG = this.spawnTableInfo[this.spawnTableInfo.length - 1].RNGThresholdMax;
+    console.log(maxRNG);
+    let spawnRNG = Phaser.Math.FloatBetween(0, maxRNG);
+
     for (var rngIndex = 0; rngIndex < this.spawnTableInfo.length; ++rngIndex) {
       let currSpawnItemData = this.spawnTableInfo[rngIndex];
 
-      if (spawnRNG >= currSpawnItemData.RNGThresholdMin && spawnRNG < currSpawnItemData.RNGThresholdMax) {
-        selectableItem.setTexture(currSpawnItemData.ID);
+      let spawnRNGSuccess = spawnRNG >= currSpawnItemData.RNGThresholdMin && spawnRNG < currSpawnItemData.RNGThresholdMax;
+      if (spawnRNGSuccess) {
+
+        let selectableItem;
+
+        // either add a text character or picked image 
+        if (currSpawnItemData.WordCharacter) {
+          selectableItem = this.add.text(spawnPosX, startY, "Coin", { font: '32px KaiTi', fill: "#F8FD38", align: 'center' });
+        }
+        else {
+
+          selectableItem = this.add.sprite(spawnPosX, startY, "Coin").setScale(0.5);
+          selectableItem.setTexture(currSpawnItemData.ID);
+
+          let targetAnimName = String(currSpawnItemData.ID + "Anim");
+          if (this.anims.exists(targetAnimName)) {
+            selectableItem.play(targetAnimName);
+          }
+
+        }
+
+        selectableItem.setInteractive();
+        selectableItem.on('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem,
+          () => {
+            this.onSelectableItemClicked(selectableItem);
+          }));
+
         selectableItem.payout = parseInt(currSpawnItemData.Payout);
         selectableItem.freezeType = parseInt(currSpawnItemData.Freeze);
+
+        // drop down tween anim
+        let targetTween = this.add.tween({
+          targets: selectableItem,
+          y: { from: startY, to: finalY },
+          ease: "Cubic.In",
+          onCompleteScope: this,
+          startDelay: randomStartDelay,
+          onComplete: function () {
+            selectableItem.destroy();
+          },
+          duration: randomFallDuration
+        });
+
+        selectableItem.tweenRef = targetTween;
       }
     }
-
-    // drop down tween anim
-    let targetTween = this.add.tween({
-      targets: selectableItem,
-      y: { from: startY, to: finalY },
-      ease: "Cubic.In",
-      onCompleteScope: this,
-      startDelay: randomStartDelay,
-      onComplete: function () {
-        selectableItem.destroy();
-      },
-      duration: randomFallDuration
-    });
-
-    selectableItem.tweenRef = targetTween;
   }
 
   activateCoinShower() {
@@ -232,14 +310,20 @@ class CoinShowerBonusGame extends Phaser.Scene {
     // freeze alreadt active just destroy it
     if(this.freezeMode)
     {
-      console.log("adsfasd");
       selectedItem.destroy();
       return;
     }
 
     this.freezeMode = true;
 
-    let freezeDuration = 2500;
+    let freezeDuration = 2000;
+
+    // fade in the freezeoverlay
+    this.add.tween({
+      targets: this.freezeOverlay,
+      alpha: { from: 0, to: 1 },
+      duration: 500,
+    });
 
     this.tweens.addCounter({
       from: 1,
@@ -257,6 +341,13 @@ class CoinShowerBonusGame extends Phaser.Scene {
         this.tweens.timeScale = 1.0;
         this.freezeMode = false;
         selectedItem.destroy();
+
+        // fade out the overlay     
+        this.add.tween({
+          targets: this.freezeOverlay,
+          alpha: { from: 1, to: 0 },
+          duration: 500,
+        });
       }
     });
   }
