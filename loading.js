@@ -155,7 +155,10 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('GenericCollect_SFX', 'assets/Audio/GenericCollect.mp3');
 
     this.load.audio('WordCharacterCollect_SFX', 'assets/Audio/WordCharacterCollect.mp3');
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
   }
 }
