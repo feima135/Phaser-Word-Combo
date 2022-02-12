@@ -2,15 +2,15 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='1' partsToGuess='1' maxselectable='3' penalizeWrongAns = '1'></level>
-      <level levelID='1' threshold ='20' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
-      <level levelID='2' threshold ='32' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
-      <level levelID='3' threshold ='-1' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
+      <level levelID='0' threshold ='8' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
+      <level levelID='1' threshold ='15' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
+      <level levelID='2' threshold ='25' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
+      <level levelID='3' threshold ='30' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
    </levelInfo>
 
    <globalInfo worldPartInfoTable = '火,少,开,彡,丬,犬,𦍌,介,共,由,𫇦,吕,囗,此,角,疋,虫'></globalInfo>
 
-   <!-- <question id="炒">
+   <question id="炒">
       <wordsCombo guessWordID = '0' word = '炒_饭' pinYin ='chǎo_fàn' audioName = 'ChaoFan_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '炒_菜' pinYin ='chǎo_cài ' audioName = 'ChaoCai_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '炒_熟' pinYin ='chǎo_shú' audioName = 'ChaoShou_SFX'> </wordsCombo>
@@ -38,7 +38,7 @@
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '介' atlasInfo='9'></wordPartBox>
    </question>
 
-   <!-- <question id="黄">
+   <question id="黄">
       <wordsCombo guessWordID = '0' word = '黄_色' pinYin ='huáng_sè' audioName = 'HuangSe_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '黄_瓜' pinYin ='huáng_guā' audioName = 'HuangGua_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '黄_金' pinYin ='huáng_jīn' audioName = 'HuangJin_SFX'> </wordsCombo>
@@ -47,7 +47,7 @@
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'   wordPartInfo = '由' atlasInfo='12'></wordPartBox>
    </question> -->
 
- <!-- <question id="营">
+   <question id="营">
       <wordsCombo guessWordID = '0' word = '营_地' pinYin ='yíng_de' audioName = 'YingDi_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '营_火_会' pinYin ='yíng_huǒ_huì' audioName = 'YingHuoHui_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '1' word = '露_营' pinYin ='lù_yíng' audioName = 'LuYing_SFX'> </wordsCombo>
@@ -56,21 +56,21 @@
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '吕' atlasInfo='7'></wordPartBox>
    </question> -->
 
-   <!-- <question id="嘴">
+   <question id="嘴">
       <wordsCombo guessWordID = '0' word = '嘴_巴' pinYin ='zuǐ_bā' audioName = 'ZuiBa_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '嘴_里' pinYin ='zuǐ_lǐ' audioName = 'ZuiLi_SFX'> </wordsCombo>
       <wordPartBox x='0' y ='.8' u='.4' w='1.11'  wordPartInfo = '囗' atlasInfo='0'></wordPartBox>
       <wordPartBox x='1.23' y ='.3' u='.82' w='0.55'  wordPartInfo = '此' atlasInfo='1'></wordPartBox>
       <wordPartBox x='1.23' y ='1.5' u='.82' w='.55' wordPartInfo = '角' atlasInfo='3'></wordPartBox>
-   </question> -->
-
-   <!-- <question id="蛋">
+   </question>
+   
+   <question id="蛋">
       <wordsCombo guessWordID = '1' word = '鸡_蛋' pinYin ='jī_dàn' audioName = 'JiDan_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '蛋_黄' pinYin ='dàn_huáng' audioName = 'DanHuang_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '蛋_糕' pinYin ='dàn_gāo' audioName = 'DanGao_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '蛋_白' pinYin ='dàn_bái' audioName = 'DanBai_SFX'> </wordsCombo>
       <wordPartBox x='1.05' y ='.28' u='1.2' w='0.6'   wordPartInfo = '疋' atlasInfo='4'></wordPartBox>
       <wordPartBox x='1.05' y ='1.42' u='1.2' w='0.6'  wordPartInfo = '虫' atlasInfo='5'></wordPartBox>
-   </question> -->
+   </question>
 
 </Questions>

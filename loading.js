@@ -145,14 +145,17 @@ class LoadingScene extends Phaser.Scene {
 
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
 
-    this.load.audio('CoinCollect_1', 'assets/Audio/CoinCollect_1.mp3');
-    this.load.audio('CoinCollect_2', 'assets/Audio/CoinCollect_2.mp3');
-    this.load.audio('CoinCollect_3', 'assets/Audio/CoinCollect_3.mp3');
-    this.load.audio('CoinCollect_Big', 'assets/Audio/CoinCollect_Big.mp3');
+    this.load.audio('CoinCollect_1_SFX', 'assets/Audio/CoinCollect_1.mp3');
+    this.load.audio('CoinCollect_2_SFX', 'assets/Audio/CoinCollect_2.mp3');
+    this.load.audio('CoinCollect_3_SFX', 'assets/Audio/CoinCollect_3.mp3');
+    this.load.audio('CoinCollect_Big_SFX', 'assets/Audio/CoinCollect_Big_SFX.mp3');
 
-    this.load.audio('FreezeCollect', 'assets/Audio/FreezeCollect.mp3');
-    this.load.audio('BombCollect', 'assets/Audio/BombCollect.mp3');
-    this.load.audio('GenericCollect', 'assets/Audio/GenericCollect.mp3');
+    this.load.audio('FreezeCollect_SFX', 'assets/Audio/FreezeCollect.mp3');
+    this.load.audio('BombCollect_SFX', 'assets/Audio/BombCollect.mp3');
+    this.load.audio('GenericCollect_SFX', 'assets/Audio/GenericCollect.mp3');
+
+    this.load.audio('WordCharacterCollect_SFX', 'assets/Audio/WordCharacterCollect.mp3');
+
 
   }
 }

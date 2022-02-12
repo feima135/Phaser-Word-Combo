@@ -90,13 +90,13 @@ class CoinShowerBonusGame extends Phaser.Scene {
       }
     });
 
-    console.log("mainword guessing" + randomWordCombo);
-    console.log("randomindex" + randomIndex);
+    //console.log("mainword guessing" + randomWordCombo);
+    //console.log("randomindex" + randomIndex);
 
-    this.possibleWordComboTargetTable.forEach(item => 
-    {
-    console.log("guessing" + item.character);
-    });
+    // this.possibleWordComboTargetTable.forEach(item => 
+    // {
+    // console.log("guessing" + item.character);
+    // });
 
     let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px KaiTi', fill: "#F8FD38" });
     currWord.setOrigin(0.5);
@@ -491,6 +491,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
           onComplete: function () {
             selectedItem.destroy();
             selectedItem.wordCharacterObj.destroy();
+
+            this.sound.play("Correct_SFX");
 
             // flyover prize flyover and self destruct
             this.add.tween({

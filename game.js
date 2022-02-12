@@ -31,7 +31,7 @@ class GameScene extends Phaser.Scene {
         threshold: info.getAttribute("threshold"),
         partsToGuess: info.getAttribute("partsToGuess"),
         maxselectable: info.getAttribute("maxselectable"),
-        penalizeWrongAns : parseInt(info.getAttribute("maxselectable"))
+        penalizeWrongAns : parseInt(info.getAttribute("penalizeWrongAns"))
       };
 
       this.levelInfoTable.push(currLevelInfo);
@@ -527,7 +527,7 @@ class GameScene extends Phaser.Scene {
 
     //this.scene.start('CoinShowerBonusGame');
 
-    if(g_ExpBaseScore == 0){
+    if(g_CurrLevelIndex == 0){
     this.genericSplashSummary(this, "游戏开始", "Game Start", "", 3500);
     }
   }
@@ -838,46 +838,49 @@ class GameScene extends Phaser.Scene {
   // check if question ended
   /////////////////
   updateScore(valueDiff) {
-    let prevLevel = g_CurrLevelIndex;
-
-    let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
-
-    this.updateExpBar(g_ExpBaseScore, g_ExpBaseScore + valueDiff, currThreshold);
 
     // award the global score as well
     if (valueDiff > 0) {
       g_Score += valueDiff;
-      this.sound.play("GenericCollect");
+      this.ScoreText.text = g_Score;
+      this.sound.play("GenericCollect_SFX");
     }
 
-    // check limits
-    if(g_ExpBaseScore + valueDiff / currThreshold >= 0){
+    let finishedThisLevel = false;
+
+    let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
+
+    // not really updated _gExpBaseScore
+    this.updateExpBar(g_ExpBaseScore, g_ExpBaseScore + valueDiff, currThreshold);
+
+    // real update now
     g_ExpBaseScore += valueDiff;
+    g_ExpBaseScore = Phaser.Math.Clamp(g_ExpBaseScore, 0, currThreshold);
+
+    if (g_ExpBaseScore >= currThreshold) {
+      ++g_CurrLevelIndex;
+
+      // clamp max level index
+      let maxPossibleLevel = this.levelInfoTable.length - 1;
+      g_CurrLevelIndex = Phaser.Math.Clamp(g_CurrLevelIndex, 0, maxPossibleLevel);
+
+      g_ExpBaseScore = 0; // reset
+      finishedThisLevel = true;
     }
 
-    this.ScoreText.text = g_Score;
-
-    // threshold negative means infinite level
-    if (currThreshold > 0) {
-      if (g_ExpBaseScore >= currThreshold) {
-        ++g_CurrLevelIndex;
-      }
-    }
-
-    this.LevelText.text = "Level " + parseInt(g_CurrLevelIndex + 1);
-
-    this.add.tween(
-      {
-        targets: this.starIcon,
-        scaleX: 1.01,
-        scaleY: 1.01,
-        duration: 180,
-        yoyo: true
-      });
-
+    // not shown
+    // this.LevelText.text = "Level " + parseInt(g_CurrLevelIndex + 1);
+    // this.add.tween(
+    //   {
+    //     targets: this.starIcon,
+    //     scaleX: 1.01,
+    //     scaleY: 1.01,
+    //     duration: 180,
+    //     yoyo: true
+    //   });
 
     // check if we move to new level
-    return prevLevel != g_CurrLevelIndex;
+    return finishedThisLevel;
   }
 
   /***************************/
@@ -1019,7 +1022,15 @@ class GameScene extends Phaser.Scene {
   genericUpdateGlobalScore(valueDiff, ownerScene) {
     g_Score += valueDiff;
     ownerScene.ScoreText.text = g_Score;
-    ownerScene.sound.play("GenericCollect");
+
+    if(valueDiff == 1){      
+    ownerScene.sound.play("GenericCollect_SFX");
+    }
+
+    if(valueDiff > 10){      
+      ownerScene.sound.play("CoinCollect_Big_SFX");
+      }
+  
 
     let targetObject = ownerScene.ScoreText;
 
