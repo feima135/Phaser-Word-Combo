@@ -74,7 +74,7 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('Gem', 'assets/Gem.png');
     this.load.image('Bomb', 'assets/Bomb.png');
     this.load.image('Skull_A', 'assets/Skull_A.png');
-    this.load.image('ScoreIcon', 'assets/ScoreIcon.png');
+    this.load.image('ScoreIcon', 'assets/GlobalScoreIcon.png');
     this.load.image('FreezeEffectOverlay', 'assets/FreezeEffectOverlay.png');
     this.load.image('WordCharacterBG', 'assets/WordCharacterBG.png');
     this.load.image('GuessWordComboBG', 'assets/GuessWordComboBG.png');
