@@ -58,7 +58,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     // now randomly pick 1 portion to be a guess portion
     let randomIndex = Phaser.Math.Between(0, randomWordCombo.length - 1);
 
-    console.log("random index " + randomIndex);
+    //console.log("random index " + randomIndex);
 
     // check for this chinese character 
     // could have other answers
@@ -68,7 +68,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // look up this.wordComboPool and see other similar instances
     this.wordComboPool.forEach(item => {
-      console.log("hmm" + item.charAt(randomIndex));
+      //console.log("hmm" + item.charAt(randomIndex));
 
       // consider 炒饭 炒菜, mainguesscharacter 炒
       // consider 炒饭 vs 菜饭, mainguesscharacter 炒
@@ -119,6 +119,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
   onTimerExpired()
   {
+    this.tweens.timeScale = 1.0;
+    this.freezeMode = false;
+
     this.scene.get('GameScene').genericSplashSummary(this, "游戏结束", "Bonus Level Complete", "", 3500, ()=>
     {
       this.scene.start('GameScene');
@@ -155,7 +158,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
         ID: info.getAttribute("ID"),
         Payout: info.getAttribute("Payout"),
         Freeze: info.getAttribute("Freeze"),
-        WordCharacter : info.getAttribute("WordCharacter")
+        WordCharacter : info.getAttribute("WordCharacter"),
+        AudioName : info.getAttribute("audioName")
       }
 
       this.spawnTableInfo.push(spawnInfo);
@@ -255,11 +259,13 @@ class CoinShowerBonusGame extends Phaser.Scene {
           }
         }
 
+        //console.log(currSpawnItemData.AudioName);
+
         selectableItem.setInteractive();
         selectableItem.on('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem,
           () => {
             this.onSelectableItemClicked(selectableItem);
-          }));
+          }, currSpawnItemData.AudioName));
 
         selectableItem.payout = parseInt(currSpawnItemData.Payout);
         selectableItem.freezeType = parseInt(currSpawnItemData.Freeze);

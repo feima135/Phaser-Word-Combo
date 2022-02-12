@@ -10,12 +10,12 @@
     </LevelInfo>
 
    <SpawnInfoTable>
-      <Spawn ID='Coin' RNGSpawn ='0.3' Payout='1' Freeze='0'></Spawn>
-      <Spawn ID='Gem' RNGSpawn ='0.05' Payout='10' Freeze='0'></Spawn>
-      <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1' Freeze='0' ></Spawn>
-      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5' Freeze='0'></Spawn>
-      <Spawn ID='WordCharacterBG' RNGSpawn ='0.8' Payout='0' WordCharacter = '1'></Spawn>
-      <Spawn ID='Freeze' RNGSpawn ='0.15' Payout='0' Freeze='1' Animated ='1'></Spawn>
+      <Spawn ID='Coin' RNGSpawn ='0.3' Payout='1' Freeze='0' audioName ='CoinCollect_1'></Spawn>
+      <Spawn ID='Gem' RNGSpawn ='0.05' Payout='10' Freeze='0' audioName ='CoinCollect_2'></Spawn>
+      <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1' Freeze='0' audioName ='BombCollect'></Spawn>
+      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5' Freeze='0' audioName ='CoinCollect_3'></Spawn>
+      <Spawn ID='WordCharacterBG' RNGSpawn ='0.8' Payout='0' WordCharacter = '1' audioName ='WordCharacterCollect'></Spawn>
+      <Spawn ID='Freeze' RNGSpawn ='0.15' Payout='0' Freeze='1' Animated ='1' audioName ='FreezeCollect'></Spawn>
    </SpawnInfoTable>
 
    <WordsMatchTable>

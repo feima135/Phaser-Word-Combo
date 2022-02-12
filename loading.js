@@ -144,5 +144,15 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('ChaoDan_SFX', 'assets/Audio/ChaoDan_SFX.mp3');
 
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
+
+    this.load.audio('CoinCollect_1', 'assets/Audio/CoinCollect_1.mp3');
+    this.load.audio('CoinCollect_2', 'assets/Audio/CoinCollect_2.mp3');
+    this.load.audio('CoinCollect_3', 'assets/Audio/CoinCollect_3.mp3');
+    this.load.audio('CoinCollect_Big', 'assets/Audio/CoinCollect_Big.mp3');
+
+    this.load.audio('FreezeCollect', 'assets/Audio/FreezeCollect.mp3');
+    this.load.audio('BombCollect', 'assets/Audio/BombCollect.mp3');
+    this.load.audio('GenericCollect', 'assets/Audio/GenericCollect.mp3');
+
   }
 }

@@ -30,7 +30,8 @@ class GameScene extends Phaser.Scene {
         levelID: info.getAttribute("levelID"),
         threshold: info.getAttribute("threshold"),
         partsToGuess: info.getAttribute("partsToGuess"),
-        maxselectable: info.getAttribute("maxselectable")
+        maxselectable: info.getAttribute("maxselectable"),
+        penalizeWrongAns : parseInt(info.getAttribute("maxselectable"))
       };
 
       this.levelInfoTable.push(currLevelInfo);
@@ -443,7 +444,7 @@ class GameScene extends Phaser.Scene {
     this.HintBtn = this.add.image(config.width * 0.4, config.height * 0.9, "HintBtn").setInteractive();
     this.HintBtn.setScale(0.7, 0.7);
     this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn,
-      () => this.processHint())
+      () => this.processHint(), "ButtonClick_SFX")
     );
 
     // audio button
@@ -451,7 +452,7 @@ class GameScene extends Phaser.Scene {
     this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn,
       () => {
         this.sound.play(this.currQuestionAudioName);
-      })
+      }, "ButtonClick_SFX")
     );
 
 
@@ -526,11 +527,20 @@ class GameScene extends Phaser.Scene {
 
     //this.scene.start('CoinShowerBonusGame');
 
-    //this.splashSummary("游戏开始", "", false);
+    if(g_ExpBaseScore == 0){
+    this.genericSplashSummary(this, "游戏开始", "Game Start", "", 3500);
+    }
   }
 
   updateExpBar(oldScore, newScore, totalPossibleScore)
   {
+    let normalizedScale = newScore / totalPossibleScore;
+
+    if(normalizedScale < 0)
+    {
+      return;
+    }
+
     if(oldScore == newScore)
     {
       this.expBarContent.setScale(0, 1);
@@ -540,7 +550,6 @@ class GameScene extends Phaser.Scene {
     let tintTargetImage = this.expBarContent;
 
     let valueDiff = newScore - oldScore;
-    let normalizedScale = newScore / totalPossibleScore;
 
     if (valueDiff < 0) {
       // red tint effect for penalize
@@ -629,6 +638,7 @@ class GameScene extends Phaser.Scene {
         this.resetQuestion();
 
         if (newLevelAttained) {
+          this.genericPlayCelebration(this);
           this.genericSplashSummary(this, "过关", "Level Complete", "", 3500, ()=>
           {
             this.scene.start('CoinShowerBonusGame');
@@ -658,9 +668,12 @@ class GameScene extends Phaser.Scene {
       // random delay call
       ownerScene.time.delayedCall(index * 500, function () {
         targetFireworkSprite.visible = true;
+        targetFireworkSprite.depth = 200;
+
         targetFireworkSprite.play("FireworksEmit");
       }, [], targetFireworkSprite);
       ownerScene.children.bringToTop(ownerScene.fireworksArray[index]);
+
     }
   }
 
@@ -676,8 +689,8 @@ class GameScene extends Phaser.Scene {
     ownerScene.maskUnderlay.visible = true;
     ownerScene.SummaryContainer.visible = true;
 
-    ownerScene.maskUnderlay.depth = 99;
-    ownerScene.SummaryContainer.depth = 99;
+    // ownerScene.maskUnderlay.depth = 99;
+    // ownerScene.SummaryContainer.depth = 99;
 
     ownerScene.SummaryContainer.y = -config.height * 0.5;
 
@@ -800,6 +813,11 @@ class GameScene extends Phaser.Scene {
 
       gameObject.x = gameObject.input.dragStartX;
       gameObject.y = gameObject.input.dragStartY;
+
+      if(this.levelInfoTable[g_CurrLevelIndex].penalizeWrongAns > 0)
+      {
+        this.updateScore(-1);
+      }
     }
 
     // Regenerate the selectables
@@ -829,10 +847,14 @@ class GameScene extends Phaser.Scene {
     // award the global score as well
     if (valueDiff > 0) {
       g_Score += valueDiff;
+      this.sound.play("GenericCollect");
     }
 
+    // check limits
+    if(g_ExpBaseScore + valueDiff / currThreshold >= 0){
     g_ExpBaseScore += valueDiff;
-    
+    }
+
     this.ScoreText.text = g_Score;
 
     // threshold negative means infinite level
@@ -861,7 +883,7 @@ class GameScene extends Phaser.Scene {
   /***************************/
   // Generic Btn Click Effect
   /***************************/
-  buttonAnimEffect(img, callback) {
+  buttonAnimEffect(img, callback, btnAudioName) {
     this.tweens.add({
       targets: img,
       scaleX: img.scaleY * 1.2,
@@ -871,7 +893,7 @@ class GameScene extends Phaser.Scene {
       yoyo: true
     });
 
-    this.sound.play('ButtonClick_SFX');
+    this.sound.play(btnAudioName);
   }
 
   
@@ -997,6 +1019,7 @@ class GameScene extends Phaser.Scene {
   genericUpdateGlobalScore(valueDiff, ownerScene) {
     g_Score += valueDiff;
     ownerScene.ScoreText.text = g_Score;
+    ownerScene.sound.play("GenericCollect");
 
     let targetObject = ownerScene.ScoreText;
 
