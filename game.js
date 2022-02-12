@@ -162,7 +162,7 @@ class GameScene extends Phaser.Scene {
     // some correct answers the rest are rubbish
     for (var index = 0; index < maxSelectableWordsInPanel; ++index) {
       let targetWordPart = Phaser.Utils.Array.RemoveRandomElement(creationTable);
-      let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '64px Arial', fill: "#000" });
+      let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '64px CustomKaiTi', fill: "#000" });
       currWord.wordPartCharacter = targetWordPart;
       currWord.setOrigin(0.5);
       currWord.setScale(1.1, 1.1);
@@ -209,7 +209,7 @@ class GameScene extends Phaser.Scene {
     for (var index = 0; index < resultSplitArray.length; ++index) {
       let character = resultSplitArray[index];
 
-      let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, character, { font: '100px Arial', fill: "#000" });
+      let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, character, { font: '100px CustomKaiTi', fill: "#000" });
 
       // create the han yun pin yin
       let pinYinData = splitPinYinArray[index];
@@ -287,7 +287,7 @@ class GameScene extends Phaser.Scene {
         }
         // no need for box but create the word part sprite
         else {
-          let fixedWordPart = this.add.text(boxX, boxY, wordPartInfo, { font: '100px Arial', fill: "#000" });
+          let fixedWordPart = this.add.text(boxX, boxY, wordPartInfo, { font: '100px CustomKaiTi', fill: "#000" });
           fixedWordPart.setOrigin(0.5);
           this.selectableGuessedCorrectWords.push(fixedWordPart);
           this.garbageCollector.push(fixedWordPart);
@@ -374,7 +374,7 @@ class GameScene extends Phaser.Scene {
 
     ownerScene.SummaryContainer = ownerScene.add.container(0, 0);
     ownerScene.gameOverSplash = ownerScene.add.image(config.width / 2, 0, "GameOverSplash");
-    ownerScene.SplashTextA = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y - 80, "Test asfs df", { font: '32px Arial', fill: "#000", align: 'center' });
+    ownerScene.SplashTextA = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y - 80, "Test asfs df", { font: '32px CustomKaiTi', fill: "#000", align: 'center' });
     ownerScene.SplashTextB = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.SplashTextA.y + 50, "Test asfs df", { font: '24px Arial', fill: "#000", align: 'center' });
     ownerScene.SplashTextA.setOrigin(0.5);
     ownerScene.SplashTextB.setOrigin(0.5);
