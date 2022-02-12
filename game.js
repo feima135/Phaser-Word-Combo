@@ -1,5 +1,6 @@
 // global score
 var g_Score = 0;
+var g_ExpBaseScore = 0;
 var g_LevelTime = 60000; // how long for each level in ms
 var g_CurrLevelIndex = 0;
 
@@ -372,11 +373,17 @@ class GameScene extends Phaser.Scene {
 
     ownerScene.SummaryContainer = ownerScene.add.container(0, 0);
     ownerScene.gameOverSplash = ownerScene.add.image(config.width / 2, 0, "GameOverSplash");
-    ownerScene.SplashTextA = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y, "Test asfs df", { font: '42px KaiTi', fill: "#000", align: 'center' });
-    ownerScene.SplashTextB = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.SplashTextA.y + 50, "Test asfs df", { font: '42px Arial', fill: "#000", align: 'center' });
+    ownerScene.SplashTextA = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y - 80, "Test asfs df", { font: '32px KaiTi', fill: "#000", align: 'center' });
+    ownerScene.SplashTextB = ownerScene.add.text(ownerScene.gameOverSplash.x, ownerScene.SplashTextA.y + 50, "Test asfs df", { font: '24px Arial', fill: "#000", align: 'center' });
     ownerScene.SplashTextA.setOrigin(0.5);
+    ownerScene.SplashTextB.setOrigin(0.5);
 
-    ownerScene.SummaryContainer.add([ownerScene.gameOverSplash, ownerScene.SplashTextA, ownerScene.SplashTextB]);
+    let additionalImageSpawn = ownerScene.add.image(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y + 70, "GameSceneBG");
+    ownerScene.SummaryContainer.additionalImageSpawn = additionalImageSpawn;
+    additionalImageSpawn.visible = false;
+    additionalImageSpawn.setOrigin(0.5);
+
+    ownerScene.SummaryContainer.add([ownerScene.gameOverSplash, ownerScene.SplashTextA, ownerScene.SplashTextB, additionalImageSpawn]);
     ownerScene.SummaryContainer.visible = false;
   }
 
@@ -409,12 +416,15 @@ class GameScene extends Phaser.Scene {
 
     // top UI
     this.starIcon = this.add.image(config.width / 2, config.height * 0.1, "StarIcon").setScale(0.5, 0.5);
-    this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20, g_Score, { font: '42px Arial', fill: "#000" });
+    this.ScoreText = this.add.text(this.starIcon.x + 30, this.starIcon.y - 20, g_ExpBaseScore, { font: '42px Arial', fill: "#000" });
     this.LevelText = this.add.text(config.width * 0.1, this.starIcon.y, "Level " + parseInt(g_CurrLevelIndex + 1), { font: '24px Arial', fill: "#000" });
+    this.LevelText.visible = false;
+    this.ScoreText.visible = false;
+    this.starIcon.visible = false;
 
     // create progression to bonus game bar
-    let expBarBase = this.add.image(config.width / 2 - 150, 120, "TimerBar").setOrigin(0, 0.5);
-    this.expBar = this.add.image(expBarBase.x + 53, expBarBase.y, "TimerBarContent").setOrigin(0, 0.5);
+    let expBarBase = this.add.image(config.width / 2 - 150, config.height * 0.1, "ExpBar").setOrigin(0, 0.5);
+    this.expBar = this.add.image(expBarBase.x + 53, expBarBase.y, "GenericBarContent").setOrigin(0, 0.5);
 
     // right panel for selectables
     this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
@@ -509,7 +519,7 @@ class GameScene extends Phaser.Scene {
 
     this.createFireworks();
 
-    this.scene.start('CoinShowerBonusGame');
+    //this.scene.start('CoinShowerBonusGame');
 
     //this.splashSummary("游戏开始", "", false);
   }
@@ -580,7 +590,11 @@ class GameScene extends Phaser.Scene {
         this.resetQuestion();
 
         if (newLevelAttained) {
-          this.splashSummary("过关", "", true);
+          this.genericSplashSummary(this, "过关", "Level Complete", "", 3500, ()=>
+          {
+            this.scene.start('CoinShowerBonusGame');
+          });
+          
         }
         this.children.bringToTop(this.maskUnderlay);
         this.children.bringToTop(this.SummaryContainer);
@@ -591,14 +605,30 @@ class GameScene extends Phaser.Scene {
   }
 
   /////////////////////////
+  // Generic celebration
+  ////////////////////////
+  genericPlayCelebration(ownerScene)
+  {
+    ownerScene.sound.play("CombinedCelebration_SFX");
+
+    // play fireworks
+    for (var index = 0; index < ownerScene.fireworksArray.length; ++index) {
+
+      let targetFireworkSprite = ownerScene.fireworksArray[index];
+      targetFireworkSprite.visible = false;
+      // random delay call
+      ownerScene.time.delayedCall(index * 500, function () {
+        targetFireworkSprite.visible = true;
+        targetFireworkSprite.play("FireworksEmit");
+      }, [], targetFireworkSprite);
+      ownerScene.children.bringToTop(ownerScene.fireworksArray[index]);
+    }
+  }
+
+  /////////////////////////
   // Generic splash summary
   ////////////////////////
-  genericSplashSummary(ownerScene, messageA, messageB, playCelebration, postReadCallback) {
-
-    if (playCelebration) {
-      ownerScene.sound.play("CombinedCelebration_SFX");
-      //this.sound.play("LevelComplete_SFX");
-    }
+  genericSplashSummary(ownerScene, messageA, messageB, additionalImage, displayDuration, postReadCallback) {
 
     ownerScene.SplashTextA.text = messageA;
     ownerScene.SplashTextB.text = messageB;
@@ -606,24 +636,19 @@ class GameScene extends Phaser.Scene {
     // due to dragging we need to rearrage the summary box to show up on top
     ownerScene.maskUnderlay.visible = true;
     ownerScene.SummaryContainer.visible = true;
-    ownerScene.children.bringToTop(ownerScene.maskUnderlay);
-    ownerScene.children.bringToTop(ownerScene.SummaryContainer);
+
+    ownerScene.maskUnderlay.depth = 99;
+    ownerScene.SummaryContainer.depth = 99;
 
     ownerScene.SummaryContainer.y = -config.height * 0.5;
 
-    // play fireworks
-    if (playCelebration) {
-      for (var index = 0; index < ownerScene.fireworksArray.length; ++index) {
+    if(additionalImage != "" || additionalImage){
+      ownerScene.SummaryContainer.additionalImageSpawn.visible = true;
+      ownerScene.SummaryContainer.additionalImageSpawn.setTexture(additionalImage);
+    }
+    else{
+      ownerScene.SummaryContainer.additionalImageSpawn.visible = false;
 
-        let targetFireworkSprite = ownerScene.fireworksArray[index];
-        targetFireworkSprite.visible = false;
-        // random delay call
-        ownerScene.time.delayedCall(index * 500, function () {
-          targetFireworkSprite.visible = true;
-          targetFireworkSprite.play("FireworksEmit");
-        }, [], targetFireworkSprite);
-        ownerScene.children.bringToTop(ownerScene.fireworksArray[index]);
-      }
     }
 
     // fade in the mask underlay
@@ -642,7 +667,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // done reading
-    ownerScene.time.delayedCall(3500, () => {
+    ownerScene.time.delayedCall(displayDuration, () => {
 
       if (ownerScene.fireworksArray) {
         for (var index = 0; index < ownerScene.fireworksArray.length; ++index) {
@@ -760,12 +785,12 @@ class GameScene extends Phaser.Scene {
 
     let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
 
-    g_Score += valueDiff;
-    this.ScoreText.text = g_Score;
+    g_ExpBaseScore += valueDiff;
+    this.ScoreText.text = g_ExpBaseScore;
 
     // threshold negative means infinite level
     if (currThreshold > 0) {
-      if (g_Score >= currThreshold) {
+      if (g_ExpBaseScore >= currThreshold) {
         ++g_CurrLevelIndex;
       }
     }
@@ -948,7 +973,8 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   // generic timer
   /*******************************************/
-  genericCreateTimer(levelDuration, ownerScene) {
+  genericCreateTimer(levelDuration, ownerScene, startDelay) {
+
     // create timer bar
     ownerScene.timerContainer = ownerScene.add.container();
 

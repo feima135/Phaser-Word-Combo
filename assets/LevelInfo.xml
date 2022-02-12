@@ -2,7 +2,7 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='8' partsToGuess='1' maxselectable='3'></level>
+      <level levelID='0' threshold ='2' partsToGuess='1' maxselectable='3'></level>
       <level levelID='1' threshold ='20' partsToGuess='2' maxselectable='4'></level>
       <level levelID='2' threshold ='32' partsToGuess='3' maxselectable='5'></level>
       <level levelID='3' threshold ='-1' partsToGuess='5' maxselectable='6'></level>

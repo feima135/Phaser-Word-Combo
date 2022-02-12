@@ -18,22 +18,21 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.parseData();
 
-    this.scene.get('GameScene').genericCreateTimer(this.levelInfo.levelDuration, this);
-
     this.scene.get('GameScene').genericGameSceneInit(this);
 
     // bypass intro splash
-    this.activateCoinShower();
+    //this.activateCoinShower();
+    //this.generateBonusWordComboPrize();
 
-    this.generateBonusWordComboPrize();
+    // intro splash
+    this.scene.get('GameScene').genericSplashSummary(this, "游戏开始", "Bonus Game", "ExplainBonusGame", 5000, ()=>
+    {
+      this.scene.get('GameScene').genericCreateTimer(this.levelInfo.levelDuration, this, 100);
 
-    // // intro splash
-    // this.scene.get('GameScene').genericSplashSummary(this, "Game Start", "qqqq", false, ()=>
-    // {
-    //   this.activateCoinShower();
+      this.activateCoinShower();
       
-    //   this.generateBonusWordComboPrize();
-    // });
+      this.generateBonusWordComboPrize();
+    });
   }
 
   update() {
@@ -120,7 +119,10 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
   onTimerExpired()
   {
-    console.log("done");
+    this.scene.get('GameScene').genericSplashSummary(this, "游戏结束", "Bonus Level Complete", "", 3500, ()=>
+    {
+      this.scene.start('GameScene');
+    });
   }
   
   // populate spawn data from XML
@@ -214,7 +216,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     let randomStartDelay = this.levelInfo.dispatchInterval;
     //let randomStartDelay = Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval);
-    let startY = -bufferItemWorldSize * 3;
+    let startY = -bufferItemWorldSize - 10;
     let finalY = config.height + bufferItemWorldSize;
 
     // random select type to drop
