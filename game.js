@@ -39,6 +39,7 @@ class GameScene extends Phaser.Scene {
     const globalInfo = levelInfo.getElementsByTagName('globalInfo');
     let wordPartsStringData = globalInfo[0].getAttribute("worldPartInfoTable");
     this.wordPartsPool = wordPartsStringData.split(',');
+    this.wordPartsPool.forEach(item => item.trim());
 
     const questions = levelInfo.getElementsByTagName('question');
 
@@ -192,8 +193,10 @@ class GameScene extends Phaser.Scene {
     this.currQuestionAudioName = targetQuestion.audioTable[randomComboSetIndex];
 
     let resultSplitArray = targetQuestion.wordsComboTable[randomComboSetIndex].split('_');
+    resultSplitArray.forEach(item => item.trim());
 
     let splitPinYinArray = targetQuestion.pinYinTable[randomComboSetIndex].split('_');
+    splitPinYinArray.forEach(item => item.trim());
 
     // for centralize word based on word count
     let startPosOffSet = (maxWordsDisplay - resultSplitArray.length) * wordXGap * 0.5;
@@ -357,7 +360,6 @@ class GameScene extends Phaser.Scene {
     this.createDragWordSelectables(this.currQuestion);
   }
 
-  frig
   //////////////////////////////////
   // create the underlay and splash
   /////////////////////////////////
@@ -800,6 +802,23 @@ class GameScene extends Phaser.Scene {
     this.sound.play('ButtonClick_SFX');
   }
 
+  
+  /***************************/
+  // Generic pulse effect
+  /***************************/
+  genericPulseUIEffect(ownerScene, img, scaleAmt, callback)
+  {
+    ownerScene.tweens.add({
+      targets: img,
+      scaleX: img.scaleY * scaleAmt,
+      scaleY: img.scaleX * scaleAmt,
+      duration: 150,
+      onComplete: callback,
+      yoyo: true
+    });
+
+  }
+
   // /*******************************************/
   // // Create Home Btn, timer bar, game over splash etc
   // /*******************************************/
@@ -909,11 +928,17 @@ class GameScene extends Phaser.Scene {
 
     let targetObject = ownerScene.ScoreText;
 
+    targetObject.setOrigin(0.0);
+    targetObject.setScale(1, 1);
+    
     ownerScene.tweens.add({
       targets: targetObject,
-      scaleX: 1.5,
-      scaleY: 1.5,
+      scaleX: 1.3,
+      scaleY: 1.3,
       duration: 80,
+      onComplete: function (tween) {
+        targetObject.setScale(1, 1);
+      },
       yoyo: true
     });
 

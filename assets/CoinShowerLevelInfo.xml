@@ -1,17 +1,27 @@
 <?xml version="1.0"?>
 <CoinShowerLevel>
 
+   <LevelInfo> 
+         <LevelInfoDetail LevelDuration = '30000' 
+                          FallDuration='9000' 
+                          FallDurationVariance = '3000' 
+                          DispatchInterval = '250' >
+         </LevelInfoDetail>
+    </LevelInfo>
+
    <SpawnInfoTable>
       <Spawn ID='Coin' RNGSpawn ='0.3' Payout='1' Freeze='0'></Spawn>
       <Spawn ID='Gem' RNGSpawn ='0.05' Payout='10' Freeze='0'></Spawn>
       <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1' Freeze='0' ></Spawn>
       <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5' Freeze='0'></Spawn>
-      <Spawn ID='wordCharacter' RNGSpawn ='0.8' Payout='0' WordCharacter = '1'></Spawn>
+      <Spawn ID='WordCharacterBG' RNGSpawn ='0.8' Payout='0' WordCharacter = '1'></Spawn>
       <Spawn ID='Freeze' RNGSpawn ='0.15' Payout='0' Freeze='1' Animated ='1'></Spawn>
    </SpawnInfoTable>
 
    <WordsMatchTable>
-      <WordsCombo combo = '炒_饭, 炒_菜' ></WordsCombo>
-      <WordsCombo combo = '形_状, 圆_形' ></WordsCombo>
+      <FeatureInfo scorePerComboWord = '20' ></FeatureInfo>
+      <WordsCombo combo = '炒饭, 炒菜, 菜饭' ></WordsCombo>
+      <WordsCombo combo = '形状, 圆形' ></WordsCombo>
    </WordsMatchTable>
+
 </CoinShowerLevel>

@@ -7,12 +7,10 @@ class CoinShowerBonusGame extends Phaser.Scene {
   create() {
 
     this.freezeMode = false;
-    this.levelDuration = 50000;
-    this.dispatchInterval = 100;
 
-    
     this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
 
+    // Create guess word feature assets
     this.guessWordComboBG = this.add.image(config.width * 0.85, config.height * 0.13, "GuessWordComboBG").setScale(.22, .22);
 
     this.freezeOverlay = this.add.image(config.width / 2, config.height / 2, "FreezeEffectOverlay").setScale(1, 1);
@@ -20,12 +18,13 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.parseData();
 
-    this.scene.get('GameScene').genericCreateTimer(this.levelDuration, this);
+    this.scene.get('GameScene').genericCreateTimer(this.levelInfo.levelDuration, this);
 
     this.scene.get('GameScene').genericGameSceneInit(this);
 
     // bypass intro splash
     this.activateCoinShower();
+
     this.generateBonusWordComboPrize();
 
     // // intro splash
@@ -41,24 +40,82 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.scene.get('GameScene').genericGameSceneUpdate(this);
 
     this.guessWordComboBG.depth = 1;
-    //this.children.bringToTop(this.guessWordComboBG);
   }
 
   // generate a random word combo question
   // if player picks correct missing words, award big prize
   generateBonusWordComboPrize()
   {
+    if (this.guessWordComboBG.currWord) {
+      this.guessWordComboBG.currWord.destroy();
+    }
+
     let randomWordCombo = Phaser.Utils.Array.GetRandom(this.wordComboPool);
 
-    randomWordCombo = randomWordCombo.replace('_' , "");
-    console.log(randomWordCombo);
+    //randomWordCombo = randomWordCombo.replace('_' , "");
 
     let depth = this.guessWordComboBG.depth;
+
+    // now randomly pick 1 portion to be a guess portion
+    let randomIndex = Phaser.Math.Between(0, randomWordCombo.length - 1);
+
+    console.log("random index " + randomIndex);
+
+    // check for this chinese character 
+    // could have other answers
+    let mainGuessCharacter = randomWordCombo[randomIndex];
+    this.possibleWordComboTargetTable = [];
+    //this.currBonousWordComboTarget.push(mainGuessCharacter);
+
+    // look up this.wordComboPool and see other similar instances
+    this.wordComboPool.forEach(item => {
+      console.log("hmm" + item.charAt(randomIndex));
+
+      // consider 炒饭 炒菜, mainguesscharacter 炒
+      // consider 炒饭 vs 菜饭, mainguesscharacter 炒
+      // its a match if the immediate next character matches
+      let primaryMatch = item.charAt(randomIndex - 1) == randomWordCombo[randomIndex - 1];
+      let secondaryMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
+
+      if (primaryMatch || secondaryMatch) {
+        let potentialCharacter = item[randomIndex];
+        let comboTargetSet =
+        {
+          character: potentialCharacter,
+          correctAnswerCombo: item
+        };
+
+        if (!this.possibleWordComboTargetTable.includes(potentialCharacter)) {
+          this.possibleWordComboTargetTable.push(comboTargetSet);
+        }
+      }
+    });
+
+    console.log("mainword guessing" + randomWordCombo);
+    console.log("randomindex" + randomIndex);
+
+    this.possibleWordComboTargetTable.forEach(item => 
+    {
+    console.log("guessing" + item.character);
+    });
 
     let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px KaiTi', fill: "#F8FD38" });
     currWord.setOrigin(0.5);
     currWord.depth = depth + 1;
     this.children.bringToTop(currWord);
+
+    this.guessWordComboBG.currWord = currWord;
+
+    // replace ? with index
+    currWord.text = randomWordCombo.replace(mainGuessCharacter, "?");
+    
+    // generate a prize
+    this.guessWordComboBG.prize = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y - 18, 100, { font: '22px Arial', fill: "#000" });
+    this.guessWordComboBG.prize.setStroke('#fff', 3);
+    this.guessWordComboBG.prize.depth = this.guessWordComboBG.depth + 1;
+    this.guessWordComboBG.prize.setOrigin(0.5);
+    this.guessWordComboBG.prize.amount = this.scorePerComboWord * randomWordCombo.length;
+    this.guessWordComboBG.prize.text = this.guessWordComboBG.prize.amount;
   }
 
   onTimerExpired()
@@ -71,6 +128,17 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.spawnTableInfo = [];
 
     const spawnInfoData = this.cache.xml.get('CoinShowerLevelInfo');
+
+    const levelInfoDetail = spawnInfoData.getElementsByTagName('LevelInfoDetail');
+
+    let levelInfo = {
+      levelDuration : parseInt(levelInfoDetail[0].getAttribute("LevelDuration")),
+      fallDuration : parseInt(levelInfoDetail[0].getAttribute("FallDuration")),
+      fallVariance : parseInt(levelInfoDetail[0].getAttribute("FallDurationVariance")),
+      dispatchInterval : parseInt(levelInfoDetail[0].getAttribute("DispatchInterval"))
+    };
+
+    this.levelInfo = levelInfo;
 
     const spawnInfoTable = spawnInfoData.getElementsByTagName('Spawn');
 
@@ -120,13 +188,19 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
       wordPairing.forEach(targetString => {
 
+        targetString = targetString.trim();
         this.wordComboPool.push(targetString);
-  
-        let wordPart = targetString.split('_'); // 1 instance of example 炒
 
-        wordPart.forEach(item => this.wordCharacterPool.push(item));
+        let wordPart = targetString.split(''); // 1 instance of example 炒
+
+        wordPart.forEach(item => {
+          this.wordCharacterPool.push(item.trim());
+        });
       });
     });
+
+    const wordsComboFeatureInfo = spawnInfoData.getElementsByTagName('FeatureInfo');
+    this.scorePerComboWord = wordsComboFeatureInfo[0].getAttribute("scorePerComboWord");
   }
 
   // dispatch collectable, could be coin, gems or bombs etc
@@ -135,8 +209,10 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // randomly select a drop start pt and speed
     let spawnPosX = Phaser.Math.FloatBetween(bufferItemWorldSize, config.width - bufferItemWorldSize);
-    let randomFallDuration = Phaser.Math.FloatBetween(3500, 8000);
-    let randomStartDelay = Phaser.Math.FloatBetween(0, 2000);
+    let randomFallDuration = Phaser.Math.FloatBetween(this.levelInfo.fallDuration - this.levelInfo.fallVariance, 
+      this.levelInfo.fallDuration + this.levelInfo.fallVariance);
+
+    let randomStartDelay = Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval);
     let startY = -bufferItemWorldSize * 3;
     let finalY = config.height + bufferItemWorldSize;
 
@@ -144,7 +220,6 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // set the random type
     let maxRNG = this.spawnTableInfo[this.spawnTableInfo.length - 1].RNGThresholdMax;
-    console.log(maxRNG);
     let spawnRNG = Phaser.Math.FloatBetween(0, maxRNG);
 
     for (var rngIndex = 0; rngIndex < this.spawnTableInfo.length; ++rngIndex) {
@@ -153,14 +228,14 @@ class CoinShowerBonusGame extends Phaser.Scene {
       let spawnRNGSuccess = spawnRNG >= currSpawnItemData.RNGThresholdMin && spawnRNG < currSpawnItemData.RNGThresholdMax;
       if (spawnRNGSuccess) {
 
-        let selectableItemRoot = this.add.container();
-        let selectableItem = this.add.sprite(spawnPosX, startY, "WordCharacterBG").setScale(0.5);
+        let selectableItem = this.add.sprite(spawnPosX, startY, "Coin").setScale(0.5);
+        selectableItem.setTexture(currSpawnItemData.ID);
 
-        selectableItemRoot.add(selectableItem);
+        let movementTargets = [];
+        movementTargets.push(selectableItem);
 
         // either add a text character or picked image 
         if (currSpawnItemData.WordCharacter) {
-
           let randomCharacter = Phaser.Utils.Array.GetRandom(this.wordCharacterPool);
 
           // chinese character round base
@@ -168,11 +243,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
           selectableItem.wordCharacterObj.setOrigin(0.5);
           selectableItem.wordCharacterObj.word = randomCharacter;
 
-          selectableItemRoot.add(selectableItem.wordCharacterObj);
+          movementTargets.push(selectableItem.wordCharacterObj);
         }
         else {
-          selectableItem.setTexture(currSpawnItemData.ID);
-
           let targetAnimName = String(currSpawnItemData.ID + "Anim");
           if (this.anims.exists(targetAnimName)) {
             selectableItem.play(targetAnimName);
@@ -187,16 +260,19 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
         selectableItem.payout = parseInt(currSpawnItemData.Payout);
         selectableItem.freezeType = parseInt(currSpawnItemData.Freeze);
+        selectableItem.wordCharacterType = parseInt(currSpawnItemData.WordCharacter);
 
         // drop down tween anim
         let targetTween = this.add.tween({
-          targets: selectableItemRoot,
+          targets: movementTargets,
           y: { from: startY, to: finalY },
           ease: "Cubic.In",
           onCompleteScope: this,
           startDelay: randomStartDelay,
           onComplete: function () {
-            selectableItemRoot.destroy();
+            
+            movementTargets.forEach(item => item.destroy());
+
           },
           duration: randomFallDuration
         });
@@ -213,7 +289,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
       targets: this,
       onLoopScope: this,
       loop: -1,
-      loopDelay: this.dispatchInterval,
+      loopDelay: Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval),
       onLoop: function () {
         this.dispatchItem();
       },
@@ -266,7 +342,6 @@ class CoinShowerBonusGame extends Phaser.Scene {
           },
         });
       },
-
       yoyo: true
     });
 
@@ -333,6 +408,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
       return;
     }
 
+    selectedItem.disableInteractive();
+    selectedItem.alpha = 0.5;
     this.freezeMode = true;
 
     let freezeDuration = 2000;
@@ -371,6 +448,72 @@ class CoinShowerBonusGame extends Phaser.Scene {
     });
   }
 
+  onSelectedWordCharacter(selectedItem)
+  {
+    let targetPos = this.guessWordComboBG.currWord;
+
+    let targetCombo;
+    let correctWord = false;
+    this.possibleWordComboTargetTable.forEach(item => {
+      if (item.character == selectedItem.wordCharacterObj.word) {
+        targetCombo = item;
+        correctWord = true;
+      }
+    });
+
+    //check if correct
+    if (selectedItem  && targetCombo != null) {
+      if (correctWord) {
+        selectedItem.depth = this.guessWordComboBG.depth + 2;
+        selectedItem.wordCharacterObj.depth = selectedItem.depth + 1;
+
+        // flyover and self destruct
+        this.add.tween({
+          targets: [selectedItem, selectedItem.wordCharacterObj],
+          onCompleteScope: this,
+          delay: 100,
+          x: targetPos.x,
+          y: targetPos.y,
+          ease: "Back.easeInOut",
+          onComplete: function () {
+            selectedItem.destroy();
+            selectedItem.wordCharacterObj.destroy();
+
+            // flyover prize flyover and self destruct
+            this.add.tween({
+              targets: this.guessWordComboBG.prize,
+              onCompleteScope: this,
+              delay: 500,
+              x: this.scene.get('GameScene').ScoreText.x,
+              y: this.scene.get('GameScene').ScoreText.y,
+              ease: "Back.easeInOut",
+              onComplete: function () {
+                this.scene.get('GameScene').genericUpdateGlobalScore(this.guessWordComboBG.prize.amount, this);
+                this.guessWordComboBG.prize.destroy();
+
+                // generate a new combo!
+                this.generateBonusWordComboPrize();
+
+              },
+              duration: 1000
+            });
+
+            // reveal correct answer
+            this.guessWordComboBG.currWord.text = targetCombo.correctAnswer;
+            
+            this.scene.get('GameScene').genericPulseUIEffect(this, this.guessWordComboBG.currWord, 1.5, null);
+          },
+          duration: 800
+        });
+      }
+      else{
+
+        selectedItem.destroy();
+        selectedItem.wordCharacterObj.destroy();
+      }
+    }
+  }
+
   // when selectable item gets clicked
   onSelectableItemClicked(selectedItem) {
 
@@ -387,6 +530,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
     }
     else if(selectedItem.freezeType > 0){
       this.onSelectedFreezeItem(selectedItem);
+    }
+    else if(selectedItem.wordCharacterType > 0){
+      this.onSelectedWordCharacter(selectedItem);
     }
   }
 }
