@@ -784,6 +784,8 @@ class GameScene extends Phaser.Scene {
     this.HintBtn.alpha = 1.0;
 
     // check if this word part is correct
+    console.log((gameObject.wordPartCharacter));
+
     let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
 
     if (answerCorrect) {
