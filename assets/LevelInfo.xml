@@ -30,13 +30,13 @@
       <wordsCombo guessWordID = '1' word = '形_状' pinYin ='xíng_zhuàng' audioName = 'XingZhuang_SFX'> </wordsCombo>
       <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '丬' atlasInfo='15'></wordPartBox>
       <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '犬' atlasInfo='16'></wordPartBox>
-   </question>
+   </question> -->
 
    <question id="养">
       <wordsCombo guessWordID = '0' word = '养_成_习_惯' pinYin ='yǎng_chéng_xí_guàn' audioName = 'YangChengXiGuan_SFX'> </wordsCombo>
       <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '𦍌' atlasInfo='10'></wordPartBox>
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '介' atlasInfo='9'></wordPartBox>
-   </question> -->
+   </question>
 
    <!-- <question id="黄">
       <wordsCombo guessWordID = '0' word = '黄_色' pinYin ='huáng_sè' audioName = 'HuangSe_SFX'> </wordsCombo>
@@ -56,13 +56,13 @@
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '吕' atlasInfo='7'></wordPartBox>
    </question> -->
 
-   <question id="嘴">
+   <!-- <question id="嘴">
       <wordsCombo guessWordID = '0' word = '嘴_巴' pinYin ='zuǐ_bā' audioName = 'ZuiBa_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '嘴_里' pinYin ='zuǐ_lǐ' audioName = 'ZuiLi_SFX'> </wordsCombo>
       <wordPartBox x='0' y ='.8' u='.4' w='1.11'  wordPartInfo = '囗' atlasInfo='0'></wordPartBox>
       <wordPartBox x='1.23' y ='.3' u='.82' w='0.55'  wordPartInfo = '此' atlasInfo='1'></wordPartBox>
       <wordPartBox x='1.23' y ='1.5' u='.82' w='.55' wordPartInfo = '角' atlasInfo='3'></wordPartBox>
-   </question>
+   </question> -->
 
    <!-- <question id="蛋">
       <wordsCombo guessWordID = '1' word = '鸡_蛋' pinYin ='jī_dàn' audioName = 'JiDan_SFX'> </wordsCombo>

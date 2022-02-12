@@ -161,7 +161,7 @@ class GameScene extends Phaser.Scene {
     // some correct answers the rest are rubbish
     for (var index = 0; index < maxSelectableWordsInPanel; ++index) {
       let targetWordPart = Phaser.Utils.Array.RemoveRandomElement(creationTable);
-      let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '80px KaiTi', fill: "#000" });
+      let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '64px KaiTi', fill: "#000" });
       currWord.wordPartCharacter = targetWordPart;
       currWord.setOrigin(0.5);
       currWord.setScale(1.1, 1.1);
@@ -185,7 +185,7 @@ class GameScene extends Phaser.Scene {
   createQuestionAssets(targetQuestion, cenPosX, cenPosY) {
     let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.25);
     let wordSize = 1.1;
-    let wordXGap = wordSize * 128 * 1.2;
+    let wordXGap = wordSize * 128 * 1.1;
     let maxWordsDisplay = 4; // assume is 4
 
     // choose a random combo
@@ -212,7 +212,7 @@ class GameScene extends Phaser.Scene {
 
       // create the han yun pin yin
       let pinYinData = splitPinYinArray[index];
-      let pinYin = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet + 50, spawnPos.y + 140, pinYinData, { font: '22px Arial', fill: "#000" });
+      let pinYin = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet + 30, spawnPos.y + 140, pinYinData, { font: '22px Arial', fill: "#000" });
 
       //let currWord = this.add.sprite(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, "QuestionWordsAtlas");
       //currWord.setFrame(atlasIndex);
@@ -412,7 +412,10 @@ class GameScene extends Phaser.Scene {
     this.add.image(config.width / 2, config.height / 2, "GameSceneBG").setScale(config.width, config.height);
 
     // Game BG
-    //this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+    this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+
+    // bg for the question words
+    this.add.image(config.width * 0.51, config.height * 0.38, "MainGameSubBG").setScale(1, 1);
 
     // top UI
     this.starIcon = this.add.image(config.width / 2, config.height * 0.1, "StarIcon").setScale(0.5, 0.5);
@@ -423,11 +426,11 @@ class GameScene extends Phaser.Scene {
     this.starIcon.visible = false;
 
     // create progression to bonus game bar
-    let expBarBase = this.add.image(config.width / 2 - 150, config.height * 0.1, "ExpBar").setOrigin(0, 0.5);
-    this.expBar = this.add.image(expBarBase.x + 53, expBarBase.y, "GenericBarContent").setOrigin(0, 0.5);
+    let expBarBase = this.add.image(config.width / 2 - 150, config.height * 0.08, "ExpBar").setOrigin(0, 0.5);
+    this.expBarContent = this.add.image(expBarBase.x + 53, expBarBase.y, "GenericBarContent").setOrigin(0, 0.5);
 
     // right panel for selectables
-    this.SelectablePanel = this.add.image(config.width * 0.5, config.height * 0.68, "NoFillBox");
+    this.SelectablePanel = this.add.image(config.width * 0.49, config.height * 0.72, "NoFillBox");
     this.SelectablePanel.alpha = 0.5;
 
     //this.ScoreText = this.add.text(0,0,  'chǎofàn', { font: '20px Arial', fill: "#000" });
@@ -437,14 +440,14 @@ class GameScene extends Phaser.Scene {
     this.accumulateStarIcon.visible = false;
 
     // hint btn
-    this.HintBtn = this.add.image(config.width * 0.5, config.height * 0.9, "HintBtn").setInteractive();
+    this.HintBtn = this.add.image(config.width * 0.4, config.height * 0.9, "HintBtn").setInteractive();
     this.HintBtn.setScale(0.7, 0.7);
     this.HintBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.HintBtn,
       () => this.processHint())
     );
 
     // audio button
-    this.voiceOverBtn = this.add.image(config.width * 0.95, config.height * 0.3, "AudioButton").setScale(.8, .8).setInteractive();
+    this.voiceOverBtn = this.add.image(config.width * 0.6, config.height * 0.9, "AudioButton").setScale(.8, .8).setInteractive();
     this.voiceOverBtn.on('pointerdown', this.buttonAnimEffect.bind(this, this.voiceOverBtn,
       () => {
         this.sound.play(this.currQuestionAudioName);
@@ -457,6 +460,8 @@ class GameScene extends Phaser.Scene {
     this.resetQuestion();
 
     this.genericGameSceneInit(this);
+
+    this.updateScore(0);
 
     ///////////////////////
     // TO BE PORTED ANIMATION CODE FOR MONSTER
@@ -522,6 +527,40 @@ class GameScene extends Phaser.Scene {
     //this.scene.start('CoinShowerBonusGame');
 
     //this.splashSummary("游戏开始", "", false);
+  }
+
+  updateExpBar(oldScore, newScore, totalPossibleScore)
+  {
+    if(oldScore == newScore)
+    {
+      this.expBarContent.setScale(0, 1);
+      return;
+    }
+
+    let tintTargetImage = this.expBarContent;
+
+    let valueDiff = newScore - oldScore;
+    let normalizedScale = newScore / totalPossibleScore;
+
+    if (valueDiff < 0) {
+      // red tint effect for penalize
+      this.tweens.addCounter({
+        from: 255,
+        to: 2,
+        duration: 100,
+        yoyo: true,
+        onUpdate: function (tween) {
+          const value = Math.floor(tween.getValue());
+          tintTargetImage.setTint(Phaser.Display.Color.GetColor(255, value, value));
+        }
+      });
+    }
+
+    this.add.tween({
+          targets: this.expBarContent,
+          scaleX: normalizedScale,
+          duration: 800
+        });
   }
 
   /////////////////
@@ -785,8 +824,16 @@ class GameScene extends Phaser.Scene {
 
     let currThreshold = this.levelInfoTable[g_CurrLevelIndex].threshold;
 
+    this.updateExpBar(g_ExpBaseScore, g_ExpBaseScore + valueDiff, currThreshold);
+
+    // award the global score as well
+    if (valueDiff > 0) {
+      g_Score += valueDiff;
+    }
+
     g_ExpBaseScore += valueDiff;
-    this.ScoreText.text = g_ExpBaseScore;
+    
+    this.ScoreText.text = g_Score;
 
     // threshold negative means infinite level
     if (currThreshold > 0) {
@@ -806,9 +853,9 @@ class GameScene extends Phaser.Scene {
         yoyo: true
       });
 
+
     // check if we move to new level
     return prevLevel != g_CurrLevelIndex;
-
   }
 
   /***************************/
@@ -916,7 +963,7 @@ class GameScene extends Phaser.Scene {
   // Common Init stuff for all scenes
   /*******************************************/
   genericGameSceneInit(ownerScene) {
-    ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.1, config.height * 0.1, "ScoreIcon").setScale(0.5, 0.5);
+    ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.08, config.height * 0.08, "ScoreIcon").setScale(0.5, 0.5);
     ownerScene.ScoreText = ownerScene.add.text(ownerScene.scoreIcon.x + 20, ownerScene.scoreIcon.y - 20, g_Score, { font: '32px Arial', fill: "#000", align: 'center' });
     ownerScene.ScoreText.setOrigin(0.0);
     ownerScene.ScoreText.setStroke('#fff', 3);
