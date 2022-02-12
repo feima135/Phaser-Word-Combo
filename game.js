@@ -988,7 +988,7 @@ class GameScene extends Phaser.Scene {
   // Common Init stuff for all scenes
   /*******************************************/
   genericGameSceneInit(ownerScene) {
-    ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.08, config.height * 0.08, "GlobalScoreIcon").setScale(0.5, 0.5);
+    ownerScene.scoreIcon = ownerScene.add.image(config.width * 0.08, config.height * 0.08, "StarIcon").setScale(0.5, 0.5);
     ownerScene.ScoreText = ownerScene.add.text(ownerScene.scoreIcon.x + 20, ownerScene.scoreIcon.y - 20, g_Score, { font: '32px Arial', fill: "#000", align: 'center' });
     ownerScene.ScoreText.setOrigin(0.0);
     ownerScene.ScoreText.setStroke('#fff', 3);
