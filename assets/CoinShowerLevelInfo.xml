@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<CoinShowerLevel>
+
+   <LevelInfo> 
+         <LevelInfoDetail LevelDuration = '38000' 
+                          FallDuration='9000' 
+                          FallDurationVariance = '3000' 
+                          DispatchInterval = '200' >
+         </LevelInfoDetail>
+    </LevelInfo>
+
+   <SpawnInfoTable>
+      <Spawn ID='Coin' RNGSpawn ='0.4' Payout='1' Freeze='0' audioName ='CoinCollect_1_SFX'></Spawn>
+      <Spawn ID='Gem' RNGSpawn ='0.05' Payout='10' Freeze='0' audioName ='CoinCollect_2_SFX'></Spawn>
+      <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1' Freeze='0' audioName ='BombCollect_SFX'></Spawn>
+      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5' Freeze='0' audioName ='CoinCollect_3_SFX'></Spawn>
+      <Spawn ID='WordCharacterBG' RNGSpawn ='0.7' Payout='0' WordCharacter = '1' audioName ='WordCharacterCollect_SFX'></Spawn>
+      <Spawn ID='Freeze' RNGSpawn ='0.1' Payout='0' Freeze='1' Animated ='1' audioName ='FreezeCollect_SFX'></Spawn>
+   </SpawnInfoTable>
+
+   <WordsMatchTable>
+      <FeatureInfo scorePerComboWord = '25' ></FeatureInfo>
+      <WordsCombo combo = '炒饭, 炒菜, 菜饭, 炒熟, 炒蛋' ></WordsCombo>
+      <WordsCombo combo = '形状, 圆形' ></WordsCombo>
+      <WordsCombo combo = '养成习惯' ></WordsCombo>
+      <WordsCombo combo = '黄色, 黄瓜, 黄金, 黄昏' ></WordsCombo>
+      <WordsCombo combo = '营地, 营火会, 露营, 营养' ></WordsCombo>
+      <WordsCombo combo = '嘴巴, 嘴里' ></WordsCombo>
+      <WordsCombo combo = '鸡蛋, 蛋黄, 蛋糕, 蛋白' ></WordsCombo>
+   </WordsMatchTable>
+
+</CoinShowerLevel>

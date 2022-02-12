@@ -38,13 +38,14 @@ class LoadingScene extends Phaser.Scene {
 
   // when load completes
   loadCompleted() {
-    // go to home page
+
     this.scene.start('GameScene');
   }
 
   preloadAssets() {
 
     this.load.xml('LevelInfo', 'assets/LevelInfo.xml');
+    this.load.xml('CoinShowerLevelInfo', 'assets/CoinShowerLevelInfo.xml');
 
     this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
 
@@ -55,7 +56,7 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('HintBtn', 'assets/HintBtn.png');
 
     //this.load.spritesheet('QuestionWordsAtlas', 'assets/QuestionWordsAtlas.png', { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
+    //this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
 
     this.load.spritesheet('AdultMonsterIdle', 'assets/AdultMonsterIdle.png', { frameWidth: 256, frameHeight: 210 });
     this.load.spritesheet('AdultMonsterWalk', 'assets/AdultMonsterWalk.png', { frameWidth: 256, frameHeight: 210 });
@@ -68,13 +69,30 @@ class LoadingScene extends Phaser.Scene {
     // this.load.image('StarIconBase', 'assets/StarIconEmptyBase.png');
     this.load.image('AudioButton', 'assets/AudioBtn.png');
 
+    this.load.image('Coin', 'assets/Coin.png');
+    this.load.image('Crown', 'assets/Crown.png');
+    this.load.image('Gem', 'assets/Gem.png');
+    this.load.image('Bomb', 'assets/Bomb.png');
+    this.load.image('Skull_A', 'assets/Skull_A.png');
+    this.load.image('ScoreIcon', 'assets/ScoreIcon.png');
+    this.load.image('FreezeEffectOverlay', 'assets/FreezeEffectOverlay.png');
+    this.load.image('WordCharacterBG', 'assets/WordCharacterBG.png');
+    this.load.image('GuessWordComboBG', 'assets/GuessWordComboBG.png');
+    this.load.image('ExplainBonusGame', 'assets/ExplainBonusGame.png');
+    this.load.image('MainGameSubBG', 'assets/MainGameSubBG.png');
+
+    this.load.spritesheet('Freeze', 'assets/Freeze.png', { frameWidth: 128, frameHeight: 131 });
+
     // this.load.image('MultiplyIcon', 'assets/MultiplyIcon.png');
-    // this.load.spritesheet('Numbers', 'assets/Numbers.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('Fireworks', 'assets/Fireworks.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('Explosion', 'assets/Explosion.png', { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('Sparkle', 'assets/Sparkle_Gold.png', { frameWidth: 32, frameHeight: 32 });
 
     // this.load.image('ChatBubble', 'assets/FoodStoreScene/ChatBubble.png');
-    // this.load.image('TimerBar', 'assets/TimerBar.png');
-    // this.load.image('TimerBarContent', 'assets/TimerBarContent.png');
+    this.load.image('TimerBar', 'assets/TimerBar.png');
+    this.load.image('GenericBarContent', 'assets/GenericBarContent.png');
+
+    this.load.image('ExpBar', 'assets/ExpBar.png');
 
     // this.load.image('ChoppingBoard', 'assets/FoodStoreScene/ChoppingBoard.png');
     // this.load.image('FryingPan', 'assets/FoodStoreScene/FryingPan.png');
@@ -126,5 +144,18 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('ChaoDan_SFX', 'assets/Audio/ChaoDan_SFX.mp3');
 
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
+
+    this.load.audio('CoinCollect_1_SFX', 'assets/Audio/CoinCollect_1.mp3');
+    this.load.audio('CoinCollect_2_SFX', 'assets/Audio/CoinCollect_2.mp3');
+    this.load.audio('CoinCollect_3_SFX', 'assets/Audio/CoinCollect_3.mp3');
+    this.load.audio('CoinCollect_Big_SFX', 'assets/Audio/CoinCollect_Big_SFX.mp3');
+
+    this.load.audio('FreezeCollect_SFX', 'assets/Audio/FreezeCollect.mp3');
+    this.load.audio('BombCollect_SFX', 'assets/Audio/BombCollect.mp3');
+    this.load.audio('GenericCollect_SFX', 'assets/Audio/GenericCollect.mp3');
+
+    this.load.audio('WordCharacterCollect_SFX', 'assets/Audio/WordCharacterCollect.mp3');
+
+
   }
 }
