@@ -2,10 +2,10 @@
 <CoinShowerLevel>
 
    <LevelInfo> 
-         <LevelInfoDetail LevelDuration = '30000' 
+         <LevelInfoDetail LevelDuration = '35000' 
                           FallDuration='9000' 
                           FallDurationVariance = '3000' 
-                          DispatchInterval = '250' >
+                          DispatchInterval = '200' >
          </LevelInfoDetail>
     </LevelInfo>
 

@@ -212,7 +212,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
     let randomFallDuration = Phaser.Math.FloatBetween(this.levelInfo.fallDuration - this.levelInfo.fallVariance, 
       this.levelInfo.fallDuration + this.levelInfo.fallVariance);
 
-    let randomStartDelay = Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval);
+    let randomStartDelay = this.levelInfo.dispatchInterval;
+    //let randomStartDelay = Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval);
     let startY = -bufferItemWorldSize * 3;
     let finalY = config.height + bufferItemWorldSize;
 
@@ -289,7 +290,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
       targets: this,
       onLoopScope: this,
       loop: -1,
-      loopDelay: Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval),
+      loopDelay: this.levelInfo.dispatchInterval,
+      //loopDelay: Phaser.Math.FloatBetween(0, this.levelInfo.dispatchInterval),
       onLoop: function () {
         this.dispatchItem();
       },
@@ -453,6 +455,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
     let targetPos = this.guessWordComboBG.currWord;
 
     let targetCombo;
+
+    // check if it's correct
     let correctWord = false;
     this.possibleWordComboTargetTable.forEach(item => {
       if (item.character == selectedItem.wordCharacterObj.word) {
@@ -462,8 +466,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
     });
 
     //check if correct
-    if (selectedItem  && targetCombo != null) {
-      if (correctWord) {
+    if (selectedItem ) {
+      if (correctWord && targetCombo != null) {
         selectedItem.depth = this.guessWordComboBG.depth + 2;
         selectedItem.wordCharacterObj.depth = selectedItem.depth + 1;
 
@@ -475,6 +479,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
           x: targetPos.x,
           y: targetPos.y,
           ease: "Back.easeInOut",
+          // flyover from picked in scene to guessWordBG complete
           onComplete: function () {
             selectedItem.destroy();
             selectedItem.wordCharacterObj.destroy();
@@ -499,7 +504,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
             });
 
             // reveal correct answer
-            this.guessWordComboBG.currWord.text = targetCombo.correctAnswer;
+            this.guessWordComboBG.currWord.text = targetCombo.correctAnswerCombo;
             
             this.scene.get('GameScene').genericPulseUIEffect(this, this.guessWordComboBG.currWord, 1.5, null);
           },
@@ -507,7 +512,6 @@ class CoinShowerBonusGame extends Phaser.Scene {
         });
       }
       else{
-
         selectedItem.destroy();
         selectedItem.wordCharacterObj.destroy();
       }
