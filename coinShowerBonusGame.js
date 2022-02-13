@@ -98,7 +98,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     // console.log("guessing" + item.character);
     // });
 
-    let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px KaiTi', fill: "#F8FD38" });
+    let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px ' + g_TargetChineseFonts, fill: "#F8FD38" });
     currWord.setOrigin(0.5);
     currWord.depth = depth + 1;
     this.children.bringToTop(currWord);
@@ -246,7 +246,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
           let randomCharacter = Phaser.Utils.Array.GetRandom(this.wordCharacterPool);
 
           // chinese character round base
-          selectableItem.wordCharacterObj = this.add.text(spawnPosX, startY, randomCharacter, { font: '42px KaiTi', fill: "#000", align: 'center' });
+          selectableItem.wordCharacterObj = this.add.text(spawnPosX, startY, randomCharacter, { font: '42px ' + g_TargetChineseFonts, fill: "#000", align: 'center' });
           selectableItem.wordCharacterObj.setOrigin(0.5);
           selectableItem.wordCharacterObj.word = randomCharacter;
 
