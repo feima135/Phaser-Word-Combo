@@ -34,11 +34,11 @@ class GameScene extends Phaser.Scene {
 
     //g_TargetChineseFonts = "PingFang";
 
-    // if mobile device
-    if(!this.sys.game.device.os.desktop)
-    {
-      this.add.text(400, 400, "mobile", { font: '32px Arial', fill: "#000" });
-    }
+    // // if mobile device
+    // if(!this.sys.game.device.os.desktop)
+    // {
+    //   this.add.text(400, 400, "mobile", { font: '32px Arial', fill: "#000" });
+    // }
 
     const levelInfo = this.cache.xml.get('LevelInfo');
 
@@ -858,12 +858,8 @@ class GameScene extends Phaser.Scene {
     //let atlasIndex_A = g_WordPartAtlasTable[gameObject.wordPartCharacter];
     //let atlasIndex_B = g_WordPartAtlasTable[dropZone.requiredWordPart];
 
-    let answerCorrect = true;
-
-    //let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
+    let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
     //let answerCorrect = atlasIndex_A == atlasIndex_B;
-
-    this.sound.play('Wrong_SFX');
 
     if (answerCorrect) {
 
