@@ -873,16 +873,16 @@ class GameScene extends Phaser.Scene {
 
       dropZone.ownerDropBox.destroy();
 
-      // 1 less part to guess
-      Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
+      // // 1 less part to guess
+      // Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
 
-      // remove from selectables
-      Phaser.Utils.Array.Remove(this.selectableWords, gameObject);
+      // // remove from selectables
+      // Phaser.Utils.Array.Remove(this.selectableWords, gameObject);
 
-      this.selectableGuessedCorrectWords.push(gameObject);
+      // this.selectableGuessedCorrectWords.push(gameObject);
 
-      // check end question condition
-      this.checkEndQuestionCondition();
+      // // check end question condition
+      // this.checkEndQuestionCondition();
     }
     // wrong answer
     else {
