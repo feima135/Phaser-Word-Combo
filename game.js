@@ -23,7 +23,7 @@ class GameScene extends Phaser.Scene {
   /////////////////
   parseLevelData() {
 
-    g_TargetChineseFonts = "PingFang SC Regular";
+    g_TargetChineseFonts = "PingFang";
 
     // if mobile device
     if(!this.sys.game.device.os.desktop)
