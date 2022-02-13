@@ -2,10 +2,10 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='8' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
-      <level levelID='1' threshold ='15' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
-      <level levelID='2' threshold ='25' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
-      <level levelID='3' threshold ='30' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
+      <level levelID='0' threshold ='7' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
+      <level levelID='1' threshold ='10' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
+      <level levelID='2' threshold ='15' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
+      <level levelID='3' threshold ='20' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
    </levelInfo>
 
    <globalInfo worldPartInfoTable = '火,少,开,彡,丬,犬,𦍌,介,共,由,𫇦,吕,囗,此,角,疋,虫'></globalInfo>

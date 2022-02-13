@@ -262,7 +262,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
         //console.log(currSpawnItemData.AudioName);
 
         selectableItem.setInteractive();
-        selectableItem.on('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem,
+        selectableItem.once('pointerdown', this.scene.get('GameScene').buttonAnimEffect.bind(this, selectableItem,
           () => {
             this.onSelectableItemClicked(selectableItem);
           }, currSpawnItemData.AudioName));
