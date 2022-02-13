@@ -864,7 +864,7 @@ class GameScene extends Phaser.Scene {
     if (answerCorrect) {
 
 
-      this.sound.play('Correct_SFX');
+      //this.sound.play('Correct_SFX');
 
       // gameObject.x = dropZone.x;
       // gameObject.y = dropZone.y;
