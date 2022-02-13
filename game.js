@@ -866,12 +866,14 @@ class GameScene extends Phaser.Scene {
 
       this.sound.play('Correct_SFX');
 
-      gameObject.x = dropZone.x;
-      gameObject.y = dropZone.y;
-      gameObject.disableInteractive();
+      // gameObject.x = dropZone.x;
+      // gameObject.y = dropZone.y;
+      // gameObject.disableInteractive();
 
-      dropZone.ownerDropBox.destroy();
-      this.add.text(100, 100, "correctV2" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px ' + g_TargetChineseFonts, fill: "#000", align: 'center' });
+      // dropZone.ownerDropBox.destroy();
+      this.add.text(100, 100, "correctV3" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
+      this.add.text(100, 200, gameObject, { font: '32px Arial', fill: "#000", align: 'center' });
+      this.add.text(100, 300, dropZone.ownerDropBox, { font: '32px Arial', fill: "#000", align: 'center' });
 
       // // 1 less part to guess
       // Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
