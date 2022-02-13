@@ -863,7 +863,6 @@ class GameScene extends Phaser.Scene {
 
     if (answerCorrect) {
 
-      this.add.text(100, 100, "correct" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px ' + g_TargetChineseFonts, fill: "#000", align: 'center' });
 
       this.sound.play('Correct_SFX');
 
@@ -872,6 +871,7 @@ class GameScene extends Phaser.Scene {
       gameObject.disableInteractive();
 
       dropZone.ownerDropBox.destroy();
+      this.add.text(100, 100, "correctV2" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px ' + g_TargetChineseFonts, fill: "#000", align: 'center' });
 
       // // 1 less part to guess
       // Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
