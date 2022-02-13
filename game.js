@@ -4,6 +4,15 @@ var g_ExpBaseScore = 0;
 var g_LevelTime = 60000; // how long for each level in ms
 var g_CurrLevelIndex = 0;
 var g_TargetChineseFonts = "KaiTi";
+var g_WordAtlasTable = {
+  chineseChar: "",
+  atlasIndex : 0
+};
+
+var g_WordPartAtlasTable  = {
+  partChar: "",
+  atlasIndex : 0
+};
 
 // so questions are different when exiting and entering the bonus
 var g_allQuestionsIDPool = [];
@@ -23,7 +32,7 @@ class GameScene extends Phaser.Scene {
   /////////////////
   parseLevelData() {
 
-    g_TargetChineseFonts = "PingFang";
+    //g_TargetChineseFonts = "PingFang";
 
     // if mobile device
     if(!this.sys.game.device.os.desktop)
@@ -89,6 +98,14 @@ class GameScene extends Phaser.Scene {
         let wordData = wordCombo.getAttribute("word");
         currQuestion.wordsComboTable.push(wordData);
 
+        // compile dictionary of atlas info
+        let atlasData = wordCombo.getAttribute("atlasInfo");
+        let splitAtlasData = atlasData.split('_');
+        let splitWordData = wordData.split('_');
+        for(var index = 0; index < splitAtlasData.length; ++index){
+          g_WordAtlasTable[splitWordData[index]] = parseInt(splitAtlasData[index]);
+        }
+
         // save the audio file name
         let audioName = wordCombo.getAttribute("audioName");
         currQuestion.audioTable.push(audioName);
@@ -115,6 +132,7 @@ class GameScene extends Phaser.Scene {
         let u = wordPartBox.getAttribute("u");
         let w = wordPartBox.getAttribute("w");
         let partInfo = wordPartBox.getAttribute("wordPartInfo");
+        let atlasInfo = wordPartBox.getAttribute("atlasInfo");
 
         let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
         currQuestion.wordPartsBoxes.push(boxInfo);
@@ -122,6 +140,9 @@ class GameScene extends Phaser.Scene {
 
         // take this chance to collate the word parts
         this.wordPartsPool.push(partInfo);
+
+        // compile dictionary of atlas info
+        g_WordPartAtlasTable[partInfo] = atlasInfo;
       });
 
       this.allQuestions.push(currQuestion);
@@ -834,11 +855,11 @@ class GameScene extends Phaser.Scene {
     this.HintBtn.alpha = 1.0;
 
     // check if this word part is correct
-    let compareA_charInt = gameObject.wordPartCharacter.charCodeAt(0);
-    let compareB_charInt = dropZone.requiredWordPart.charCodeAt(0);
+    let atlasIndex_A = g_WordPartAtlasTable[gameObject.wordPartCharacter];
+    let atlasIndex_B = g_WordPartAtlasTable[dropZone.requiredWordPart];
 
     //let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
-    let answerCorrect = compareA_charInt == compareB_charInt;
+    let answerCorrect = atlasIndex_A == atlasIndex_B;
 
     if (answerCorrect) {
 
