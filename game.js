@@ -863,28 +863,26 @@ class GameScene extends Phaser.Scene {
 
     if (answerCorrect) {
 
+      this.add.text(100, 100, "correctV4" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
 
       //this.sound.play('Correct_SFX');
 
-      // gameObject.x = dropZone.x;
-      // gameObject.y = dropZone.y;
-      // gameObject.disableInteractive();
+      gameObject.x = dropZone.x;
+      gameObject.y = dropZone.y;
+      gameObject.disableInteractive();
 
-      // dropZone.ownerDropBox.destroy();
-      this.add.text(100, 100, "correctV3" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
-      this.add.text(100, 200, gameObject, { font: '32px Arial', fill: "#000", align: 'center' });
-      this.add.text(100, 300, dropZone.ownerDropBox, { font: '32px Arial', fill: "#000", align: 'center' });
+      dropZone.ownerDropBox.destroy();
 
-      // // 1 less part to guess
-      // Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
+      // 1 less part to guess
+      Phaser.Utils.Array.Remove(this.currQuestion.wordPartsLeftToGuess, gameObject.wordPartCharacter);
 
-      // // remove from selectables
-      // Phaser.Utils.Array.Remove(this.selectableWords, gameObject);
+      // remove from selectables
+      Phaser.Utils.Array.Remove(this.selectableWords, gameObject);
 
-      // this.selectableGuessedCorrectWords.push(gameObject);
+      this.selectableGuessedCorrectWords.push(gameObject);
 
-      // // check end question condition
-      // this.checkEndQuestionCondition();
+      // check end question condition
+      this.checkEndQuestionCondition();
     }
     // wrong answer
     else {
