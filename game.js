@@ -100,10 +100,12 @@ class GameScene extends Phaser.Scene {
 
         // compile dictionary of atlas info
         let atlasData = wordCombo.getAttribute("atlasInfo");
-        let splitAtlasData = atlasData.split('_');
-        let splitWordData = wordData.split('_');
-        for(var index = 0; index < splitAtlasData.length; ++index){
-          g_WordAtlasTable[splitWordData[index]] = parseInt(splitAtlasData[index]);
+        if (atlasData) {
+          let splitAtlasData = atlasData.split('_');
+          let splitWordData = wordData.split('_');
+          for (var index = 0; index < splitAtlasData.length; ++index) {
+            g_WordAtlasTable[splitWordData[index]] = parseInt(splitAtlasData[index]);
+          }
         }
 
         // save the audio file name
