@@ -861,6 +861,8 @@ class GameScene extends Phaser.Scene {
     let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
     //let answerCorrect = atlasIndex_A == atlasIndex_B;
 
+    
+    this.add.text(100, 100, "Dropped", { font: '32px Arial', fill: "#000", align: 'center' });
     if (answerCorrect) {
 
       this.sound.play('Correct_SFX');
