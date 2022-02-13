@@ -855,11 +855,15 @@ class GameScene extends Phaser.Scene {
     this.HintBtn.alpha = 1.0;
 
     // check if this word part is correct
-    let atlasIndex_A = g_WordPartAtlasTable[gameObject.wordPartCharacter];
-    let atlasIndex_B = g_WordPartAtlasTable[dropZone.requiredWordPart];
+    //let atlasIndex_A = g_WordPartAtlasTable[gameObject.wordPartCharacter];
+    //let atlasIndex_B = g_WordPartAtlasTable[dropZone.requiredWordPart];
 
-    let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
+    let answerCorrect = true;
+
+    //let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
     //let answerCorrect = atlasIndex_A == atlasIndex_B;
+
+    this.sound.play('Wrong_SFX');
 
     if (answerCorrect) {
 
