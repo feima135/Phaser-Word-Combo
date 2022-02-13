@@ -858,8 +858,8 @@ class GameScene extends Phaser.Scene {
     let atlasIndex_A = g_WordPartAtlasTable[gameObject.wordPartCharacter];
     let atlasIndex_B = g_WordPartAtlasTable[dropZone.requiredWordPart];
 
-    //let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
-    let answerCorrect = atlasIndex_A == atlasIndex_B;
+    let answerCorrect = gameObject.wordPartCharacter == dropZone.requiredWordPart;
+    //let answerCorrect = atlasIndex_A == atlasIndex_B;
 
     if (answerCorrect) {
 

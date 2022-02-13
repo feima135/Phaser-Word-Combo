@@ -13,8 +13,8 @@
       <wordsCombo guessWordID = '0' word = '炒_菜' atlasInfo = '0_1' pinYin ='chǎo_cài ' audioName = 'ChaoCai_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '炒_熟' atlasInfo = '0_1' pinYin ='chǎo_shú' audioName = 'ChaoShou_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '炒_蛋' atlasInfo = '0_1' pinYin ='chǎo_dàn' audioName = 'ChaoDan_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '火' atlasInfo='17'></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '少' atlasInfo='18'></wordPartBox>
+      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = 'huo_part' atlasInfo='17'></wordPartBox>
+      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = 'sao_part' atlasInfo='18'></wordPartBox>
    </question>
    
    <!-- <question id="形">
