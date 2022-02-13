@@ -21,13 +21,19 @@ class GameScene extends Phaser.Scene {
   //Read Level data, create drag boxes and link up
   /////////////////
   parseLevelData() {
+
+    if(!this.sys.game.device.os.desktop)
+    {
+      this.add.text(400, 400, "mobile", { font: '32px Arial', fill: "#000" });
+    }
+
     const levelInfo = this.cache.xml.get('LevelInfo');
 
     const levelInfoDataTable = levelInfo.getElementsByTagName('level');
 
     this.levelInfoTable = [];
     this.wordPartsPool = [];
-    
+
     // iterate all level info
     Array.from(levelInfoDataTable).forEach(info => {
 
