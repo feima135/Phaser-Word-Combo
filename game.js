@@ -4,6 +4,10 @@ var g_ExpBaseScore = 0;
 var g_LevelTime = 60000; // how long for each level in ms
 var g_CurrLevelIndex = 0;
 
+// so questions are different when exiting and entering the bonus
+var g_allQuestionsIDPool = [];
+var g_allQuestionsCooldownIDPool = [];
+
 /////////////////
 // Game
 /////////////////
@@ -107,6 +111,17 @@ class GameScene extends Phaser.Scene {
 
       this.allQuestions.push(currQuestion);
     });
+
+    // prepare a random question + combo pool only the very first time
+    if (g_allQuestionsIDPool.length == 0 && g_allQuestionsCooldownIDPool.length == 0) {
+      for (var index = 0; index < this.allQuestions.length; ++index) {
+        let currQuestion = this.allQuestions[index];
+        for (var comboIndex = 0; comboIndex < currQuestion.wordsComboTable.length; ++comboIndex) {
+          let savedID = index + "_" + comboIndex;
+          g_allQuestionsIDPool.push(savedID)
+        }
+      }
+    }
   }
 
   ////////////////////////////////
@@ -183,14 +198,14 @@ class GameScene extends Phaser.Scene {
   ///////////////////////////////////////////////////////////////
   // based on current questions, prepare the drag boxes etc etc
   //////////////////////////////////////////////////////////////
-  createQuestionAssets(targetQuestion, cenPosX, cenPosY) {
+  createQuestionAssets(targetQuestion, randomComboSetIndex, cenPosX, cenPosY) {
     let spawnPos = new Phaser.Math.Vector2(config.width * 0.14, config.height * 0.25);
     let wordSize = 1.1;
     let wordXGap = wordSize * 128 * 1.1;
     let maxWordsDisplay = 4; // assume is 4
 
     // choose a random combo
-    let randomComboSetIndex = Phaser.Math.Between(0, targetQuestion.wordsComboTable.length - 1);
+    //let randomComboSetIndex = Phaser.Math.Between(0, targetQuestion.wordsComboTable.length - 1);
 
     this.currQuestionAudioName = targetQuestion.audioTable[randomComboSetIndex];
 
@@ -353,11 +368,31 @@ class GameScene extends Phaser.Scene {
     this.HintBtn.setInteractive();
     this.HintBtn.alpha = 1.0;
 
-    this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
+    //this.currQuestion = Phaser.Utils.Array.GetRandom(this.allQuestions);
 
     //this.levelLogic();
+    // extract the random question and Combo
+    //console.log(g_allQuestionsIDPool);
 
-    this.createQuestionAssets(this.currQuestion, config.width * 0.4, config.height * 0.4);
+    let randomID = Phaser.Utils.Array.RemoveRandomElement(g_allQuestionsIDPool);
+    g_allQuestionsCooldownIDPool.push(randomID);
+
+    //console.log("genrating => " + randomID);
+
+    let splitID = randomID.split("_");
+    let questionID = splitID[0];
+    let comboID = splitID[1];
+
+    this.currQuestion = this.allQuestions[questionID];
+
+    // check if we need to recycle the pool
+    if(g_allQuestionsIDPool.length == 0)
+    {
+      g_allQuestionsCooldownIDPool.forEach(item => g_allQuestionsIDPool.push(item));
+      g_allQuestionsCooldownIDPool.length = 0; // clear it
+    }
+
+    this.createQuestionAssets(this.currQuestion, comboID, config.width * 0.4, config.height * 0.4);
 
     this.createDragWordSelectables(this.currQuestion);
   }
