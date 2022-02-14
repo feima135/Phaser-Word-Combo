@@ -94,18 +94,6 @@ class LoadingScene extends Phaser.Scene {
 
     this.load.image('ExpBar', 'assets/ExpBar.png');
 
-    // this.load.image('ChoppingBoard', 'assets/FoodStoreScene/ChoppingBoard.png');
-    // this.load.image('FryingPan', 'assets/FoodStoreScene/FryingPan.png');
-    // this.load.image('MixingBowl', 'assets/FoodStoreScene/MixingBowl.png');
-
-    // this.load.image('Word_Cut_Cucumber', 'assets/FoodStoreScene/Word_Cut_Cucumber.png');
-
-    // this.load.spritesheet('Knife', 'assets/FoodStoreScene/Knife.png', { frameWidth: 128, frameHeight: 100 });
-    // this.load.spritesheet('EggWhisk', 'assets/FoodStoreScene/EggWhisk.png', { frameWidth: 128, frameHeight: 100 });
-
-    // this.load.spritesheet('Cucumber', 'assets/FoodStoreScene/Cucumber.png', { frameWidth: 100, frameHeight: 100 });
-
-
     // // audio
     this.load.audio('QuestionCorrect_SFX', 'assets/Audio/QuestionCorrect.mp3');
     this.load.audio('Correct_SFX', 'assets/Audio/Correct.mp3');
@@ -113,35 +101,18 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.mp3');
     // this.load.audio('CollectStar_SFX', 'assets/Audio/CollectStar.wav');
 
-    this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');
+    this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.mp3');
 
-    this.load.audio('HuangSe_SFX', 'assets/Audio/HuangSe_SFX.mp3');
-    this.load.audio('HuangGua_SFX', 'assets/Audio/HuangGua_SFX.mp3');
-    this.load.audio('HuangJin_SFX', 'assets/Audio/HuangJin_SFX.mp3');
-    this.load.audio('HuangHun_SFX', 'assets/Audio/HuangHun_SFX.mp3');
-
-    this.load.audio('ZuiBa_SFX', 'assets/Audio/ZuiBa_SFX.mp3');
-    this.load.audio('ZuiLi_SFX', 'assets/Audio/ZuiLi_SFX.mp3');
-
-    this.load.audio('DanBai_SFX', 'assets/Audio/DanBai_SFX.mp3');
-    this.load.audio('DanGao_SFX', 'assets/Audio/DanGao_SFX.mp3');
-    this.load.audio('DanHuang_SFX', 'assets/Audio/DanHuang_SFX.mp3');
-    this.load.audio('JiDan_SFX', 'assets/Audio/JiDan_SFX.mp3');
-
-    this.load.audio('YingDi_SFX', 'assets/Audio/YingDi_SFX.mp3');
-    this.load.audio('YingYang_SFX', 'assets/Audio/YingYang_SFX.mp3');
-    this.load.audio('LuYing_SFX', 'assets/Audio/LuYing_SFX.mp3');
-    this.load.audio('YingHuoHui_SFX', 'assets/Audio/YingHuoHui_SFX.mp3');
-    
-    this.load.audio('YangChengXiGuan_SFX', 'assets/Audio/YangChengXiGuan_SFX.mp3');
-
-    this.load.audio('XingZhuang_SFX', 'assets/Audio/XingZhuang_SFX.mp3');
-    this.load.audio('YuanXing_SFX', 'assets/Audio/YuanXing_SFX.mp3');
-
-    this.load.audio('ChaoFan_SFX', 'assets/Audio/ChaoFan_SFX.mp3');
-    this.load.audio('ChaoCai_SFX', 'assets/Audio/ChaoCai_SFX.mp3');
-    this.load.audio('ChaoShou_SFX', 'assets/Audio/ChaoShou_SFX.mp3');
-    this.load.audio('ChaoDan_SFX', 'assets/Audio/ChaoDan_SFX.mp3');
+    // Voice over
+    this.load.audio('DaAn_SFX', 'assets/Audio/Voiceover/DaAn_SFX.mp3');
+    this.load.audio('DongDe_SFX', 'assets/Audio/Voiceover/DongDe_SFX.mp3');
+    this.load.audio('DongShi_SFX', 'assets/Audio/Voiceover/DongShi_SFX.mp3');
+    this.load.audio('HuiDa_SFX', 'assets/Audio/Voiceover/HuiDa_SFX.mp3');
+    this.load.audio('LaoLei_SFX', 'assets/Audio/Voiceover/LaoLei_SFX.mp3');
+    this.load.audio('ShiDe_SFX', 'assets/Audio/Voiceover/ShiDe_SFX.mp3');
+    this.load.audio('TanLun_SFX', 'assets/Audio/Voiceover/TanLun_SFX.mp3');
+    this.load.audio('TanTian_SFX', 'assets/Audio/Voiceover/TanTian_SFX.mp3');
+    this.load.audio('YiKouTongSheng_SFX', 'assets/Audio/Voiceover/YiKouTongSheng_SFX.mp3');
 
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
 

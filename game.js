@@ -46,7 +46,7 @@ class GameScene extends Phaser.Scene {
     const levelInfoDataTable = levelInfo.getElementsByTagName('level');
 
     this.levelInfoTable = [];
-    this.wordPartsPool = [];
+    //this.wordPartsPool = [];
 
     // iterate all level info
     Array.from(levelInfoDataTable).forEach(info => {
@@ -65,9 +65,9 @@ class GameScene extends Phaser.Scene {
     // harvest all the possible word parts
     const globalInfo = levelInfo.getElementsByTagName('globalInfo');
     
-    // let wordPartsStringData = globalInfo[0].getAttribute("worldPartInfoTable");
-    // this.wordPartsPool = wordPartsStringData.split(',');
-    // this.wordPartsPool.forEach(item => item.trim());
+    let wordPartsStringData = globalInfo[0].getAttribute("worldPartInfoTable");
+    this.wordPartsPool = wordPartsStringData.split(',');
+    this.wordPartsPool.forEach(item => item.trim());
 
     const questions = levelInfo.getElementsByTagName('question');
 
@@ -142,7 +142,9 @@ class GameScene extends Phaser.Scene {
         currQuestion.wordParts.push(partInfo);
 
         // take this chance to collate the word parts
-        this.wordPartsPool.push(partInfo);
+        if(!this.wordPartsPool.includes(partInfo)){
+          this.wordPartsPool.push(partInfo);
+        }
 
         // compile dictionary of atlas info
         //g_WordPartAtlasTable[partInfo] = atlasInfo;
