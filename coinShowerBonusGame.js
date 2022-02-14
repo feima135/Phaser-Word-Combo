@@ -170,13 +170,28 @@ class CoinShowerBonusGame extends Phaser.Scene {
     let mainGuessCharacter = randomWordCombo[randomIndex];
     this.possibleWordComboTargetTable = [];
     
+    let comparePrev = randomWordCombo.substring(0, randomIndex);
+    let compareNext = randomWordCombo.substring(randomIndex, randomWordCombo.length);
+
+    console.log("Compare Prev = " + comparePrev);
+    console.log("Compare Next = " + compareNext);
+
     this.wordComboPool.forEach(item => {
       // consider 炒饭 炒菜, mainguesscharacter 炒
       // consider 炒饭 vs 菜饭, mainguesscharacter 炒
       // its a match if the immediate next character matches
-      let prevMatch = item.charAt(randomIndex - 1) == randomWordCombo[randomIndex - 1];
-      let nextMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
-      let potentialMatchFlag = false;
+      //let prevMatch = item.charAt(randomIndex - 1) == randomWordCombo[randomIndex - 1];
+      //let nextMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
+
+      let prevSubString = item.substring(0, randomIndex);
+      let nextSubString = item.substring(randomIndex, item.length);
+
+      //console.log("prevSubString = " + prevSubString);
+      //console.log("nextSubString = " + nextSubString);
+
+      
+      let potentialMatchFlag = (comparePrev.length > 0 && comparePrev == prevSubString)
+                             ||(compareNext.length > 0 && compareNext == nextSubString);
 
       if (potentialMatchFlag) {
         let potentialCharacter = item[randomIndex];
