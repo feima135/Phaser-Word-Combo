@@ -5,6 +5,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
   }
 
   create() {
+    // after certain level, we randomly decide if its bonus word combo mode
+    this.bonusWordComboMode = g_CurrLevelIndex > 1 && Phaser.Math.Between(0, 1) == 1;
+    //this.bonusWordComboMode = true;
 
     this.freezeMode = false;
 
@@ -12,6 +15,10 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // Create guess word feature assets
     this.guessWordComboBG = this.add.image(config.width * 0.85, config.height * 0.13, "GuessWordComboBG").setScale(.22, .22);
+    if(!this.bonusWordComboMode)
+    {
+      this.guessWordComboBG.visible = false;
+    }
 
     this.freezeOverlay = this.add.image(config.width / 2, config.height / 2, "FreezeEffectOverlay").setScale(1, 1);
     this.freezeOverlay.alpha = 0.0;
@@ -24,14 +31,17 @@ class CoinShowerBonusGame extends Phaser.Scene {
     //this.activateCoinShower();
     //this.generateBonusWordComboPrize();
 
+    let splashInstructionImage = this.bonusWordComboMode ? "ExplainBonusGame" : "ExplainBonusGame";
+
     // intro splash
-    this.scene.get('GameScene').genericSplashSummary(this, "游戏开始", "Bonus Game", "ExplainBonusGame", 5000, ()=>
-    {
+    this.scene.get('GameScene').genericSplashSummary(this, "游戏开始", "Bonus Game", splashInstructionImage, 5000, () => {
       this.scene.get('GameScene').genericCreateTimer(this.levelInfo.levelDuration, this, 100);
 
       this.activateCoinShower();
-      
-      this.generateBonusWordComboPrize();
+
+      if (this.bonusWordComboMode) {
+        this.generateBonusWordComboPrize();
+      }
     });
   }
 
@@ -160,6 +170,24 @@ class CoinShowerBonusGame extends Phaser.Scene {
         Freeze: info.getAttribute("Freeze"),
         WordCharacter : info.getAttribute("WordCharacter"),
         AudioName : info.getAttribute("audioName")
+      }
+
+      // bonus word combo, spawn accordingly
+      if (this.bonusWordComboMode) {
+        if (spawnInfo.ID != "WordCharacterBG") {
+          spawnInfo.RNGThresholdMin = 0;
+          spawnInfo.RNGThresholdMax = 0;
+        }
+        else{
+          spawnInfo.RNGThresholdMin = 0;
+          spawnInfo.RNGThresholdMax = 1;
+        }
+      }
+      else {
+        if (spawnInfo.ID == "WordCharacterBG") {
+          spawnInfo.RNGThresholdMin = 0;
+          spawnInfo.RNGThresholdMax = 0;
+        }
       }
 
       this.spawnTableInfo.push(spawnInfo);

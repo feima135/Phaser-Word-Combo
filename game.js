@@ -4,15 +4,16 @@ var g_ExpBaseScore = 0;
 var g_LevelTime = 60000; // how long for each level in ms
 var g_CurrLevelIndex = 0;
 var g_TargetChineseFonts = "KaiTi";
-var g_WordAtlasTable = {
-  chineseChar: "",
-  atlasIndex : 0
-};
 
-var g_WordPartAtlasTable  = {
-  partChar: "",
-  atlasIndex : 0
-};
+// var g_WordAtlasTable = {
+//   chineseChar: "",
+//   atlasIndex : 0
+// };
+
+// var g_WordPartAtlasTable  = {
+//   partChar: "",
+//   atlasIndex : 0
+// };
 
 // so questions are different when exiting and entering the bonus
 var g_allQuestionsIDPool = [];
@@ -98,15 +99,15 @@ class GameScene extends Phaser.Scene {
         let wordData = wordCombo.getAttribute("word");
         currQuestion.wordsComboTable.push(wordData);
 
-        // compile dictionary of atlas info
-        let atlasData = wordCombo.getAttribute("atlasInfo");
-        if (atlasData) {
-          let splitAtlasData = atlasData.split('_');
-          let splitWordData = wordData.split('_');
-          for (var index = 0; index < splitAtlasData.length; ++index) {
-            g_WordAtlasTable[splitWordData[index]] = parseInt(splitAtlasData[index]);
-          }
-        }
+        // // compile dictionary of atlas info
+        // let atlasData = wordCombo.getAttribute("atlasInfo");
+        // if (atlasData) {
+        //   let splitAtlasData = atlasData.split('_');
+        //   let splitWordData = wordData.split('_');
+        //   for (var index = 0; index < splitAtlasData.length; ++index) {
+        //     g_WordAtlasTable[splitWordData[index]] = parseInt(splitAtlasData[index]);
+        //   }
+        // }
 
         // save the audio file name
         let audioName = wordCombo.getAttribute("audioName");
@@ -144,7 +145,7 @@ class GameScene extends Phaser.Scene {
         this.wordPartsPool.push(partInfo);
 
         // compile dictionary of atlas info
-        g_WordPartAtlasTable[partInfo] = atlasInfo;
+        //g_WordPartAtlasTable[partInfo] = atlasInfo;
       });
 
       this.allQuestions.push(currQuestion);
@@ -865,7 +866,7 @@ class GameScene extends Phaser.Scene {
 
     if (answerCorrect) {
 
-      this.add.text(100, 100, "correctV5" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
+      //this.add.text(100, 100, "correctV5" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
 
       this.sound.play('Correct_SFX');
 
