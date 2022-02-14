@@ -108,9 +108,9 @@ class LoadingScene extends Phaser.Scene {
 
     // // audio
     this.load.audio('QuestionCorrect_SFX', 'assets/Audio/QuestionCorrect.mp3');
-    this.load.audio('Correct_SFX', 'assets/Audio/Correct.wav');
+    this.load.audio('Correct_SFX', 'assets/Audio/Correct.mp3');
     
-    this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.wav');
+    this.load.audio('Wrong_SFX', 'assets/Audio/Wrong.mp3');
     // this.load.audio('CollectStar_SFX', 'assets/Audio/CollectStar.wav');
 
     this.load.audio('ButtonClick_SFX', 'assets/Audio/ButtonClick.wav');

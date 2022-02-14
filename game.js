@@ -865,9 +865,9 @@ class GameScene extends Phaser.Scene {
 
     if (answerCorrect) {
 
-      this.add.text(100, 100, "correctV4" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
+      this.add.text(100, 100, "correctV5" + gameObject.wordPartCharacter + dropZone.requiredWordPart, { font: '32px Arial', fill: "#000", align: 'center' });
 
-      //this.sound.play('Correct_SFX');
+      this.sound.play('Correct_SFX');
 
       gameObject.x = dropZone.x;
       gameObject.y = dropZone.y;
