@@ -20,6 +20,10 @@
 
    <WordsMatchTable>
       <FeatureInfo scorePerComboWord = '25' ></FeatureInfo>
+<!-- 
+      <WordsCombo guessWord ='炒' guessIndex = '0' possibleCombos = '炒饭, 炒菜, 炒熟, 炒蛋' ></WordsCombo>
+      <WordsCombo guessWord ='菜' guessIndex = '0' possibleCombos = '菜饭' ></WordsCombo> -->
+
       <WordsCombo combo = '炒饭, 炒菜, 菜饭, 炒熟, 炒蛋' ></WordsCombo>
       <WordsCombo combo = '形状, 圆形' ></WordsCombo>
       <WordsCombo combo = '养成习惯' ></WordsCombo>

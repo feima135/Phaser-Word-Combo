@@ -17,14 +17,14 @@
       <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '董' ></wordPartBox>
    </question>
    
-   <!-- <question id="劳">
-      <wordsCombo guessWordID = '0' word = '劳_累' pinYin ='láo_lèi' audioName = 'XingZhuang_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '1' word = '圆_形' pinYin ='yuán_xíng' audioName = 'YuanXing_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '开' atlasInfo='13'></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '彡' atlasInfo='14'></wordPartBox>
+   <question id="劳">
+      <wordsCombo guessWordID = '0' word = '劳_累' pinYin ='láo_lèi' audioName = 'LaoLei_SFX'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '劳_动' pinYin ='láo_dòng' audioName = 'LaoDong_SFX'> </wordsCombo>
+      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '𫇦'></wordPartBox>
+      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '力'></wordPartBox>
    </question>
 
-   <question id="累">
+   <!-- <question id="累">
       <wordsCombo guessWordID = '1' word = '形_状' pinYin ='xíng_zhuàng' audioName = 'XingZhuang_SFX'> </wordsCombo>
       <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '丬' atlasInfo='15'></wordPartBox>
       <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '犬' atlasInfo='16'></wordPartBox>
@@ -61,7 +61,7 @@
       <wordPartBox x='1.23' y ='.3' u='.82' w='0.55'  wordPartInfo = '此' atlasInfo='1'></wordPartBox>
       <wordPartBox x='1.23' y ='1.5' u='.82' w='.55' wordPartInfo = '角' atlasInfo='3'></wordPartBox>
    </question> -->
-   
+    -->
    <!-- <question id="蛋">
       <wordsCombo guessWordID = '1' word = '鸡_蛋' pinYin ='jī_dàn' audioName = 'JiDan_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '蛋_黄' pinYin ='dàn_huáng' audioName = 'DanHuang_SFX'> </wordsCombo>

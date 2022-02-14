@@ -93,7 +93,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
         let finalItemPosX = startPosX + (colIndex * gapX);
         let finalItemPosY = startPosY + (rowIndex * gapY);
-        let intialItemPosY = finalItemPosY - config.height * 1.5;
+        let intialItemPosY = finalItemPosY - config.height * 2;
 
         let selectableItem = this.add.sprite(finalItemPosX, intialItemPosY, "WordCharacterBG").setScale(0.5);
 
@@ -129,8 +129,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
          this.add.tween({
           targets: [selectableItem, selectableItem.wordCharacterObj],
           y: finalItemPosY,
-          duration: 1000,
-          delay: colIndex * 150,
+          duration: 1300,
+          delay : colIndex * 100,
           ease: "Cubic.InOut",
           onComplete: function () {
             selectableItem.setInteractive();
@@ -154,53 +154,48 @@ class CoinShowerBonusGame extends Phaser.Scene {
       this.guessWordComboBG.currWord.destroy();
     }
 
-    let randomWordCombo = Phaser.Utils.Array.GetRandom(this.wordComboPool);
-
-    //randomWordCombo = randomWordCombo.replace('_' , "");
-
+    this.currQnsWordComboInfo = Phaser.Utils.Array.GetRandom(this.guessWordInfoPool);
+    this.currQnsTargetWordCombo =  Phaser.Utils.Array.GetRandom(this.currQnsWordComboInfo.possibleCombosData); 
     let depth = this.guessWordComboBG.depth;
 
-    // now randomly pick 1 portion to be a guess portion
-    let randomIndex = Phaser.Math.Between(0, randomWordCombo.length - 1);
-
-    //console.log("random index " + randomIndex);
-
-    // check for this chinese character 
-    // could have other answers
-    let mainGuessCharacter = randomWordCombo[randomIndex];
-    this.possibleWordComboTargetTable = [];
+    // // check for this chinese character 
+    // // could have other answers
+    // let mainGuessCharacter = randomWordCombo[randomIndex];
+    // this.possibleWordComboTargetTable = [];
     
-    this.wordComboPool.forEach(item => {
-      // consider 炒饭 炒菜, mainguesscharacter 炒
-      // consider 炒饭 vs 菜饭, mainguesscharacter 炒
-      // its a match if the immediate next character matches
-      let prevMatch = item.charAt(randomIndex - 1) == randomWordCombo[randomIndex - 1];
-      let nextMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
-      let potentialMatchFlag = false;
+    // this.wordComboPool.forEach(item => {
+    //   // consider 炒饭 炒菜, mainguesscharacter 炒
+    //   // consider 炒饭 vs 菜饭, mainguesscharacter 炒
+    //   // its a match if the immediate next character matches
+    //   let prevMatch = item.charAt(randomIndex - 1) == randomWordCombo[randomIndex - 1];
+    //   let nextMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
+    //   let potentialMatchFlag = false;
 
-      if (potentialMatchFlag) {
-        let potentialCharacter = item[randomIndex];
-        let comboTargetSet =
-        {
-          character: potentialCharacter,
-          correctAnswerCombo: item
-        };
 
-        if (!this.possibleWordComboTargetTable.includes(potentialCharacter)) {
-          this.possibleWordComboTargetTable.push(comboTargetSet);
-        }
-      }});
+    //   // we have searched on and this is a potential match
+    //   if (potentialMatchFlag) {
+    //     let potentialCharacter = item[randomIndex];
+    //     let comboTargetSet =
+    //     {
+    //       character: potentialCharacter,
+    //       correctAnswerCombo: item
+    //     };
+
+    //     if (!this.possibleWordComboTargetTable.includes(potentialCharacter)) {
+    //       this.possibleWordComboTargetTable.push(comboTargetSet);
+    //     }
+    //   }});
 
     //console.log("mainword guessing" + randomWordCombo);
     //console.log("randomindex" + randomIndex);
 
-    console.log("================");
-    this.possibleWordComboTargetTable.forEach(item => 
-    {
-    console.log("guessing" + item.character);
-    });
+    // console.log("================");
+    // this.possibleWordComboTargetTable.forEach(item => 
+    // {
+    // console.log("guessing" + item.character);
+    // });
 
-    let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, randomWordCombo, { font: '50px ' + g_TargetChineseFonts, fill: "#F8FD38" });
+    let currWord = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y + 20, this.currQnsTargetWordCombo, { font: '50px ' + g_TargetChineseFonts, fill: "#F8FD38" });
     currWord.setOrigin(0.5);
     currWord.depth = depth + 1;
     this.children.bringToTop(currWord);
@@ -208,14 +203,15 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.guessWordComboBG.currWord = currWord;
 
     // replace ? with index
-    currWord.text = randomWordCombo.replace(mainGuessCharacter, "?");
+    let mainGuessCharacter = this.currQnsWordComboInfo.guessWord;
+    currWord.text = this.currQnsTargetWordCombo.replace(mainGuessCharacter, "?");
     
     // generate a prize
     this.guessWordComboBG.prize = this.add.text(this.guessWordComboBG.x, this.guessWordComboBG.y - 18, 100, { font: '22px Arial', fill: "#000" });
     this.guessWordComboBG.prize.setStroke('#fff', 3);
     this.guessWordComboBG.prize.depth = this.guessWordComboBG.depth + 1;
     this.guessWordComboBG.prize.setOrigin(0.5);
-    this.guessWordComboBG.prize.amount = this.scorePerComboWord * randomWordCombo.length;
+    this.guessWordComboBG.prize.amount = this.scorePerComboWord * this.currQnsTargetWordCombo.length;
     this.guessWordComboBG.prize.text = this.guessWordComboBG.prize.amount;
   }
 
@@ -306,23 +302,28 @@ class CoinShowerBonusGame extends Phaser.Scene {
     // all the single word
     this.wordCharacterPool = [];
 
-    // all the word pairings
-    this.wordComboPool = [];
+    // all the testable guess word info
+    this.guessWordInfoPool = [];
 
     // harvest bonus chest words combo
     const wordsMatchTable = spawnInfoData.getElementsByTagName('WordsCombo');
+
     Array.from(wordsMatchTable).forEach(info => {
 
-      let comboMasterString = info.getAttribute("combo");
-      let wordPairing = comboMasterString.split(','); // 1 instance of example 炒_菜
+      let guessWordInfo = {
+        guessWord: info.getAttribute("guessWord"),
+        guessIndex: parseInt(info.getAttribute("guessIndex")),
+        possibleCombosData : info.getAttribute("possibleCombos").split(',') // 1 instance of example 炒菜
+      }
 
-      wordPairing.forEach(targetString => {
+      this.guessWordInfoPool.push(guessWordInfo);
+
+      // harvest all the single word
+      guessWordInfo.possibleCombosData.forEach(targetString => {
 
         targetString = targetString.trim();
-        this.wordComboPool.push(targetString);
 
         let wordPart = targetString.split(''); // 1 instance of example 炒
-
         wordPart.forEach(item => {
           if(!this.wordCharacterPool.includes(item.trim())){
           this.wordCharacterPool.push(item.trim());
@@ -588,20 +589,30 @@ class CoinShowerBonusGame extends Phaser.Scene {
   {
     let targetPos = this.guessWordComboBG.currWord;
 
-    let targetCombo;
+    let targetCombo = this.currQnsTargetWordCombo;
 
     // check if it's correct
-    let correctWord = false;
-    this.possibleWordComboTargetTable.forEach(item => {
-      if (item.character == selectedItem.wordCharacterObj.word) {
-        targetCombo = item;
-        correctWord = true;
-      }
-    });
+    let correctWord = this.currQnsWordComboInfo.guessWord == selectedItem.wordCharacterObj.word;
+
+    // this.currQnsWordComboInfo.possibleCombosData.forEach(item => {
+
+    //   console.log(selectedItem.wordCharacterObj.word);
+
+    //   if(item[this.currQnsWordComboInfo.] == (selectedItem.wordCharacterObj.word)){
+    //     correctWord = true;
+    //     targetCombo = item;}
+    // });
+ 
+    // this.possibleWordComboTargetTable.forEach(item => {
+    //   if (item.character == selectedItem.wordCharacterObj.word) {
+    //     targetCombo = item;
+    //     correctWord = true;
+    //   }
+    // });
 
     //check if correct
     if (selectedItem ) {
-      if (correctWord && targetCombo != null) {
+      if (correctWord) {
         selectedItem.depth = this.guessWordComboBG.depth + 2;
         selectedItem.wordCharacterObj.depth = selectedItem.depth + 1;
 
@@ -641,8 +652,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
             });
 
             // reveal correct answer
-            this.guessWordComboBG.currWord.text = targetCombo.correctAnswerCombo;
-            
+            //this.guessWordComboBG.currWord.text = targetCombo.correctAnswerCombo;
+            this.guessWordComboBG.currWord.text = targetCombo.replace("?", this.currQnsWordComboInfo.guessWord);
+
             this.scene.get('GameScene').genericPulseUIEffect(this, this.guessWordComboBG.currWord, 1.5, null);
           },
           duration: 800

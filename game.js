@@ -601,7 +601,7 @@ class GameScene extends Phaser.Scene {
 
     this.createFireworks();
 
-    //this.scene.start('CoinShowerBonusGame');
+    this.scene.start('CoinShowerBonusGame');
 
     if(g_CurrLevelIndex == 0){
     this.genericSplashSummary(this, "游戏开始", "Game Start", "", 3500);

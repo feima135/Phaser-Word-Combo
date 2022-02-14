@@ -55,6 +55,8 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('NoFillBox', 'assets/NoFillBox.png');
     this.load.image('HintBtn', 'assets/HintBtn.png');
 
+    this.load.image('CrossIcon', 'assets/CrossIcon.png');
+
     //this.load.spritesheet('QuestionWordsAtlas', 'assets/QuestionWordsAtlas.png', { frameWidth: 128, frameHeight: 128 });
     //this.load.spritesheet('WordsAtlas', 'assets/WordsAtlas.png', { frameWidth: 64, frameHeight: 64 });
 
@@ -113,6 +115,7 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('TanLun_SFX', 'assets/Audio/Voiceover/TanLun_SFX.mp3');
     this.load.audio('TanTian_SFX', 'assets/Audio/Voiceover/TanTian_SFX.mp3');
     this.load.audio('YiKouTongSheng_SFX', 'assets/Audio/Voiceover/YiKouTongSheng_SFX.mp3');
+    this.load.audio('LaoDong_SFX', 'assets/Audio/Voiceover/LaoDong_SFX.mp3');
 
     this.load.audio('CombinedCelebration_SFX', 'assets/Audio/CombinedCelebration.mp3');
 
