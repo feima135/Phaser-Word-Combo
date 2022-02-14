@@ -253,11 +253,24 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     const levelInfoDetail = spawnInfoData.getElementsByTagName('LevelInfoDetail');
 
+    let targetLevelInfoChildNode;
+    for(let childIndex = 0; childIndex < levelInfoDetail.length; ++childIndex)
+    {
+      let targetNode = levelInfoDetail[childIndex];
+      let bonusGameType = targetNode.getAttribute("BonusGameType");
+
+      if(bonusGameType == "CoinShower" && !this.bonusWordComboMode){
+        targetLevelInfoChildNode = targetNode;
+      }else if(bonusGameType == "BonusWordCombo" && this.bonusWordComboMode){
+        targetLevelInfoChildNode = targetNode;
+      }
+    }
+
     let levelInfo = {
-      levelDuration : parseInt(levelInfoDetail[0].getAttribute("LevelDuration")),
-      fallDuration : parseInt(levelInfoDetail[0].getAttribute("FallDuration")),
-      fallVariance : parseInt(levelInfoDetail[0].getAttribute("FallDurationVariance")),
-      dispatchInterval : parseInt(levelInfoDetail[0].getAttribute("DispatchInterval"))
+      levelDuration : parseInt(targetLevelInfoChildNode.getAttribute("LevelDuration")),
+      fallDuration : parseInt(targetLevelInfoChildNode.getAttribute("FallDuration")),
+      fallVariance : parseInt(targetLevelInfoChildNode.getAttribute("FallDurationVariance")),
+      dispatchInterval : parseInt(targetLevelInfoChildNode.getAttribute("DispatchInterval"))
     };
 
     this.levelInfo = levelInfo;

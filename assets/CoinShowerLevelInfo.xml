@@ -2,10 +2,17 @@
 <CoinShowerLevel>
 
    <LevelInfo> 
-         <LevelInfoDetail LevelDuration = '40000' 
+         <LevelInfoDetail BonusGameType = 'CoinShower'
+                          LevelDuration = '40000' 
                           FallDuration='9000' 
                           FallDurationVariance = '3000' 
                           DispatchInterval = '200' >
+         </LevelInfoDetail>
+         <LevelInfoDetail BonusGameType = 'BonusWordCombo'
+                          LevelDuration = '60000' 
+                          FallDuration='0' 
+                          FallDurationVariance = '0' 
+                          DispatchInterval = '0' >
          </LevelInfoDetail>
     </LevelInfo>
 
