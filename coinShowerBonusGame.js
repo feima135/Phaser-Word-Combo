@@ -35,7 +35,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     //this.activateCoinShower();
     //this.generateBonusWordComboPrize();
 
-    let splashInstructionImage = this.bonusWordComboMode ? "ExplainBonusGame" : "ExplainBonusGame";
+    let splashInstructionImage = this.bonusWordComboMode ? "ExplainWordComboBonusGame" : "ExplainBonusGame";
 
     // intro splash
     // 游戏开始, Bonus Game

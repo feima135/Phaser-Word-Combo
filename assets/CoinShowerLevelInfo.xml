@@ -28,7 +28,7 @@
    <WordsMatchTable>
       <FeatureInfo scorePerComboWord = '5' ></FeatureInfo>
 
-      <WordsCombo combo = '懂事, 懂的' ></WordsCombo>
+      <WordsCombo combo = '懂事, 懂得' ></WordsCombo>
       <WordsCombo combo = '劳累' ></WordsCombo>
       <WordsCombo combo = '似的' ></WordsCombo>
       <WordsCombo combo = '答案, 回答' ></WordsCombo>

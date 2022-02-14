@@ -81,6 +81,8 @@ class LoadingScene extends Phaser.Scene {
     this.load.image('WordCharacterBG', 'assets/WordCharacterBG.png');
     this.load.image('GuessWordComboBG', 'assets/GuessWordComboBG.png');
     this.load.image('ExplainBonusGame', 'assets/ExplainBonusGame.png');
+    this.load.image('ExplainWordComboBonusGame', 'assets/ExplainWordComboBonusGame.png');
+
     this.load.image('MainGameSubBG', 'assets/MainGameSubBG.png');
 
     this.load.spritesheet('Freeze', 'assets/Freeze.png', { frameWidth: 128, frameHeight: 131 });
@@ -122,11 +124,12 @@ class LoadingScene extends Phaser.Scene {
     this.load.audio('CoinCollect_1_SFX', 'assets/Audio/CoinCollect_1.mp3');
     this.load.audio('CoinCollect_2_SFX', 'assets/Audio/CoinCollect_2.mp3');
     this.load.audio('CoinCollect_3_SFX', 'assets/Audio/CoinCollect_3.mp3');
-    this.load.audio('CoinCollect_Big_SFX', 'assets/Audio/CoinCollect_Big_SFX.mp3');
 
     this.load.audio('FreezeCollect_SFX', 'assets/Audio/FreezeCollect.mp3');
     this.load.audio('BombCollect_SFX', 'assets/Audio/BombCollect.mp3');
+
     this.load.audio('GenericCollect_SFX', 'assets/Audio/GenericCollect.mp3');
+    this.load.audio('CoinCollect_Big_SFX', 'assets/Audio/CoinCollect_Big.mp3');
 
     this.load.audio('WordCharacterCollect_SFX', 'assets/Audio/WordCharacterCollect.mp3');
   }

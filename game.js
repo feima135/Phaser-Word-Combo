@@ -474,7 +474,7 @@ class GameScene extends Phaser.Scene {
     ownerScene.SplashTextA.setOrigin(0.5);
     ownerScene.SplashTextB.setOrigin(0.5);
 
-    let additionalImageSpawn = ownerScene.add.image(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y + 70, "GameSceneBG");
+    let additionalImageSpawn = ownerScene.add.image(ownerScene.gameOverSplash.x, ownerScene.gameOverSplash.y, "GameSceneBG");
     ownerScene.SummaryContainer.additionalImageSpawn = additionalImageSpawn;
     additionalImageSpawn.visible = false;
     additionalImageSpawn.setOrigin(0.5);
@@ -1143,14 +1143,12 @@ class GameScene extends Phaser.Scene {
     g_Score += valueDiff;
     ownerScene.ScoreText.text = g_Score;
 
-    if(valueDiff == 1){      
-    ownerScene.sound.play("GenericCollect_SFX");
+    if (valueDiff < 10) {
+      ownerScene.sound.play("GenericCollect_SFX");
     }
-
-    if(valueDiff > 10){      
+    else{
       ownerScene.sound.play("CoinCollect_Big_SFX");
-      }
-  
+    }
 
     let targetObject = ownerScene.ScoreText;
 
