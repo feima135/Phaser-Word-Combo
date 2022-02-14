@@ -16,7 +16,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     this.freezeMode = false;
 
-    this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+    let BGName = this.bonusWordComboMode ? "BG_A" : "BG_C";
+
+    this.add.image(config.width / 2, config.height / 2, BGName).setScale(1, 1);
 
     // Create guess word feature assets
     this.guessWordComboBG = this.add.image(config.width * 0.85, config.height * 0.13, "GuessWordComboBG").setScale(.22, .22);

@@ -18,9 +18,9 @@
 
    <SpawnInfoTable>
       <Spawn ID='Coin' RNGSpawn ='0.4' Payout='1' Freeze='0' audioName ='CoinCollect_1_SFX'></Spawn>
-      <Spawn ID='Gem' RNGSpawn ='0.01' Payout='10' Freeze='0' audioName ='CoinCollect_2_SFX'></Spawn>
-      <Spawn ID='Bomb' RNGSpawn ='0.25' Payout='-1' Freeze='0' audioName ='BombCollect_SFX'></Spawn>
-      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='5' Freeze='0' audioName ='CoinCollect_3_SFX'></Spawn>
+      <Spawn ID='Gem' RNGSpawn ='0.01' Payout='5' Freeze='0' audioName ='CoinCollect_2_SFX'></Spawn>
+      <Spawn ID='Bomb' RNGSpawn ='0.3' Payout='-1' Freeze='0' audioName ='BombCollect_SFX'></Spawn>
+      <Spawn ID='Crown' RNGSpawn ='0.2' Payout='2' Freeze='0' audioName ='CoinCollect_3_SFX'></Spawn>
       <Spawn ID='WordCharacterBG' RNGSpawn ='0.7' Payout='0' WordCharacter = '1' audioName ='WordCharacterCollect_SFX'></Spawn>
       <Spawn ID='Freeze' RNGSpawn ='0.05' Payout='0' Freeze='1' Animated ='1' audioName ='FreezeCollect_SFX'></Spawn>
    </SpawnInfoTable>

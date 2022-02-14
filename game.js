@@ -504,11 +504,8 @@ class GameScene extends Phaser.Scene {
     this.input.on('dragenter', this.onItemDropZoneEnter, this);
     this.input.on('dragleave', this.onItemDropZoneLeave, this);
 
-    // BG
-    this.add.image(config.width / 2, config.height / 2, "GameSceneBG").setScale(config.width, config.height);
-
     // Game BG
-    this.add.image(config.width / 2, config.height / 2, "GameMonsterBG").setScale(1, 1);
+    this.add.image(config.width / 2, config.height / 2, "BG_B").setScale(1, 1);
 
     // bg for the question words
     this.add.image(config.width * 0.51, config.height * 0.38, "MainGameSubBG").setScale(1, 1);

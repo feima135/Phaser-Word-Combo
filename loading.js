@@ -47,9 +47,9 @@ class LoadingScene extends Phaser.Scene {
     this.load.xml('LevelInfo', 'assets/LevelInfo.xml');
     this.load.xml('CoinShowerLevelInfo', 'assets/CoinShowerLevelInfo.xml');
 
-    this.load.image('GameSceneBG', 'assets/GameSceneBG.png');
-
-    this.load.image('GameMonsterBG', 'assets/GameMonsterBG.png');
+    this.load.image('BG_A', 'assets/BG_A.png');
+    this.load.image('BG_B', 'assets/BG_B.png');
+    this.load.image('BG_C', 'assets/BG_C.png');
 
     this.load.image('WordDropBox', 'assets/WordDropBox.png');
     this.load.image('NoFillBox', 'assets/NoFillBox.png');
