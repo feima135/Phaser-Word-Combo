@@ -477,7 +477,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     })
 
     selectedItem.destroy();
-    this.scene.get('GameScene').genericDeductTimer(selectedItem.payout, this);
+    this.scene.get('GameScene').genericDeductTimer(5, this);
   }
 
   onSelectedPayoutItem(selectedItem) {
@@ -688,6 +688,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
         });
       }
       else{
+
+        this.scene.get('GameScene').genericDeductTimer(2, this);
 
         // pulse and play wrong audio
         this.sound.play("Wrong_SFX");

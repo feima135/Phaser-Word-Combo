@@ -1192,7 +1192,7 @@ class GameScene extends Phaser.Scene {
   /*******************************************/
   // generic timer penalize timer
   /*******************************************/
-  genericDeductTimer(valueDiff, ownerScene) {
+  genericDeductTimer(deductTimeScaleParam, ownerScene) {
     let tintTargetImage = ownerScene.timerBarContent;
 
     // red tint effect
@@ -1211,7 +1211,7 @@ class GameScene extends Phaser.Scene {
     ownerScene.tweens.addCounter({
       duration: 500,
       onUpdate: function (tween) {
-        ownerScene.gameTimer.timeScale = 5.0;
+        ownerScene.gameTimer.timeScale = deductTimeScaleParam;
       },
       onComplete: function (tween) {
         ownerScene.gameTimer.timeScale = 1.0;
