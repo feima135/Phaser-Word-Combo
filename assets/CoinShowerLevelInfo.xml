@@ -3,7 +3,7 @@
 
    <LevelInfo> 
          <LevelInfoDetail BonusGameType = 'CoinShower'
-                          LevelDuration = '40000' 
+                          LevelDuration = '38000' 
                           FallDuration='9000' 
                           FallDurationVariance = '3000' 
                           DispatchInterval = '200' >

@@ -38,7 +38,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
     let splashInstructionImage = this.bonusWordComboMode ? "ExplainBonusGame" : "ExplainBonusGame";
 
     // intro splash
-    this.scene.get('GameScene').genericSplashSummary(this, "游戏开始", "Bonus Game", splashInstructionImage, 5000, () => {
+    // 游戏开始, Bonus Game
+    this.scene.get('GameScene').genericSplashSummary(this, "", "", splashInstructionImage, 5000, () => {
       
       this.scene.get('GameScene').genericCreateTimer(this.levelInfo.levelDuration, this, 100);
 
@@ -587,14 +588,19 @@ class CoinShowerBonusGame extends Phaser.Scene {
       duration: 500,
     });
 
-    this.tweens.addCounter({
+    let slowTimerTween = this.tweens.addCounter({
       from: 1,
       to: 0.3,
       duration: 500,
       onUpdateScope: this,
       onCompleteScope: this,
       onUpdate: function (tween) {
+        if(this.freezeMode){
         this.tweens.timeScale = tween.getValue();
+        }
+        else{
+          slowTimerTween.stop();
+        }
       },
       completeDelay : freezeDuration,
       onComplete: function(tween)
