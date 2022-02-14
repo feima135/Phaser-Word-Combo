@@ -62,6 +62,19 @@ class GameScene extends Phaser.Scene {
       this.levelInfoTable.push(currLevelInfo);
     });
 
+    // some additional offset info
+    const wordPartsOffsetTableData = levelInfo.getElementsByTagName('offsetInfo');
+    
+    this.wordPartsOffsetDict = {}
+    Array.from(wordPartsOffsetTableData).forEach(info => {
+      let x = parseFloat(info.getAttribute("x"));
+      let y = parseFloat(info.getAttribute("y"));
+      this.wordPartsOffsetDict[info.getAttribute("wordPart")] = new Phaser.Math.Vector2(x, y);
+
+    });
+
+    //console.log(this.wordPartsOffsetDict);
+
     // harvest all the possible word parts
     const globalInfo = levelInfo.getElementsByTagName('globalInfo');
     
@@ -134,11 +147,10 @@ class GameScene extends Phaser.Scene {
         let y = wordPartBox.getAttribute("y");
         let u = wordPartBox.getAttribute("u");
         let w = wordPartBox.getAttribute("w");
-        let partInfo = wordPartBox.getAttribute("wordPartInfo");
-        let atlasInfo = wordPartBox.getAttribute("atlasInfo");
 
-        let boxInfo = new Phaser.Math.Vector4(x, y, u, w);
-        currQuestion.wordPartsBoxes.push(boxInfo);
+        let partInfo = wordPartBox.getAttribute("wordPartInfo");
+
+        currQuestion.wordPartsBoxes.push(new Phaser.Math.Vector4(x, y, u, w));
         currQuestion.wordParts.push(partInfo);
 
         // take this chance to collate the word parts (anything we might have missed)
@@ -217,7 +229,9 @@ class GameScene extends Phaser.Scene {
 
     // some correct answers the rest are rubbish
     for (var index = 0; index < maxSelectableWordsInPanel; ++index) {
+
       let targetWordPart = Phaser.Utils.Array.RemoveRandomElement(creationTable);
+
       let currWord = this.add.text(startPosX + xGap * index, startPosY, targetWordPart, { font: '64px ' + g_TargetChineseFonts, fill: "#000" });
       currWord.wordPartCharacter = targetWordPart;
       currWord.setOrigin(0.5);
@@ -261,11 +275,13 @@ class GameScene extends Phaser.Scene {
 
     let wordCreatedCache = [];
 
+    this.mainPanelChineseWordsFontSize = 100;
+
     // create all the words
     for (var index = 0; index < resultSplitArray.length; ++index) {
       let character = resultSplitArray[index];
 
-      let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, character, { font: '100px ' + g_TargetChineseFonts, fill: "#000" });
+      let currWord = this.add.text(spawnPos.x + (index * wordXGap) + startPosOffSet, spawnPos.y, character, { font: this.mainPanelChineseWordsFontSize + 'px ' + g_TargetChineseFonts, fill: "#000" });
 
       // create the han yun pin yin
       let pinYinData = splitPinYinArray[index];
@@ -343,7 +359,10 @@ class GameScene extends Phaser.Scene {
         }
         // no need for box but create the word part sprite
         else {
-          let fixedWordPart = this.add.text(boxX, boxY, wordPartInfo, { font: '100px ' + g_TargetChineseFonts, fill: "#000" });
+
+          let additionalOffset = this.getWordPartOffset(wordPartInfo);
+          let targetFontSize = this.mainPanelChineseWordsFontSize * 0.8;
+          let fixedWordPart = this.add.text(boxX + additionalOffset.x, boxY + additionalOffset.y, wordPartInfo, { font: targetFontSize + 'px ' + g_TargetChineseFonts, fill: "#000" });
           fixedWordPart.setOrigin(0.5);
           this.selectableGuessedCorrectWords.push(fixedWordPart);
           this.garbageCollector.push(fixedWordPart);
@@ -878,10 +897,14 @@ class GameScene extends Phaser.Scene {
 
       this.sound.play('Correct_SFX');
 
-      gameObject.x = dropZone.x;
-      gameObject.y = dropZone.y;
+      let additionalOffset = this.getWordPartOffset(gameObject.wordPartCharacter);
+      gameObject.x = dropZone.x + additionalOffset.x;
+      gameObject.y = dropZone.y + additionalOffset.y;
       gameObject.disableInteractive();
 
+      // force the font size after it deploys
+      gameObject.setFontSize(this.mainPanelChineseWordsFontSize * 0.8);
+      dropZone.destroy();
       dropZone.ownerDropBox.destroy();
 
       // 1 less part to guess
@@ -918,6 +941,18 @@ class GameScene extends Phaser.Scene {
 
   // drop zone leave
   onItemDropZoneLeave(pointer, gameObject, dropZone) {
+  }
+
+  // some wor parts need additional offsets
+  getWordPartOffset(inputChar){
+      // look up table offset
+      let additionalOffSet = new Phaser.Math.Vector2(0, 0);
+
+      if(this.wordPartsOffsetDict[inputChar] != null){
+        additionalOffSet = this.wordPartsOffsetDict[inputChar];
+      }
+
+      return additionalOffSet;
   }
 
   //////////////////////////////////////////////////////////////////

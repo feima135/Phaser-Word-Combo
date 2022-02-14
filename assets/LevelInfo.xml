@@ -10,11 +10,19 @@
 
    <globalInfo worldPartInfoTable = '火,少,开,彡,丬,犬,𦍌,介,共,由,𫇦,吕,囗,此,角,疋,虫'></globalInfo>
 
+   <WordPartsOffsetTable>
+         <offsetInfo wordPart='忄' x ='30' y='0'></offsetInfo>
+         <offsetInfo wordPart='𫇦' x ='0' y='20'></offsetInfo>
+         <offsetInfo wordPart='亻' x ='30' y='0'></offsetInfo>
+         <offsetInfo wordPart='⺮' x ='0' y='25'></offsetInfo>
+         <offsetInfo wordPart='讠' x ='30' y='0'></offsetInfo>
+   </WordPartsOffsetTable>
+
    <question id="懂">
       <wordsCombo guessWordID = '0' word = '懂_事'  pinYin ='dǒng_shì' audioName = 'DongShi_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '懂_得'  pinYin ='dǒng_dé' audioName = 'DongDe_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '忄' ></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '董' ></wordPartBox>
+      <wordPartBox x='0.35' y ='0.86' u='.6' w='1' wordPartInfo = '忄' ></wordPartBox>
+      <wordPartBox x='1.55' y ='0.86' u='.6' w='1' wordPartInfo = '董' ></wordPartBox>
    </question>
    
    <question id="劳">
@@ -32,8 +40,8 @@
       
    <question id="似">
       <wordsCombo guessWordID = '0' word = '似_的' pinYin ='shì_de' audioName = 'ShiDe_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '亻' ></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '以' ></wordPartBox>
+      <wordPartBox x='0.2' y ='0.86' u='.6' w='1'  wordPartInfo = '亻' ></wordPartBox>
+      <wordPartBox x='1.4' y ='0.86' u='.6' w='1'  wordPartInfo = '以' ></wordPartBox>
    </question>
 
    <question id="答">
@@ -41,14 +49,14 @@
       <wordsCombo guessWordID = '1' word = '回_答' pinYin ='huí_dá' audioName = 'HuiDa_SFX'> </wordsCombo>
       <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '⺮'></wordPartBox>
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'   wordPartInfo = '合'></wordPartBox>
-   </question> 
+   </question>  -->
 
    <question id="谈">
       <wordsCombo guessWordID = '0' word = '谈_论' pinYin ='tán_lùn' audioName = 'TanLun_SFX'> </wordsCombo>
       <wordsCombo guessWordID = '0' word = '谈_天' pinYin ='tán_tiān' audioName = 'TanTian_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '讠' ></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '炎' ></wordPartBox>
-   </question> 
+      <wordPartBox x='0.08' y ='0.86' u='.6' w='1'  wordPartInfo = '讠' ></wordPartBox>
+      <wordPartBox x='1.22' y ='0.86' u='.6' w='1'  wordPartInfo = '炎' ></wordPartBox>
+   </question>
 
    <question id="异">
       <wordsCombo guessWordID = '0' word = '异_口_同_声' pinYin ='yì_kǒu_tóng_shēng' audioName = 'YiKouTongSheng_SFX'> </wordsCombo>
