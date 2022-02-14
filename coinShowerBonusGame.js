@@ -9,7 +9,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.bonusWordGridGarabageCollect = [];
 
     // after certain level, we randomly decide if its bonus word combo mode
-    this.bonusWordComboMode = g_CurrLevelIndex > 1 && Phaser.Math.Between(0, 1) == 1;
+    this.bonusWordComboMode = g_CurrLevelIndex == 2 || g_CurrLevelIndex >= 3 && Phaser.Math.Between(0, 1) == 1;
     
     // debug
     //this.bonusWordComboMode = true;

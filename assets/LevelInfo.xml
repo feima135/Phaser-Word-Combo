@@ -2,9 +2,9 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='7' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
-      <level levelID='1' threshold ='10' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
-      <level levelID='2' threshold ='12' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
+      <level levelID='0' threshold ='6' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
+      <level levelID='1' threshold ='8' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
+      <level levelID='2' threshold ='10' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
       <level levelID='3' threshold ='12' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
    </levelInfo>
 
