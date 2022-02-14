@@ -63,7 +63,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
       // fade out and destroy and grop new grid
       this.add.tween({
         targets: element,
-        alpha: { from: 1, to: 0.0 },
+        alpha: { from: element.alpha, to: 0.0 },
         duration: 200,
         onComplete:function(){
           element.destroy();  
@@ -156,12 +156,14 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     let randomWordCombo = Phaser.Utils.Array.GetRandom(this.wordComboPool);
 
-    //randomWordCombo = randomWordCombo.replace('_' , "");
-
     let depth = this.guessWordComboBG.depth;
 
     // now randomly pick 1 portion to be a guess portion
     let randomIndex = Phaser.Math.Between(0, randomWordCombo.length - 1);
+
+    // debug
+    //randomWordCombo = '鸡蛋';
+    //randomIndex = 0;
 
     //console.log("random index " + randomIndex);
 
@@ -171,10 +173,10 @@ class CoinShowerBonusGame extends Phaser.Scene {
     this.possibleWordComboTargetTable = [];
     
     let comparePrev = randomWordCombo.substring(0, randomIndex);
-    let compareNext = randomWordCombo.substring(randomIndex, randomWordCombo.length);
+    let compareNext = randomWordCombo.substring(randomIndex + 1, randomWordCombo.length);
 
-    console.log("Compare Prev = " + comparePrev);
-    console.log("Compare Next = " + compareNext);
+    //console.log("Compare Prev = " + comparePrev);
+    //console.log("Compare Next = " + compareNext);
 
     this.wordComboPool.forEach(item => {
       // consider 炒饭 炒菜, mainguesscharacter 炒
@@ -184,14 +186,11 @@ class CoinShowerBonusGame extends Phaser.Scene {
       //let nextMatch = item.charAt(randomIndex + 1) == randomWordCombo[randomIndex + 1];
 
       let prevSubString = item.substring(0, randomIndex);
-      let nextSubString = item.substring(randomIndex, item.length);
+      let nextSubString = item.substring(randomIndex + 1, item.length);
 
-      //console.log("prevSubString = " + prevSubString);
-      //console.log("nextSubString = " + nextSubString);
-
+      //console.log("pre_next : " + prevSubString + "_" + nextSubString);
       
-      let potentialMatchFlag = (comparePrev.length > 0 && comparePrev == prevSubString)
-                             ||(compareNext.length > 0 && compareNext == nextSubString);
+      let potentialMatchFlag = (comparePrev == prevSubString) &&(compareNext == nextSubString);
 
       if (potentialMatchFlag) {
         let potentialCharacter = item[randomIndex];
@@ -630,6 +629,15 @@ class CoinShowerBonusGame extends Phaser.Scene {
     //check if correct
     if (selectedItem ) {
       if (correctWord && targetCombo != null) {
+
+        // disable the rest
+        this.bonusWordGridGarabageCollect.forEach(item => {
+          if (item != selectedItem && item != selectedItem.wordCharacterObj) {
+            item.disableInteractive();
+            item.alpha = 0.5;
+          }
+        });
+
         selectedItem.depth = this.guessWordComboBG.depth + 2;
         selectedItem.wordCharacterObj.depth = selectedItem.depth + 1;
 

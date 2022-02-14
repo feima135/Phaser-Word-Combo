@@ -141,7 +141,7 @@ class GameScene extends Phaser.Scene {
         currQuestion.wordPartsBoxes.push(boxInfo);
         currQuestion.wordParts.push(partInfo);
 
-        // take this chance to collate the word parts
+        // take this chance to collate the word parts (anything we might have missed)
         if(!this.wordPartsPool.includes(partInfo)){
           this.wordPartsPool.push(partInfo);
         }
@@ -601,7 +601,7 @@ class GameScene extends Phaser.Scene {
 
     this.createFireworks();
 
-    this.scene.start('CoinShowerBonusGame');
+    //this.scene.start('CoinShowerBonusGame');
 
     if(g_CurrLevelIndex == 0){
     this.genericSplashSummary(this, "游戏开始", "Game Start", "", 3500);
@@ -757,6 +757,12 @@ class GameScene extends Phaser.Scene {
   // Generic splash summary
   ////////////////////////
   genericSplashSummary(ownerScene, messageA, messageB, additionalImage, displayDuration, postReadCallback) {
+
+    // //DEBUG
+    // if(postReadCallback){
+    //   postReadCallback();
+    //   return;
+    // }
 
     ownerScene.SplashTextA.text = messageA;
     ownerScene.SplashTextB.text = messageB;
