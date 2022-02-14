@@ -2,7 +2,7 @@
 <Questions>
 
    <levelInfo>
-      <level levelID='0' threshold ='1' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
+      <level levelID='0' threshold ='11' partsToGuess='1' maxselectable='3' penalizeWrongAns = '0'></level>
       <level levelID='1' threshold ='1' partsToGuess='2' maxselectable='4' penalizeWrongAns = '1'></level>
       <level levelID='2' threshold ='1' partsToGuess='3' maxselectable='5' penalizeWrongAns = '1'></level>
       <level levelID='3' threshold ='1' partsToGuess='5' maxselectable='6' penalizeWrongAns = '1'></level>
@@ -24,51 +24,36 @@
       <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '力'></wordPartBox>
    </question>
 
-   <!-- <question id="累">
-      <wordsCombo guessWordID = '1' word = '形_状' pinYin ='xíng_zhuàng' audioName = 'XingZhuang_SFX'> </wordsCombo>
-      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '丬' atlasInfo='15'></wordPartBox>
-      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '犬' atlasInfo='16'></wordPartBox>
+   <question id="累">
+      <wordsCombo guessWordID = '1' word = '劳_累' pinYin ='láo_lèi' audioName = 'LaoLei_SFX'> </wordsCombo>
+      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '田'></wordPartBox>
+      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '糸'></wordPartBox>
    </question>
       
    <question id="似">
-      <wordsCombo guessWordID = '0' word = '养_成_习_惯' pinYin ='yǎng_chéng_xí_guàn' audioName = 'YangChengXiGuan_SFX'> </wordsCombo>
-      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '𦍌' atlasInfo='10'></wordPartBox>
-      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '介' atlasInfo='9'></wordPartBox>
+      <wordsCombo guessWordID = '0' word = '似_的' pinYin ='shì_de' audioName = 'ShiDe_SFX'> </wordsCombo>
+      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '亻' ></wordPartBox>
+      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '以' ></wordPartBox>
    </question>
 
    <question id="答">
-      <wordsCombo guessWordID = '0' word = '答_案' pinYin ='huáng_sè' audioName = 'HuangSe_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '黄_答' pinYin ='huáng_guā' audioName = 'HuangGua_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '黄_金' pinYin ='huáng_jīn' audioName = 'HuangJin_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '黄_昏' pinYin ='huáng_hūn' audioName = 'HuangHun_SFX'> </wordsCombo>
-      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '共' atlasInfo='11'></wordPartBox>
-      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'   wordPartInfo = '由' atlasInfo='12'></wordPartBox>
+      <wordsCombo guessWordID = '0' word = '答_案' pinYin ='dá_àn' audioName = 'DaAn_SFX'> </wordsCombo>
+      <wordsCombo guessWordID = '1' word = '回_答' pinYin ='huí_dá' audioName = 'HuiDa_SFX'> </wordsCombo>
+      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '⺮'></wordPartBox>
+      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'   wordPartInfo = '合'></wordPartBox>
    </question> 
 
    <question id="谈">
-      <wordsCombo guessWordID = '0' word = '营_地' pinYin ='yíng_de' audioName = 'YingDi_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '营_火_会' pinYin ='yíng_huǒ_huì' audioName = 'YingHuoHui_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '1' word = '露_营' pinYin ='lù_yíng' audioName = 'LuYing_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '营_养' pinYin ='yíng_yǎng' audioName = 'YingYang_SFX'> </wordsCombo>
-      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '𫇦' atlasInfo='6'></wordPartBox>
-      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'  wordPartInfo = '吕' atlasInfo='7'></wordPartBox>
+      <wordsCombo guessWordID = '0' word = '谈_论' pinYin ='tán_lùn' audioName = 'TanLun_SFX'> </wordsCombo>
+      <wordsCombo guessWordID = '0' word = '谈_天' pinYin ='tán_tiān' audioName = 'TanTian_SFX'> </wordsCombo>
+      <wordPartBox x='0.5' y ='0.86' u='.6' w='1'  wordPartInfo = '讠' ></wordPartBox>
+      <wordPartBox x='1.7' y ='0.86' u='.6' w='1'  wordPartInfo = '炎' ></wordPartBox>
    </question> 
 
    <question id="异">
-      <wordsCombo guessWordID = '0' word = '嘴_巴' pinYin ='zuǐ_bā' audioName = 'ZuiBa_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '嘴_里' pinYin ='zuǐ_lǐ' audioName = 'ZuiLi_SFX'> </wordsCombo>
-      <wordPartBox x='0' y ='.8' u='.4' w='1.11'  wordPartInfo = '囗' atlasInfo='0'></wordPartBox>
-      <wordPartBox x='1.23' y ='.3' u='.82' w='0.55'  wordPartInfo = '此' atlasInfo='1'></wordPartBox>
-      <wordPartBox x='1.23' y ='1.5' u='.82' w='.55' wordPartInfo = '角' atlasInfo='3'></wordPartBox>
-   </question> -->
-    -->
-   <!-- <question id="蛋">
-      <wordsCombo guessWordID = '1' word = '鸡_蛋' pinYin ='jī_dàn' audioName = 'JiDan_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '蛋_黄' pinYin ='dàn_huáng' audioName = 'DanHuang_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '蛋_糕' pinYin ='dàn_gāo' audioName = 'DanGao_SFX'> </wordsCombo>
-      <wordsCombo guessWordID = '0' word = '蛋_白' pinYin ='dàn_bái' audioName = 'DanBai_SFX'> </wordsCombo>
-      <wordPartBox x='1.05' y ='.28' u='1.2' w='0.6'   wordPartInfo = '疋' atlasInfo='4'></wordPartBox>
-      <wordPartBox x='1.05' y ='1.42' u='1.2' w='0.6'  wordPartInfo = '虫' atlasInfo='5'></wordPartBox>
-   </question> --> -->
+      <wordsCombo guessWordID = '0' word = '异_口_同_声' pinYin ='yì_kǒu_tóng_shēng' audioName = 'YiKouTongSheng_SFX'> </wordsCombo>
+      <wordPartBox x='0.82' y ='0.3' u='1.12' w='.56'  wordPartInfo = '巳'></wordPartBox>
+      <wordPartBox x='0.82' y ='1.4' u='1.12' w='.56'   wordPartInfo = '廾'></wordPartBox>
+   </question>
 
 </Questions>
