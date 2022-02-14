@@ -31,8 +31,8 @@
       <WordsCombo combo = '懂事, 懂的' ></WordsCombo>
       <WordsCombo combo = '劳累' ></WordsCombo>
       <WordsCombo combo = '似的' ></WordsCombo>
-      <WordsCombo combo = '答案 回答' ></WordsCombo>
-      <WordsCombo combo = '谈论 谈天' ></WordsCombo>
+      <WordsCombo combo = '答案, 回答' ></WordsCombo>
+      <WordsCombo combo = '谈论, 谈天' ></WordsCombo>
       <WordsCombo combo = '异口同声' ></WordsCombo>
 
    </WordsMatchTable>

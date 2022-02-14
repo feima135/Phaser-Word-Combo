@@ -10,7 +10,9 @@ class CoinShowerBonusGame extends Phaser.Scene {
 
     // after certain level, we randomly decide if its bonus word combo mode
     this.bonusWordComboMode = g_CurrLevelIndex > 1 && Phaser.Math.Between(0, 1) == 1;
-    this.bonusWordComboMode = true;
+    
+    // debug
+    //this.bonusWordComboMode = true;
 
     this.freezeMode = false;
 
@@ -73,7 +75,7 @@ class CoinShowerBonusGame extends Phaser.Scene {
     let tempPool = [];
     this.wordCharacterPool.forEach(item => tempPool.push(item));
 
-    let rowCount = 5;
+    let rowCount = 4;
     let colCount = 6;
     let startPosX = config.width * 0.18;
     let startPosY = config.height * 0.35;
@@ -113,6 +115,8 @@ class CoinShowerBonusGame extends Phaser.Scene {
         else {
           randomCharacter = Phaser.Utils.Array.GetRandom(this.wordCharacterPool);
         }
+
+        //console.log(randomCharacter);
 
         // chinese character round base
         selectableItem.wordCharacterObj = this.add.text(selectableItem.x, selectableItem.y, randomCharacter, { font: '42px ' + g_TargetChineseFonts, fill: "#000", align: 'center' });
