@@ -1127,8 +1127,6 @@ class GameScene extends Phaser.Scene {
       },
       yoyo: true
     });
-
-    ownerScene.sound.play('ButtonClick_SFX');
   }
 
   /*******************************************/
